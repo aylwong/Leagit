@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	Tournament = mongoose.model('Tournament'),
+	Competitor = mongoose.model('Competitor'),
 	_ = require('lodash');
 
 /**
@@ -17,7 +17,7 @@ var getErrorMessage = function(err) {
 		switch (err.code) {
 			case 11000:
 			case 11001:
-				message = 'Tournament already exists';
+				message = 'Competitor already exists';
 				break;
 			default:
 				message = 'Something went wrong';
@@ -35,100 +35,99 @@ var getErrorMessage = function(err) {
  * Create a tourament
  */
 exports.create = function(req, res) {
-	var tournament = new Tournament(req.body);
+	var competitor = new Competitor(req.body);
 
         // person that created tournament
-	tournament.user = req.user;
+	competitor.user = req.user;
 
-        tournament.save(function(err) {
+        competitor.save(function(err) {
 		if (err) {
 			return res.send(400, {
 				message: getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(tournament);
+			res.jsonp(competitor);
 		}
 	});
 };
 
 /**
- * Show the current tournament
+ * Show the current competitor
  */
 exports.read = function(req, res) {
-	res.jsonp(req.tournament);
+	res.jsonp(req.competitor);
 };
 
 /**
- * Update a tournament
+ * Update a competitor
  */
 exports.update = function(req, res) {
-	var tournament = req.tournament;
+	var competitor = req.competitor;
 
-	tournament = _.extend(tournament, req.body);
+	competitor = _.extend(competitor, req.body);
 
-	tournament.save(function(err) {
+	competitor.save(function(err) {
 		if (err) {
 			return res.send(400, {
 				message: getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(tournament);
+			res.jsonp(competitor);
 		}
 	});
 };
 
 /**
- * Delete a tournament
+ * Delete a competitor
  */
 exports.delete = function(req, res) {
-	var tournament = req.tournament;
+	var competitor = req.competitor;
 
-	tournament.remove(function(err) {
+	competitor.remove(function(err) {
 		if (err) {
 			return res.send(400, {
 				message: getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(tournament);
+			res.jsonp(competitor);
 		}
 	});
 };
 
 /**
- * List of Tournament
+ * List of Competitor
  */
 exports.list = function(req, res) {
 
-          // TODO: populate tournaments, matches
-	Tournament.find().sort('-created').populate('user', 'displayName').exec(function(err, tournament) {
+          // TODO: populate competitors, matches
+	Competitor.find().sort('-created').populate('user', 'displayName').exec(function(err, competitor) {
 		if (err) {
 			return res.send(400, {
 				message: getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(tournament);
+			res.jsonp(competitor);
 		}
 	});
 };
 
 /**
- * Tournament middleware
+ * Competitor middleware
  */
-exports.tournamentByID = function(req, res, next, id) {
-              // TODO: populate competitor, match
-	Tournament.findById(id).populate('user', 'displayName').exec(function(err, tournament) {
+exports.competitorByID = function(req, res, next, id) {
+	Competitor.findById(id).populate('user', 'displayName').exec(function(err, competitor) {
 		if (err) return next(err);
-		if (!tournament) return next(new Error('Failed to load tournament ' + id));
-		req.tournament = tournament;
+		if (!competitor) return next(new Error('Failed to load competitor ' + id));
+		req.competitor = competitor;
 		next();
 	});
 };
 
 /**
- * Tournament authorization middleware
+ * Competitor authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.tournament.user.id !== req.user.id) {
+	if (req.competitor.user.id !== req.user.id) {
 		return res.send(403, {
 			message: 'User is not authorized'
 		});

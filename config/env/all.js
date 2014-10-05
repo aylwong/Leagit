@@ -14,7 +14,9 @@ module.exports = {
 		lib: {
 			css: [
                                  'public/lib/foundation/css/foundation.css',
-                                 'public/lib/foundation/css/normalize.css'
+                                 'public/lib/foundation/css/normalize.css',
+				 'public/lib/ngQuickDate/dist/ng-quick-date.css',
+				 'public/lib/isteven-angular-multiselect/angular-multiselect.css'
 			],
 			js: [
 				'public/lib/angular/angular.js',
@@ -27,7 +29,10 @@ module.exports = {
 				'public/lib/angular-ui-utils/ui-utils.js',
                                 'public/lib/jquery/dist/jquery.js',
                                 'public/lib/foundation/js/foundation.js',
-                                'public/lib/angular-foundation/mm-foundation.js'
+                                'public/lib/angular-foundation/mm-foundation.js',
+                                'public/lib/ngQuickDate/dist/ng-quick-date.js',
+                                'public/lib/sugar/release/sugar-full.development.js',
+				'public/lib/isteven-angular-multiselect/angular-multi-select.js'
 
 			]
 		},

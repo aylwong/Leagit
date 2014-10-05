@@ -1,0 +1,50 @@
+<section data-ng-controller="CompetitorsController" data-ng-init="findOne()">
+	<div class="page-header row">
+		<h1 class="large-10 columns">{{competitor.name}}</h1>
+	</div>
+        <div class="row">
+          <div class="large-10 columns">
+	    <div class="row">
+              <div class="large-10 columns">
+	      <small>
+		<em class="text-muted">Created on {{competitor.created | date:'mediumDate'}} by {{competitor.user.displayName}}</em>
+	       </small>
+              </div>
+            </div>
+            <br />
+	    <div class="row"> 
+              <div class="large-2 columns">
+                Email
+              </div>
+              <div class="large-10 columns"> 
+                {{competitor.email}}
+              </div>
+	    </div>
+            <br />
+            <div class="row">
+		<div class="large-2 columns left">
+                 Description
+                </div>
+                <div class="large-8 columns left">
+                  {{competitor.description}}
+                </div>
+            </div>
+            <br />
+	    <div class="row" data-ng-show="authentication.user._id == competitor.user._id">
+              <div class="small-2 columns left">
+		<a class="button" href="/#!/competitors/{{competitor._id}}/edit">
+                  <i class="glyphicon glyphicon-edit">edit</i>
+		</a>
+              </div>
+              <div class="small-2 columns left">
+		<a class="button" data-ng-click="remove();">
+		  <i class="glyphicon glyphicon-trash">remove</i>
+		</a>
+              </div>
+            </div>
+          </div>
+	</div>
+   
+	<p class="lead">
+	</p>
+</section>

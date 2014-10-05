@@ -1,0 +1,86 @@
+<section data-ng-controller="TournamentsController" data-ng-init="findOne()">
+	<div class="page-header row">
+		<h1 class="large-10 columns">{{tournament.name}}</h1>
+	</div>
+        <div class="row">
+          <div class="large-10 columns">
+	    <div class="row">
+              <div class="large-10 columns">
+	      <small>
+		<em class="text-muted">Created on {{tournament.created | date:'mediumDate'}} by {{tournament.user.displayName}}</em>
+	       </small>
+              </div>
+            </div>
+            <br />
+	    <div class="row"> 
+              <div class="large-2 columns">
+               Start Date
+              </div>
+              <div class="large-10 columns"> 
+                {{tournament.start_date}}
+              </div>
+	    </div>
+            <br />
+	    <div class="row"> 
+              <div class="large-2 columns">
+               End Date
+              </div>
+              <div class="large-10 columns"> 
+                {{tournament.end_date}}
+              </div>
+	    </div>
+            <br />
+	    <div class="row"> 
+              <div class="large-2 columns">
+               Type
+              </div>
+              <div class="large-10 columns"> 
+                {{tournament.type}}
+              </div>
+	    </div>
+            <br />
+	    <div class="row"> 
+              <div class="large-2 columns">
+               Matches 
+              </div>
+              <div class="large-10 columns"> 
+                {{tournament.matches.length}}
+              </div>
+	    </div>
+            <br />
+	    <div class="row"> 
+              <div class="large-2 columns">
+               Competitors 
+              </div>
+              <div class="large-10 columns"> 
+                {{tournament.competitors.length}}
+              </div>
+	    </div>
+            <br />
+            <div class="row">
+		<div class="large-2 columns left">
+                 Description
+                </div>
+                <div class="large-8 columns left">
+                  {{tournament.description}}
+                </div>
+            </div>
+            <br />
+	    <div class="row" data-ng-show="authentication.user._id == tournament.user._id">
+              <div class="small-2 columns left">
+		<a class="button" href="/#!/tournaments/{{tournament._id}}/edit">
+                  <i class="glyphicon glyphicon-edit">edit</i>
+		</a>
+              </div>
+              <div class="small-2 columns left">
+		<a class="button" data-ng-click="remove();">
+		  <i class="glyphicon glyphicon-trash">remove</i>
+		</a>
+              </div>
+            </div>
+          </div>
+	</div>
+   
+	<p class="lead">
+	</p>
+</section>
