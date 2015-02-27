@@ -1,0 +1,46 @@
+<section data-ng-controller="MatchesController" data-ng-init="find()">
+    <div class="page-header">
+        <h1>Matches</h1>
+    </div>
+    <div class="list-group">
+      <div data-ng-repeat="tournament in tournaments" data-ng-href="#!/tournaments/{{tournament._id}}" class="list-group-item">
+	<div class="row"><h3>
+      <a data-ng-href="#!/tournaments/{{tournament._id}}" class="list-group-item">{{tournament.name}}</a></h3>
+	<div>
+	<div class="row">
+	<div class="small-8 columns left">
+          <a data-ng-repeat="match in tournament.matches" data-ng-href="#!/matches/{{match._id}}" class="list-group-item">
+            <h4 class="list-group-item-heading">{{match.name}}</h4>
+	    <div class="row">
+	      <div class="small-2 columns left">Start Date</div>
+              <div class="small-8 columns left">
+		{{match.start_date | date : 'MMMM d, y h:mm a (EEEE)'}}
+	      </div>
+	    </div>
+	    <div class="row">
+	      <div class="small-2 columns left">End Date</div>
+              <div class="small-8 columns left">
+		{{match.end_date | date : 'MMMM d, y h:mm a (EEEE)'}}
+	      </div>
+	    </div>
+	    <div class="row">
+	      <div class="small-2 columns left">Competitors</div>
+              <div class="small-8 columns left">
+		{{match.competitors.length}}
+	      </div>
+	    </div>
+	    <div class="row">
+	      <div class="small-8 columns left">
+            <small class="list-group-item-text">created {{match.created | date:'medium'}}</small>
+	      </div>
+	    </div>
+          </a>
+	</div>
+	</div>
+	</div>
+      </div>
+	</div>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="!matches.$resolved || matches.length">
+    </div>
+</section>

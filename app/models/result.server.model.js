@@ -9,6 +9,8 @@ var mongoose = require('mongoose'),
 /**
  *  Result Schema
  */
+
+/*
 var ResultSchema = new Schema({
 	created: {
 		type: Date,
@@ -16,13 +18,14 @@ var ResultSchema = new Schema({
 	},
 	type: {
 		type: String,
-		enum: ['Win', 'Loss', 'Tie', 'Other']
+		enum: ['Win', 'Loss', 'Tie', 'Other', 'TBD']
 	},
 	points: { type: String, 
 		Required: false
 	},
-	Description: { type: String 
+	description: { type: String 
 	},
+	competitors: [{ type: String }],
 	// User that created
 	user: {
 		type: Schema.ObjectId,
@@ -31,3 +34,4 @@ var ResultSchema = new Schema({
 });
 
 mongoose.model('Result', ResultSchema);
+*/

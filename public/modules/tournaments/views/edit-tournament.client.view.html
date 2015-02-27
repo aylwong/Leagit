@@ -48,15 +48,7 @@
 		    	<label class="left inline" >{{ tournament.matches.length }}</label>
 		   </div>
                     <div data-ng-repeat="match in tournament.matches" class="match row">
-			  <div class="row">
-			    <div class="large-9 columns">
-			      {{ match.name }} - {{ match.start_date | format_date }}
-			    </div>
-                      	    <input ng-click="remove_match(match, $index)" value="Remove" class="button large-3 columns">
-			  </div>
-			  <div class="row">
-			    <multi-select input-model="match.competitors_list" button-label="name" item-label="name" tick-property="selected" class="large-9 right">
-			  </div>
+			<div ng-include="'/modules/tournaments/views/edit-match-tournament.client.view.html'"></div>
                     </div>
                   </div>
                 </div>
@@ -66,62 +58,11 @@
                   </div>
 		  <div class="large-8 columns">
 		    <div class="row">
-                      <input ng-click="toggle_new_match()" value="New Match" class="button">
+                      <input ng-click="toggle_new_match()" value="Add New Match" class="button">
 		    </div>
-		   <div ng-show="show_new_match">
-		      <div class="row">
-			<div class="control-label small-2 columns">
-                    		<label class="right inline" for="new_match.name">Name</label>
-			</div>
-			<div class="controls small-6 columns left">
-				<input type="text" id="new_match.name" data-ng-model="new_match.name" class="form-control" placeholder="new_match_name" >
-			</div>
-		      </div>
-		      <div class="row">
-			<div class="control-label large-2 columns">
-                    		<label class="right inline" for="new_match_start_date">Start Date</label>
-			</div>
-			<div class="controls large-6 columns left">
-				<quick-datepicker ng-model="new_match.start_date"></quick-datepicker>
-			</div>
-		      </div>
-		      <div class="row">
-			<div class="control-label large-2 columns">
-	                    <label class="right inline" for="new_match.end_date">End Date</label>
-			</div>
-			<div class="controls large-6 columns left">
-				<quick-datepicker ng-model="new_match.end_date"></quick-datepicker>
-
-			</div>
-		      </div>
-		      <div class="row">
-			<div class="control-label large-2 columns">
-	                    <label class="right inline" for="new_match.location">Location</label>
-			</div>
-			<div class="controls large-6 columns left">
-				<input type="text" data-ng-model="new_match.location" id="new_match.location" class="form-control" placeholder="new_match_location" >
-
-			</div>
-		      </div>
-		      <div class="row">
-			<div class="control-label large-2 columns">
-	                    <label class="right inline" for="new_match.results">Results</label>
-			</div>
-			<div class="controls large-6 columns left">
-				<input type="text" id="new_match.results" class="form-control" placeholder="new_match_results" >
-
-			</div>
-		      </div>
-		      <div class="row">
-			<div class="control-label large-2 columns">
-	                    <label class="right inline" for="new_match.description">Description</label>
-			</div>
-			<div class="controls large-6 columns left">
-				<input type="text" data-ng-model="new_match.description" id="new_match.description" class="form-control" placeholder="new_match_description" >
-		      	</div>
-		      </div>
-                      <input ng-click="add_new_match()" value="Update" class="button">
-		    </div>
+		   <div ng-show="show_new_match" class="box_outline">
+		     <div ng-include="'/modules/tournaments/views/add-match-tournament.client.view.html'"></div> 
+		   </div>
 		  </div>
 		</div>
                 <div class="form-group row">
@@ -129,7 +70,7 @@
                     <label class="right inline" for="tournament_competitors">Competitors</label>
                   </div>
                     <div class="controls large-8 columns left">
-			<multi-select input-model="available_competitors" button-label="name" item-label="name" tick-property="selected">
+			<multi-select input-model="available_competitors" button-label="name" item-label="name" tick-property="selected" >
 			</multi-select>
                     </div>
                 </div>

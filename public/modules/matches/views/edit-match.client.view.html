@@ -1,0 +1,61 @@
+<section data-ng-controller="MatchesController" data-ng-init="findOne()">
+  <div class="row">
+    <div class="large-6 columns">
+      <h2>Match</h2> 
+      <h3> {{ match.name }} </h3>
+    </div>
+    <div class="large-3 columns right">
+      <input ng-click="remove_match(match, $index)" value="Remove" class="button large-12 columns">
+    </div>
+  </div>
+  <div class="row"> 
+    <div class="large-2 columns">
+               Start Date
+              </div>
+              <div class="large-10 columns"> 
+                {{match.start_date | format_date}}
+              </div>
+  </div>
+  <br />
+  <div class="row"> 
+              <div class="large-2 columns">
+               End Date
+              </div>
+              <div class="large-10 columns"> 
+                {{match.end_date | format_date}}
+              </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="large-2 columns left">
+      Location
+    </div>
+    <div class="large-8 columns left">
+      {{match.location.toString()}}
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="large-2 columns left">
+      Description
+    </div>
+    <div class="large-8 columns left">
+      {{match.description}}
+     </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="large-2 columns left"> Results</div>
+    <div class="large-8 columns left">
+      <select ng-model="match.results" ng-options="result.name for result in results">
+      </select>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="large-2 columns left"> Competitors</div>
+    <div class="large-8 columns left">
+      <multi-select input-model="match.competitors_list" button-label="name" item-label="name" tick-property="selected" class="large-9 right">
+    </div>
+  </div>
+</section>

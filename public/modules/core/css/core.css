@@ -7,3 +7,7 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
 	display: none !important;
 }
+.multiSelect.checkboxLayer, .box_outline {
+	border-style: solid;
+	border-width: .2em;
+}

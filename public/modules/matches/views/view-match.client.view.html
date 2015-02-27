@@ -1,23 +1,42 @@
-<section data-ng-controller="CompetitorsController" data-ng-init="findOne()">
+<section data-ng-controller="MatchesController" data-ng-init="findOne()">
 	<div class="page-header row">
-		<h1 class="large-10 columns">{{competitor.name}}</h1>
+		<h1 class="large-10 columns">{{match.name}}</h1>
 	</div>
         <div class="row">
           <div class="large-10 columns">
 	    <div class="row">
               <div class="large-10 columns">
 	      <small>
-		<em class="text-muted">Created on {{competitor.created | date:'mediumDate'}} by {{competitor.user.displayName}}</em>
+		<em class="text-muted">Created on {{match.created | date:'mediumDate'}} by {{match.user.displayName}}</em>
 	       </small>
               </div>
             </div>
             <br />
 	    <div class="row"> 
               <div class="large-2 columns">
-                Email
+               Start Date
               </div>
               <div class="large-10 columns"> 
-                {{competitor.email}}
+                {{match.start_date}}
+              </div>
+	    </div>
+            <br />
+	    <div class="row"> 
+              <div class="large-2 columns">
+               End Date
+              </div>
+              <div class="large-10 columns"> 
+                {{match.end_date}}
+              </div>
+	    </div>
+            <br />
+            <br />
+	    <div class="row"> 
+              <div class="large-2 columns">
+               Competitors 
+              </div>
+              <div class="large-10 columns"> 
+                {{match.competitors.length}}
               </div>
 	    </div>
             <br />
@@ -26,16 +45,13 @@
                  Description
                 </div>
                 <div class="large-8 columns left">
-                  {{competitor.description}}
+                  {{match.description}}
                 </div>
             </div>
             <br />
-	    <div class="row" data-ng-show="authentication.user._id == competitor.user._id">
-	      <div class="small-2 columns left">
-	  	<a class="button" href="/#!/competitors/{{competitor._id}}/matches">Matches</a>
-	      </div>
+	    <div class="row" >
               <div class="small-2 columns left">
-		<a class="button" href="/#!/competitors/{{competitor._id}}/edit">
+		<a class="button" href="/#!/matches/{{match._id}}/edit">
                   <i class="glyphicon glyphicon-edit">edit</i>
 		</a>
               </div>

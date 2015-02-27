@@ -5,6 +5,8 @@
  */
 var mongoose = require('mongoose'),
 	Competitor = mongoose.model('Competitor'),
+	Match = mongoose.model('Match'),
+	Tournament = mongoose.model('Tournament'),
 	_ = require('lodash');
 
 /**
@@ -31,8 +33,15 @@ var getErrorMessage = function(err) {
 	return message;
 };
 
+// Sends Error
+var sendError = function(err) {
+	return res.send(400, {
+		message: getErrorMessage(err)
+	});
+};
+
 /**
- * Create a tourament
+ * Create a competitor
  */
 exports.create = function(req, res) {
 	var competitor = new Competitor(req.body);
@@ -99,8 +108,45 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-          // TODO: populate competitors, matches
-	Competitor.find().sort('-created').populate('user', 'displayName').exec(function(err, competitor) {
+	Competitor.find().sort('-created').populate('user', 'displayName').exec()
+	  .onReject(sendError)
+	  .then(function(competitor) {
+	    res.jsonp(competitor);
+	  });
+};
+
+// Select Competitors, filtered on req
+exports.selectList = function(req, res) {
+	Competitor.find(req).sort('-created').populate('user', 'displayName').exec()
+	  .onReject(sendError)
+	  .then(function(competitor) {
+	    res.jsonp(competitor);
+	  });
+};
+
+// Get Competitors from a Tournament
+exports.listByTournament = function(req, res) {
+	var tournament = req.tournament;
+
+	Tournament.find(req.tournament.id).exec()
+	.onReject(sendError)
+	.then( function(tournament) {
+  	  Competitor.find(tournament.competitors).sort('-created').populate('user','displayName').exec()
+	  .onReject(sendError)
+	  .then(function(competitor) {
+		
+	    res.jsonp(competitor);
+	  })
+	;
+	});
+};
+
+// Get Competitors from a Match
+exports.listByMatch = function(req, res) {
+	//var tournament = req.tournament;
+	var match = req.match;
+		
+	Competitor.find(match.competitors).sort('-created').populate('user','displayName').exec(function(err,competitor) {
 		if (err) {
 			return res.send(400, {
 				message: getErrorMessage(err)
@@ -108,7 +154,7 @@ exports.list = function(req, res) {
 		} else {
 			res.jsonp(competitor);
 		}
-	});
+	  });
 };
 
 /**
@@ -121,6 +167,26 @@ exports.competitorByID = function(req, res, next, id) {
 		req.competitor = competitor;
 		next();
 	});
+};
+
+exports.matchByID = function(req, res, next, id) {
+	Tournament.aggregate(
+	  { $match:{'matches._id':mongoose.Types.ObjectId(id)}}
+	  ,{$unwind:'$matches'}
+	  ,{$match:{ 'matches._id':mongoose.Types.ObjectId(id)}}
+	  ,{ $group: {_id: '$_id',name:{$first:'$name'},competitors: {$first:'$competitors'}, matches: {$push:'$matches'}}}
+	  , function (err, tournaments) {
+		// need to get 1 tournament, and 1 match
+	    if (err || tournaments.length!==1 || tournaments[0].matches.length!==1) { 
+	      return next(err);
+	    } else {
+		// if there is a match, return with its tournament.
+	      req.tournament = tournaments[0];
+	      req.match=tournaments[0].matches[0];
+	      next();
+	    }
+	  }
+  	);
 };
 
 /**

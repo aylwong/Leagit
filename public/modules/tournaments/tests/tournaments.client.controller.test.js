@@ -151,6 +151,8 @@
 		}));
 
 		it('$scope.update() should update a valid tournament', inject(function(Tournaments) {
+		    // Update update tests
+
 			// Define a sample tournament put data
 			var sampleTournamentPutData = new Tournaments({
 				_id: '525cf20451979dea2c000001',

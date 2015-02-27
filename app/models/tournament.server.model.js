@@ -6,6 +6,37 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
+/** 
+ * Results?
+ */
+
+/**
+ *  Result Schema
+ */
+var ResultSchema = new Schema({
+	created: {
+		type: Date,
+		default: Date.now,
+	},
+	name: {
+		type: String,
+		enum: ['Win', 'Loss', 'Tie', 'Other', 'TBD']
+	},
+	points: { type: String, 
+		Required: false
+	},
+	description: { type: String,
+		Required: false 
+	},
+	competitors: [{ type: String }],
+	// User that created
+	user: {
+		type: Schema.ObjectId,
+		ref: 'User'
+	}
+});
+
+
 /**
  * Subdocument Matches Schema
  */
@@ -24,7 +55,7 @@ var MatchSchema = new Schema({
 		end_date: { type: String},
 		location: [{ type: String }],
 		competitors: [{ type: String }],
-		results: { type: String },
+		results: [ResultSchema],
 		description: { type: String },
 		status: { type: String, enum: ['Pending', 'In Game', 'Done', 'Cancelled'], default:'Pending' },
 });
@@ -59,3 +90,5 @@ var TournamentSchema = new Schema({
 
 mongoose.model('Tournament', TournamentSchema);
 mongoose.model('Match', MatchSchema);
+
+mongoose.model('Result', ResultSchema);

@@ -1,0 +1,15 @@
+<div class="selector row">
+  <div class="large-6 columns">
+    <label class="right inline" >{{ list.title }}</label>
+    <div ng-repeat="entry in list" class="row">
+      {{ entry.name }}
+    </div>
+  </div>
+  <div class="large-6 columns">
+    <label class="right inline" >{{ list.chosen_title }}</label>
+    <div ng-repeat="entry in chosen_list" class="row">
+      {{ entry.name }}
+    </div>
+  </div>
+</div>
+        
