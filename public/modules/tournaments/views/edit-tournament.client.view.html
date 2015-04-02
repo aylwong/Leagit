@@ -1,97 +1,105 @@
 <section data-ng-controller="TournamentsController" data-ng-init="findOne()">
     <div class="page-header row">
-        <h1 class="large-10 columns">Edit Tournament</h1>
+        <h1 class="large-10 columns">Edit Tournament: {{tournaments.tournament.name}}</h1>
+    </div>
+    <div class="row">
+	<div class="column">
+	  <a href="#!/tournaments/{{tournaments.tournament._id}}">back to view</a>
+	</div>
     </div>
     <div class="col-md-12 row">
         <form class="form-horizontal large-10 columns" data-ng-submit="update()" novalidate>
             <fieldset>
                 <div class="form-group row">
+                  <div class="large-8 columns large-offset-2 right">
+                    <input type="submit" value="Update" class="button right">
+                  </div>
+                </div>
+                <div class="form-group row">
                   <div class="control-label large-2 columns">
-                    <label class="right inline" for="tournament.name">Name</label>
+                    <label class="right inline" for="tournaments.tournament.name">Name</label>
                   </div>
                     <div class="controls large-8 columns left">
-                        <input type="text" data-ng-model="tournament.name" id="name" class="form-control" placeholder="Name" required>
+                        <input type="text" data-ng-model="tournaments.tournament.name" id="name" class="form-control" placeholder="Name" required>
                     </div>
                 </div>
                 <div class="form-group row">
                   <div class="control-label large-2 columns">
-                    <label class="right inline" for="tournament.start_date">Start Date</label>
+                    <label class="right inline" for="tournaments.tournaments.start_date">Start Date</label>
                   </div>
 			<div class="controls large-3 columns left">
-				<quick-datepicker ng-model="tournament.start_date"></quick-datepicker>
+				<quick-datepicker ng-model="tournaments.tournament.start_date"></quick-datepicker>
 			</div>
                 </div>
                 <div class="form-group row">
                   <div class="control-label large-2 columns">
-                    <label class="right inline" for="tournament.end_date">End Date</label>
+                    <label class="right inline" for="tournaments.tournament.end_date">End Date</label>
                   </div>
 			<div class="controls large-3 columns left">
-				<quick-datepicker ng-model="tournament.end_date"></quick-datepicker>
+				<quick-datepicker ng-model="tournaments.tournament.end_date"></quick-datepicker>
 			</div>
                 </div>
                 <div class="form-group row">
                   <div class="control-label large-2 columns">
-                    <label class="right inline" for="tournament.type">Type</label>
+                    <label class="right inline" for="tournaments.tournament.type">Type</label>
                   </div>
                     <div class="controls large-8 columns left">
-		    <select data-native-menu="false" data-ng-model="tournament.type" data-role="listview">
-				<option ng-repeat="available_type in available_types" value="{{available_type.id}}">{{available_type.name}}</option>
+		    <select data-native-menu="false" data-ng-model="tournaments.tournament.type" data-role="listview">
+				<option ng-repeat="available_type in tournaments.available_types" value="{{available_type.id}}">{{available_type.name}}</option>
 		    </select>
                     </div>
                 </div>
+                <div class="form-group row">
+                  <div class="control-label large-2 columns">
+                    <label class="right inline" for="tournament.tournament_competitors">Competitors</label>
+                  </div>
+                    <div class="controls large-8 columns left">
+		      <competitor-create selected="tournaments.selected_competitors"></competitor-create>
+		      <competitor-search list="tournaments.selectable_competitors"></competitor-search>
+		      <competitor-selects selectable="tournaments.selectable_competitors" selected="tournaments.selected_competitors" selectableheader="Competitors"></competitor-selects>
+                    </div>
+                </div>
+		<div class="form-group row">
+                  <div class="control-label large-2 columns">
+                    <label class="right inline" for="tournament.image">Image Link</label>
+                  </div>
+		  <div class="controls large-8 columns left">
+		    <input type="text" data-ng-model="tournaments.tournament.image"></input>
+		  </div>
+		</div>
+                <div class="form-group row">
+                  <div class="control-label large-2 columns">
+                    <label class="right inline" for="tournament.description">Description</label>
+                  </div>
+                    <div class="controls large-8 columns left">
+                        <textarea data-ng-model="tournaments.tournament.description" id="description" class="form-control" cols="30" rows="4" placeholder="Description"></textarea>
+                    </div>
+                </div>
+               <br />
+                <div class="form-group row">
+		  <div data-ng-show="error" class="text-danger">
+		    <strong>{{error}}</strong>
+		  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="large-8 columns large-offset-2 right">
+                    <input type="submit" value="Update" class="button right">
+                  </div>
+                </div>
+            </fieldset>
                 <div class="form-group row">
                   <div class="control-label large-2 columns">
                     <label class="right inline" for="tournament_matches">Matches</label>
                   </div>
 		  <div class="control-label large-8 columns left">
 		    <div class="row inline">
-		    	<label class="left inline" >{{ tournament.matches.length }}</label>
+		    	<label class="left inline" >{{ tournaments.tournament.matches.length }}</label>
 		   </div>
-                    <div data-ng-repeat="match in tournament.matches" class="match row">
-			<div ng-include="'/modules/tournaments/views/edit-match-tournament.client.view.html'"></div>
+                    <div data-ng-repeat="match in tournaments.tournament.matches" class="match row">
+			<div ng-include="'/modules/tournaments/views/view-match-tournament.client.view.html'"></div>
                     </div>
                   </div>
                 </div>
-		<div class="form-group row">
-                  <div class="control-label large-2 columns">
-                    <label class="right inline" for="tournament_matches">New Match</label>
-                  </div>
-		  <div class="large-8 columns">
-		    <div class="row">
-                      <input ng-click="toggle_new_match()" value="Add New Match" class="button">
-		    </div>
-		   <div ng-show="show_new_match" class="box_outline">
-		     <div ng-include="'/modules/tournaments/views/add-match-tournament.client.view.html'"></div> 
-		   </div>
-		  </div>
-		</div>
-                <div class="form-group row">
-                  <div class="control-label large-2 columns">
-                    <label class="right inline" for="tournament_competitors">Competitors</label>
-                  </div>
-                    <div class="controls large-8 columns left">
-			<multi-select input-model="available_competitors" button-label="name" item-label="name" tick-property="selected" >
-			</multi-select>
-                    </div>
-                </div>
-                <div class="form-group">
-                  <div class="control-label large-2 columns">
-                    <label class="right inline" for="tournament.description">Description</label>
-                  </div>
-                    <div class="controls large-8 columns left">
-                        <textarea data-ng-model="tournament.description" id="description" class="form-control" cols="30" rows="10" placeholder="Description"></textarea>
-                    </div>
-                </div>
-               <br />
-                <div class="form-group row">
-                  <div class="large-8 columns large-offset-2 left">
-                    <input type="submit" value="Update" class="button">
-                  </div>
-                </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong>{{error}}</strong>
-				</div>
-            </fieldset>
         </form>
     </div>
 </section>

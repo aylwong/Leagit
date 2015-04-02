@@ -81,6 +81,11 @@ var UserSchema = new Schema({
 	created: {
 		type: Date,
 		default: Date.now
+	},
+	hidden: {
+		type:String,
+		enum:['open', 'hidden'],
+		default: 'open'
 	}
 });
 

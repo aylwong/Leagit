@@ -17,20 +17,25 @@ var ResultSchema = new Schema({
 	created: {
 		type: Date,
 		default: Date.now,
-	},
-	name: {
-		type: String,
-		enum: ['Win', 'Loss', 'Tie', 'Other', 'TBD']
-	},
-	points: { type: String, 
+	}
+	,key: {
+		type: String
+		,enum: ['Win', 'Loss', 'Tie', 'Other', 'TBD']
+		,required: 'Result must have a key'
+	}
+	,name: {
+		type: String
+		,enum: ['Win', 'Loss', 'Tie', 'Other', 'TBD']
+		,required: 'Result must have a name'
+	}
+	,points: { type: String, 
 		Required: false
-	},
-	description: { type: String,
+	}
+	,description: { type: String,
 		Required: false 
-	},
-	competitors: [{ type: String }],
-	// User that created
-	user: {
+	}
+	,competitors: [{ type: String }]
+	,user: {
 		type: Schema.ObjectId,
 		ref: 'User'
 	}
@@ -44,20 +49,29 @@ var MatchSchema = new Schema({
 	created: {
 		type: Date,
 		default: Date.now
-	},
-	name: {
+	}
+	,name: {
 		type: String,
 		default: '',
 		trim: true,
 		required: 'Name cannot be blank'
-	},
-		start_date: { type: String},
-		end_date: { type: String},
-		location: [{ type: String }],
-		competitors: [{ type: String }],
-		results: [ResultSchema],
-		description: { type: String },
-		status: { type: String, enum: ['Pending', 'In Game', 'Done', 'Cancelled'], default:'Pending' },
+	}
+	,start_date: { type: String}
+	,end_date: { type: String}
+	,location: [{ type: String }]
+	,competitors: [{ type: String }]
+	,results: [ResultSchema]
+	,description: { type: String }
+	,status: { type: String, enum: ['Pending', 'In Game', 'Done', 'Cancelled'], default:'Pending' }
+	,user: {
+		type: Schema.ObjectId,
+		ref: 'User'
+	}
+	,image: {
+		type: String
+		,trim:true
+	}
+	, links: [{ type: String }]
 });
 
 /**
@@ -67,25 +81,33 @@ var TournamentSchema = new Schema({
 	created: {
 		type: Date,
 		default: Date.now
-	},
-	name: {
+	}
+	,name: {
 		type: String,
 		default: '',
 		trim: true,
 		required: 'Name cannot be blank'
-	},
-	start_date: { type: String, required: false },
-	end_date: { type: String, required: false },
-	type: { type: String, required: true, enum: ['Ad Hoc', 'Round Robin', 'Joust', 'Elimination', 'Soft Elimination'] },
-	matches: [MatchSchema],
-	competitors: [{
+	}
+	,start_date: { type: String, required: false }
+	,end_date: { type: String, required: false }
+	,type: { type: String, required: true, enum: ['Ad Hoc', 'Round Robin', 'Joust', 'Elimination', 'Soft Elimination'] }
+	,viewable: {type: String
+	  ,enum: ['Private', 'Public', 'Undisclosed']
+	  }
+	,matches: [MatchSchema]
+	,competitors: [{
 		type: Schema.ObjectId,
-		ref: 'Competitor'}],
-	description: { type: String},
-	user: {
+		ref: 'Competitor'}]
+	,description: { type: String}
+	,user: {
 		type: Schema.ObjectId,
 		ref: 'User'
 	}
+	,image: {
+		type: String
+		,trim:true
+	}
+	, links: [{ type: String }]
 });
 
 mongoose.model('Tournament', TournamentSchema);

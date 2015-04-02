@@ -50,7 +50,7 @@
 			});
 		}));
 
-		it('$scope.find() should create an array with at least one competitor object fetched from XHR', inject(function(Tournaments) {
+		it('$scope.find() should create an array with at least one tournament object fetched from XHR', inject(function(Tournaments) {
 			// Create sample tournament using the Tournaments service
 			var sampleTournament = new Tournaments({
 				name: 'Tournament Name',
@@ -59,7 +59,7 @@
 				type: 'Ad Hoc',
 				matches: [],
 				competitors: [],
-				description: 'Test Competitor'
+				description: 'Test Tournament'
 			});
 
 			// Create a sample tournament array that includes the new tournament

@@ -32,7 +32,7 @@ var getErrorMessage = function(err) {
 };
 
 /**
- * Create a tourament
+ * Create a tournament
  */
 exports.create = function(req, res) {
 	var tournament = new Tournament(req.body);
@@ -63,7 +63,6 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {
 	var tournament = req.tournament;
-	console.log(req.body);
 	tournament = _.extend(tournament, req.body);
 
 	tournament.save(function(err) {
@@ -133,7 +132,6 @@ exports.listByCompetitor = function(req, res) {
 				message: getErrorMessage(err)
 			});
 		} else {
-			console.log(tournaments);
 			res.jsonp(tournaments);
 		}
 	});
@@ -144,8 +142,6 @@ exports.listByCompetitor = function(req, res) {
 // TODO: remove?
 exports.competitorList = function(req, res) {
 	var competitorId = req.competitor.id;
-
-// db.tournaments.aggregate({ $match:{'matches.competitors':'5396a18ddeb6b8431e194d67'}},{$unwind:'$matches'},{$match:{ 'matches.competitors':'5396a18ddeb6b8431e194d67'}},{ $group: {_id: '$_id', matches: {$push:'$matches'}}})
 
 	Tournament.aggregate(
 	  { $match:{'matches.competitors':competitorId}}

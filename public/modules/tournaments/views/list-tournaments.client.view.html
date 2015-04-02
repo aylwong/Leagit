@@ -1,20 +1,30 @@
-<section data-ng-controller="TournamentsController" data-ng-init="find()">
+<section data-ng-controller="TournamentsController" data-ng-init="initTournamentList()">
     <div class="page-header">
         <h1>Tournaments</h1>
     </div>
     <div class="list-group">
-        <a data-ng-repeat="tournament in tournaments" data-ng-href="#!/tournaments/{{tournament._id}}" class="list-group-item">
+        <div data-ng-repeat="tournament in tournaments.list" class="list-group-item">
             <small class="list-group-item-text">{{tournament.created | date:'medium'}} / {{tournament.user.displayName}}</small>
-            <h4 class="list-group-item-heading">{{tournament.name}}</h4>
+            <h4 class="list-group-item-heading"><a data-ng-href="#!/tournaments/{{tournament._id}}">{{tournament.name}}</a></h4>
             <h4 class="list-group-item-heading">{{tournament.start_date}}</h4>
             <h4 class="list-group-item-heading">{{tournament.end_date}}</h4>
             <h4 class="list-group-item-heading">{{tournament.type}}</h4>
             <h4 class="list-group-item-heading">Matches:{{tournament.matches.length}}</h4>
-            <h4 class="list-group-item-heading">Competitors:{{tournament.competitors.length}}</h4>
+	    <ul>
+	      <li data-ng-repeat="match in tournament.matches" class="list-group-item-heading">
+		<a data-ng-href="#!/matches/{{match._id}}">{{ match.name }}</a>
+	     </li>
+	    </ul>
+            <h4 class="list-group-item-heading">Competitors:{{tournament.selected_competitors.length}}</h4>
+	    <ul>
+	      <li data-ng-repeat="competitor in tournament.selected_competitors" class="list-group-item-heading">
+		<a data-ng-href="#!/competitors/{{competitor.id}}">{{ competitor.name }}</a>
+	     </li>
+	    </ul>
             <p class="list-group-item-text">{{tournament.description}}</p>
-        </a>
+        </div>
     </div>
-    <div class="alert alert-warning text-center" data-ng-hide="!tournaments.$resolved || tournaments.length">
+    <div class="alert alert-warning text-center" data-ng-hide="!tournaments.list.$resolved || tournaments.list.length">
     	No tournaments yet, why don't you <a href="/#!/tournaments/create">create one</a>?
     </div>
 </section>

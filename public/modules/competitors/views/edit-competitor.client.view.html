@@ -17,16 +17,32 @@
                   <div class="control-label large-2 columns">
                     <label class="right inline" for="email">Email</label>
                   </div>
-                    <div class="controls large-8 columns left">
-                        <input type="text" data-ng-model="competitor.email" id="email" class="form-control" placeholder="Email" required>
-                    </div>
+                  <div class="controls large-8 columns left">
+                    <input type="text" data-ng-model="competitor.email" id="email" class="form-control" placeholder="Email" required>
+                  </div>
                 </div>
-                <div class="form-group">
+	        <div class="form-group row">
+		  <div class="control-label large-2 columns">
+		    <label class="right inline" for="state">State</label>
+		  </div>
+		  <div class="control large-8 columns left">
+		    <input type="text" data-ng-model="competitor.archived">
+		  </div>
+		</div>
+	        <div class="form-group row">
+		  <div class="control-label large-2 columns">
+		    <label class="right inline" for="state">Image Link</label>
+		  </div>
+		  <div class="control large-8 columns left">
+		    <input type="text" data-ng-model="competitor.image">
+		  </div>
+		</div>
+                <div class="form-group row">
                   <div class="control-label large-2 columns">
                     <label class="right inline" for="competitor.description">Description</label>
                   </div>
                     <div class="controls large-8 columns left">
-                        <textarea data-ng-model="competitor.description" id="description" class="form-control" cols="30" rows="10" placeholder="Description"></textarea>
+                        <textarea data-ng-model="competitor.description" id="description" class="form-control" cols="30" rows="4" placeholder="Description"></textarea>
                     </div>
                 </div>
                <br />

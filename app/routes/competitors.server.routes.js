@@ -12,7 +12,13 @@ module.exports = function(app) {
 	app.route('/competitors')
 		.get(competitors.list)
 		.post(users.requiresLogin, competitors.create);
-	// TODO complete routes
+
+	app.route('/competitors/search')
+		.get(competitors.currentList);
+	// TODO: possibly remove archive enumerations
+	app.route('/competitors/archiveenumerations')
+		.get(competitors.archiveEnumerations);
+
 	app.route('/competitors/:competitorId/tournaments')
 		.get(tournaments.listByCompetitor);
 	app.route('/competitors/:competitorId/matches')

@@ -96,7 +96,8 @@ module.exports = function(grunt) {
             options: {
                 reporter: 'spec',
                 require: 'server.js'
-            }
+            },
+	  NODE_ENV: 'test'
         },
         karma: {
             unit: {
@@ -131,4 +132,10 @@ module.exports = function(grunt) {
 
     // Test task.
     grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
+
+    // Test Server
+    grunt.registerTask('testServer', ['env:test', 'mochaTest']);
+
+    // Test Client
+    grunt.registerTask('testClient', ['env:test', 'karma:unit']);
 };

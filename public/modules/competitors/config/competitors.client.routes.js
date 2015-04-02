@@ -13,6 +13,10 @@ angular.module('competitors').config(['$stateProvider',
 			url: '/competitors/create',
 			templateUrl: 'modules/competitors/views/create-competitor.client.view.html'
 		}).
+		state('searchCompetitors', {
+			url: '/competitors/search',
+			templateUrl: 'modules/competitors/views/search-competitors.client.view.html'
+		}).
 		state('viewCompetitor', {
 			url: '/competitors/:competitorId',
 			templateUrl: 'modules/competitors/views/view-competitor.client.view.html'

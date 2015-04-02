@@ -3,115 +3,69 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-	Tournament = mongoose.model('Tournament'),
-	Competitor = mongoose.model('Competitor'),
-	_ = require('lodash');
+var mongoose = require('mongoose')
+	,Tournament = mongoose.model('Tournament')
+	,Competitor = mongoose.model('Competitor')
+	,Match = mongoose.model('Match')
+	,User = mongoose.model('User')
+	,errorService = require('../../app/services/errors.core')
+	,MatchService = require('../../app/services/matches')
+	,_ = require('lodash');
+
+var matchService = MatchService.createService(Tournament);
 
 /**
  * Get the error message from error object
  */
-var getErrorMessage = function(err) {
-	var message = '';
-
-	if (err.code) {
-		switch (err.code) {
-			case 11000:
-			case 11001:
-				message = 'Match already exists';
-				break;
-			default:
-				message = 'Something went wrong';
-		}
-	} else {
-		for (var errName in err.errors) {
-			if (err.errors[errName].message) message = err.errors[errName].message;
-		}
-	}
-
-	return message;
-};
-
-// Finds the index of the match for the tournament matches, based on Id
-// If it doesn't find it, it returns -1
-var findTournamentMatchIndex = function(tournament, match) {
-	for(var i=0;i<tournament.matches.length;i++)
-	{
-  	  if(tournament.matches[i]._id.toString() === match._id.toString())
-	  {
-	    return i;
-	  }
-	}
-
-	return -1;
-};
-
-// Updates the match in the tournament
-// Returns the index of the updated match, or -1 if no match found.
-var updateMatch = function(tournament,match) {
-	var matchIndex = findTournamentMatchIndex(tournament,match);
-
-	if(matchIndex>=0)
-	{
-	  _.extend(tournament.matches[matchIndex], match);
-	}
-
-	return matchIndex;
-};
-
-
-// Remove the match in the tournament
-var removeMatch = function(tournament,match) {
-	var matchIndex = findTournamentMatchIndex(tournament,match);
-	if(matchIndex>=0) {
-		tournament.matches.splice(matchIndex,1);
-	}
-
-	// -1 means failed to remove	
-	return matchIndex;
-};
 
 // Error send
-var sendError = function(err) {
-	return res.send(400, {
-		message: getErrorMessage(err)
-	});
-}
+var sendError = errorService.sendError;
 
-// Save the Tournament
-var saveTournament = function(tournament,res) {
-  tournament.save(function(err) {
-	if (err) {
-	  return res.send(400, {
-	    message: getErrorMessage(err)
-	  });
+// Get Specified Tournament from any places it could be
+// first check req.tournament.
+// then check req.param
+// then check req.query
+var getTournamentId = function(req) {
+	if(req.tournament) {
+	  return req.tournament.id;
+	  // tournament already recieved, no need to retrieve again.
+	} else if(req.params.tournamentId) {
+	  return req.params.tournamentId;
+	} else if (req.query.tournamentId) {
+	  return req.query.tournamentId;
 	} else {
-	  res.jsonp(tournament);
+	  return null;
 	}
-  });
 };
 
-//Gets the Full tournament
-// Returns the promise for the full tournament.
-var getFullTournament = function(tournamentId) {
-	var tournamentPromise =	Tournament.findById(tournamentId).exec();
-	tournamentPromise.onReject(sendError);
-
-	return tournamentPromise;
-};
 
 // * Create a match, by finding tournament
 // tournament to add to is in request (mid tier?)
 exports.create = function(req, res)
 {
-	var match = req.body;
-	var tournamentPromise = getFullTournament(req.tournament._id);
+	console.log('recieved create request');
 
-	tournamentPromise.then( function(tournament) {
-		tournament.matches.push(match);
-		saveTournament(tournament,res);
+	var newMatch = new Match(req.body);
+
+	newMatch.user = req.user.id;
+
+	var tournamentId = getTournamentId(req);
+
+	var tournamentPromise =	matchService.getFullTournament(tournamentId);
+
+	tournamentPromise.onReject(sendError(res));
+
+	tournamentPromise.then(function(tournament) {
+		matchService.addMatch(tournament, newMatch);
+		matchService.saveTournament(tournament,function(err) {
+		  if(err) {
+			  sendError(res)(err);
+			} else {
+		    res.jsonp(newMatch);
+		  }
+	    });
 	});
-}
+};
 
 // * Show the current match
 exports.read = function(req, res) {
@@ -126,57 +80,111 @@ exports.read = function(req, res) {
 // * Update a match
 exports.update = function(req, res) {
 	var match = req.match;
+
+	// do not update user who created it.
+	if(req.body.user) {
+	  console.log('delete user');
+	  delete req.body.user;
+	}
+	if(match.user) {
+
+	  delete match.user;
+	}
+
 	var newMatch = _.extend(match,req.body);
 	
-	var tournamentPromise =	getFullTournament(req.tournament._id);
-	
+	var tournamentPromise =	matchService.getFullTournament(req.tournament._id);
+
+	tournamentPromise.onReject(sendError(res));
+
 	tournamentPromise.then(function(tournament) {
-		updateMatch(tournament, newMatch);
-		saveTournament(tournament,res);
+		matchService.updateMatch(tournament, newMatch);
+		matchService.saveTournament(tournament,function(err) {
+		  if(err) {
+			  sendError(res)(err);
+			} else {
+		    res.jsonp(newMatch);
+		  }
+	    });
 	});
 };
 
-// * Delete a tournament
+// * Delete a match
 exports.delete = function(req, res) {
 	var match = req.match;
-	var tournamentPromise = getFullTournament(req.tournament._id);
+	var tournamentPromise = matchService.getFullTournament(req.tournament._id);
 
 	tournamentPromise.then(function(tournament) {
-		removeMatch(tournament,match);
-		saveTournament(tournament,res);
+	  matchService.removeMatch(tournament,match);
+	  matchService.saveTournament(tournament,function(err) {
+	    if(err) {
+	      sendError(res)(err);
+	    } else {
+	      res.jsonp(tournament.id);
+	    }
+	  });
 	});
 };
 
 // * List of Match
 exports.list = function(req, res) {
-	Tournament.find({user: req.user.id}).sort('-created').populate('user', 'displayName').exec(function(err, tournament) {
-		if (err) {
-			return res.send(400, {
-				message: getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(tournament);
-		}
+	var promise = matchService.findTournamentsForUser(req.user.id);
+	promise.onReject(sendError(res));
+	promise.then(function(tournament) {
+		res.jsonp(tournament);
 	});
 };
 
 // get list of Tournaments with Matches for competitor
 exports.listByCompetitor = function(req, res) {
 	var competitorId = req.competitor.id;
+	var promise = matchService.getMatchesforCompetitor(competitorId);
+	promise.onReject(sendError(res));
+	promise.then(function(tournaments) {
+	  res.jsonp(tournaments);
+	});
+};
 
-	Tournament.aggregate(
-	  { $match:{'matches.competitors':competitorId}}
-	  ,{$unwind:'$matches'}
-	  ,{$match:{ 'matches.competitors':competitorId}}
-	  ,{ $group: {_id: '$_id',name:{$first:'$name'}, matches: {$push:'$matches'}}}
-	  , function (err, tournaments) {
-	    if (err) { 
-	      return res.send(400, { message: getErrorMessage(err)});
-	    } else {
-	      res.jsonp(tournaments);
-	    }
-	  }
-	);
+// Get UserIds to search for Tournaments
+var getUserDisplayNamesForTournamentMatches = function(tournaments) {
+	var ids = tournaments.map(function(tournament) {
+	  var matchIds = tournament.matches.map(function(match) {
+	    return mongoose.Types.ObjectId(match.user);
+	  });
+	  return matchIds;
+	}).reduce(function(prevValue,curValue,index,array) {
+	  return prevValue.concat(curValue);
+	});
+
+	if(ids.length<=0) {
+	  ids=[];
+	}
+
+
+	// return Promise that gets users.
+	return  User.find()
+	  .where('_id').in(ids)
+	  .select('id displayName')
+	  .exec();
+
+};
+
+// replace userIds for tournament matches into user+displaynames
+var populateUserDisplayNamesToTournamentMatches = function(tournaments,userNames) {
+	var ids = tournaments.forEach(function(tournament) {
+	  tournament.matches.forEach(function(match) {
+	    // replace user with user.
+	    userNames.some(function(currentValue,index) {
+	      if(currentValue.id.toString()===match.user.toString())
+		{
+		  match.user = {id:currentValue.id, displayName:currentValue.displayName};
+		  return true;
+		} else {
+		  return false;
+		}
+	    });
+	  });
+	});
 };
 
 /**
@@ -184,27 +192,32 @@ exports.listByCompetitor = function(req, res) {
  */
 
 exports.matchByID = function(req, res, next, id) {
-	Tournament.aggregate(
-	  { $match:{'matches._id':mongoose.Types.ObjectId(id)}}
-	  ,{$unwind:'$matches'}
-	  ,{$match:{ 'matches._id':mongoose.Types.ObjectId(id)}}
-	  ,{ $group: {_id: '$_id',name:{$first:'$name'},competitors: {$first:'$competitors'}, matches: {$push:'$matches'}, user:{$first:'$user'}}}
+	var promise = matchService.getMatchById(id
 	  , function (err, tournaments) {
 		// need to get 1 tournament, and 1 match
-	    if (err || tournaments.length!==1 || tournaments[0].matches.length!==1) { 
-	      return next(err);
-	    } else {
-		// if there is a match, return with its tournament.
-	      req.tournament = tournaments[0];
-	      req.match=tournaments[0].matches[0];
-	      next();
-	    }
+	      if (err || tournaments.length!==1 || tournaments[0].matches.length!==1) { 
+	        return next(err);
+	      } else {
+	  	// if there is a match, return with its tournament.
+		// get Usernames
+		var userPromise = getUserDisplayNamesForTournamentMatches(tournaments);
+		 userPromise
+		.then(function(users) {
+		  populateUserDisplayNamesToTournamentMatches(tournaments,users);
+	        req.tournament = tournaments[0];
+	        req.match=tournaments[0].matches[0];
+	        next();
+		}, function(err) {
+		  return next(err);
+		});
+	      }
 	  }
   	);
 };
 
 exports.tournamentByID = function(req, res, next, id) {
-	Tournament.findById(id).populate('user', 'displayName').exec(function(err, tournament) {
+	matchService.findTournamentById(id
+	  ,function(err, tournament) {
 		if (err) return next(err);
 		if (!tournament) return next(new Error('Failed to load tournament ' + id));
 		req.tournament = tournament;
@@ -232,3 +245,26 @@ exports.hasAuthorization = function(req, res, next) {
 	}
 	next();
 };
+
+// Has Create Authorization based on TournamentID param
+exports.hasCreateAuthorization = function(req, res, next) {
+	console.log('auth');
+	var tournamentId = getTournamentId(req);
+
+	// get tournament user (double checking to make sure correct user
+	var tournamentPromise = matchService.findTournamentUser(tournamentId);
+
+	tournamentPromise.then(function(tournament) {
+
+	  // Tournament ID to check.
+	  if( !('id' in tournament) || tournament.user.id !== req.user.id) {
+	    console.log('rejected!');
+	    return res.send(403, {
+	      message: 'User is not authorized'
+	    });
+	  }
+	  console.log('auth success');
+	  next();
+	});
+};
+

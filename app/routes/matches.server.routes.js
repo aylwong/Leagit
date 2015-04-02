@@ -15,7 +15,8 @@ module.exports = function(app) {
 
 	// Match Routes
 	app.route('/matches')
-		.get(matches.list);
+		.get(matches.list)
+		.post(users.requiresLogin,matches.hasCreateAuthorization,matches.create);
 
 	app.route('/matches/:matchId')
 		.get(matches.read)
@@ -25,9 +26,7 @@ module.exports = function(app) {
 	app.route('/matches/:matchId/competitors')
 		.get(competitors.listByMatch);
 
-	app.route('/matches/add/:tournamentId')
-	  .post(users.requiresLogin,tournaments.hasAuthorization,matches.create);
-	// TODO possibly add 'add, edit and delete'
+	// app.route('/tournaments/:tournamentId/matches/') - see tournaments routes
 
 	// Finish by binding the tournament middleware
 	app.param('tournamentId', matches.tournamentByID);

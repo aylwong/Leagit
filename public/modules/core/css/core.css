@@ -11,3 +11,8 @@
 	border-style: solid;
 	border-width: .2em;
 }
+
+.portraitImage {
+max-height:14em;
+max-width:14em
+}

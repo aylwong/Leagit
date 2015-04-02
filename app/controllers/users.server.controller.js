@@ -45,7 +45,9 @@ exports.signup = function(req, res) {
 
 	// Add missing user fields
 	user.provider = 'local';
-	user.displayName = user.firstName + ' ' + user.lastName;
+	if(!user.displayName) {
+	  user.displayName = user.firstName + ' ' + user.lastName;
+	}
 
 	// Then save the user 
 	user.save(function(err) {
@@ -107,7 +109,7 @@ exports.update = function(req, res) {
 		// Merge existing user
 		user = _.extend(user, req.body);
 		user.updated = Date.now();
-		user.displayName = user.firstName + ' ' + user.lastName;
+	//	user.displayName = user.firstName + ' ' + user.lastName;
 
 		user.save(function(err) {
 			if (err) {
@@ -199,6 +201,37 @@ exports.signout = function(req, res) {
  */
 exports.me = function(req, res) {
 	res.jsonp(req.user || null);
+};
+
+
+/**
+ * User Display name
+ */
+exports.getDisplayNames = function(req, res) {
+	if(!req.query.ids) {
+		res.send(400, {
+		message:'must include users to get displaynames'
+		});
+	} else {
+	var ids = req.query.ids.split(',');
+
+	ids = ids.map( function(id) {
+	  return mongoose.Types.ObjectId(id);
+	});
+	
+	  User.find()
+	    .where('_id').in(ids)
+	    .select('id displayName')
+	    .exec(function(err,usernames) {
+	      if(err) {
+		res.send(400, {
+			message: 'Users not found'
+		});
+		} else {
+	 	  res.jsonp(usernames);
+		}
+	    });
+	}
 };
 
 /**
