@@ -1,0 +1,36 @@
+<div class="row">  
+  <div class="row">
+    <div class="small-8 columns">
+      <div class="row">
+   	<div class="control-label small-4 columns">
+	  <label class="right inline" for="name">Name</label>
+	</div>
+    	<div class="controls small-8 columns left">
+      	  <input type="text" data-ng-model="ctrl.competitor.name" id="name" class="form-control" placeholder="Name" required>
+  	</div>
+      </div>
+      <div class="row">
+        <div class="control-label small-4 columns">
+          <label class="right inline" for="email">Email</label>
+        </div>
+	<div class=" small-8 columns left">
+      	  <input type="text" data-ng-model="ctrl.competitor.email" id="email" class="form-control" placeholder="Email" required>
+        </div>
+      </div>
+    </div>
+    <div class="small-4 columns">
+      <div class="row">
+   	<div class="small-12 columns">
+          <a href="" data-ng-click="ctrl.create(ctrl.competitor)" class="button">Create</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 columns">
+      <div data-ng-show="ctrl.error" class="text-danger">
+	<strong>{{ctrl.error}}</strong>
+      </div>
+    </div>
+  </div>
+</div>
