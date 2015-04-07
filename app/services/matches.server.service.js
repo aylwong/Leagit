@@ -81,14 +81,14 @@ var getMatchById = function(id, resolve) {
 };
 
 // get Matches for Competitor
-var getMatchesForCompetitor = function (competitorId,resolve) {
-	_Tournament.aggregate(
+// Returns a query object, aggregate
+var getMatchesForCompetitor = function (competitorId,result) {
+	return 	_Tournament.aggregate(
 	  { $match:{'matches.competitors':competitorId}}
 	  ,{$unwind:'$matches'}
 	  ,{$match:{ 'matches.competitors':competitorId}}
 	  ,{ $group: {_id: '$_id',name:{$first:'$name'}, matches: {$push:'$matches'}}}
-	  , resolve
-	);
+	).exec(result);
 };
 
 // Find the tournament for User
@@ -107,10 +107,72 @@ var findTournamentById = function(tournamentId,result) {
 // returns a promise with the tournament and user.
 var findTournamentUser = function(tournamentId,result) {
 	return _Tournament.findById(tournamentId,{id: 1, name: 1, user: 1}).populate('user', 'displayName').exec(result);
-}
+};
 
+// Get Specified Tournament from any places it could be
+// first check req.tournament.
+// then check req.param
+// then check req.query
+var getTournamentId = function(req) {
+	if(req.tournament) {
+	  return req.tournament.id;
+	  // tournament already recieved, no need to retrieve again.
+	} else if(req.params.tournamentId) {
+	  return req.params.tournamentId;
+	} else if (req.query.tournamentId) {
+	  return req.query.tournamentId;
+	} else {
+	  return null;
+	}
+};
+
+// Get UserIds to search for Tournaments
+var getUserDisplayNamesForTournamentMatches = function(tournaments,userModel) {
+	var ids = tournaments.map(function(tournament) {
+	  var matchIds = tournament.matches.map(function(match) {
+	    return mongoose.Types.ObjectId(match.user);
+	  });
+	  return matchIds;
+	}).reduce(function(prevValue,curValue,index,array) {
+	  return prevValue.concat(curValue);
+	});
+
+	if(ids.length<=0) {
+	  ids=[];
+	}
+
+	// return Promise that gets users.
+	// TODO: move this part of code to its own service
+	return  userModel.find()
+	  .where('_id').in(ids)
+	  .select('id displayName')
+	  .exec();
+};
+
+// replace userIds for tournament matches into user+displaynames
+var populateUserDisplayNamesToTournamentMatches = function(tournaments,userNames) {
+	var ids = tournaments.forEach(function(tournament) {
+	  tournament.matches.forEach(function(match) {
+	    // replace user with user.
+	    userNames.some(function(currentValue,index) {
+	      if(currentValue.id.toString()===match.user.toString())
+		{
+		  match.user = {id:currentValue.id, displayName:currentValue.displayName};
+		  return true;
+		} else {
+		  return false;
+		}
+	    });
+	  });
+	});
+};
+
+// Functions to use
 return {
   findTournamentMatchIndex: findTournamentMatchIndex
+  , getTournamentId: getTournamentId
+  , getUserDisplayNamesForTournamentMatches: getUserDisplayNamesForTournamentMatches
+  , populateUserDisplayNamesToTournamentMatches: populateUserDisplayNamesToTournamentMatches
   , updateMatch: updateMatch
   , removeMatch: removeMatch
   , addMatch: addMatch

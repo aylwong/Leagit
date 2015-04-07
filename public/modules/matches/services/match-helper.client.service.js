@@ -46,7 +46,6 @@ angular.module('matches').factory('Match-Helper', ['$filter', 'Core-Helper', fun
 		match.location = new_match.location;
 			
 		match.competitors = new_match.competitors;	
-		match.results = new_match.competitors;
 		match.results = new_match.results;
 		match.description = new_match.description;
 		match.status = new_match.status;

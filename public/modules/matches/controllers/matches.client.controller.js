@@ -12,23 +12,24 @@ angular.module('matches')
 	$scope.tournamentId = [];
 
 	// function 
-	// to add new match, using new match added (move to separate file?)
-	$scope.add_new_match = function(new_match) {
-	  var match = {};
-	  match.name = new_match.name;
-	  match.start_date = new_match.start_date;
-	  match.end_date = new_match.end_date;
-	  match.location = new_match.location;
+//	$scope.add_new_match = function(new_match) {
+//	  var match = {};
+//	  match.name = new_match.name;
+//	  match.start_date = new_match.start_date;
+//	  match.end_date = new_match.end_date;
+//	  match.location = new_match.location;
 			
-	  match.competitors = [];
+//	  match.competitors = [];
 
-	  match.results = new_match.results;
-	  match.description = new_match.description;
-	  match.status = 'Pending';
-	  addCompetitorsToMatch(match);
+	  // Fill Results
+//	  fillResultsForMatch(new_match,new_match.firstResult,new_match.competitor_winners,new_match.competitor_losers);
+//	  match.results = new_match.results;
+//	  match.description = new_match.description;
+//	  match.status = 'Pending';
+//	  addCompetitorsToMatch(match);
 
-	  $scope.tournament.matches.push(match);
-	};
+//	  $scope.tournament.matches.push(match);
+//	};
 
 	// modify match;
 	$scope.update_match = function(modifiedMatch) {
@@ -76,8 +77,9 @@ angular.module('matches')
 
 	  // make the competitors the list of selected competitors;
 	  newMatch.competitors = CHelper.listToIds(newMatch.selected_competitors);
+	  fillResultsForMatch(newMatch,newMatch.firstResult,newMatch.competitor_winners,newMatch.competitor_losers);
 	  MHelper.copyMatchData(match, newMatch);
-
+	  console.log(match);
 	  match.$create({tournamentId:$scope.tournament._id} , function() {
 	      $location.path('tournaments/' + $scope.tournament._id);
 	    }, function(errorResponse) {
@@ -200,12 +202,13 @@ angular.module('matches')
 			match.competitor_losers.splice(index,1);
 		   }
 		});
-		
 	};
+
+	// A competitor was selected
 	$scope.matches.competitorSelected = function(match) {
 	  match.selected_competitors.forEach(function(competitor) {
-		var competitorId = CHelper.getId(competitor);
-		var winners = match.competitor_winners.filter(function(win) {
+	    var competitorId = CHelper.getId(competitor);
+	    var winners = match.competitor_winners.filter(function(win) {
 		   return CHelper.getId(win)===competitorId;
 		});
 		var losers = match.competitor_losers.filter(function(lose) {
@@ -213,7 +216,7 @@ angular.module('matches')
 		});
 		
 		if(winners.length<=0 && losers.length<=0) {
-		  if(match.results[0].key===TResults.key.win) {
+		  if(match.firstResult.key===TResults.key.win) {
 		  match.competitor_losers.push(competitor);
 		  }
 		} 
@@ -284,7 +287,6 @@ angular.module('matches')
 
 	      var competitorsQ = $scope.init_competitors(competitorList);
 		return competitorsQ.$promise;
-
 		// end
 	    });
 
@@ -314,7 +316,6 @@ angular.module('matches')
 	$scope.initEditMatch = function() {
 	  var viewPromise = $scope.findOne();
 	  viewPromise.then(function() {
-
 	    $scope.$watch('match.selected_competitors' 
 	      , function() {
 		$scope.matches.competitorSelected($scope.match);
@@ -331,7 +332,6 @@ angular.module('matches')
 	      var selected_competitors = CHelper.idsToList(result.competitors, $scope.match.selected_competitors);
 	      result.competitors = selected_competitors;
 	    });
-
 	  });
 	};
 
@@ -380,12 +380,23 @@ angular.module('matches')
 	    return $scope.init_competitors(competitorList).$promise;
 	  });
 
-	  competitorPromise.then(function(competitors) {
+	  var viewPromise = competitorPromise.then(function(competitors) {
 	    var selectedCompetitors = MHelper.getMatchCompetitorList($scope.match,competitors);
 	    $scope.match.selectable_competitors = selectedCompetitors;
 	    $scope.match.selected_competitors = [];
+	    $scope.match.competitor_winners = [];
+	    $scope.match.competitor_losers = [];
 	    $scope.match.competitor_list = CHelper.filterListOnSelected(selectedCompetitors);
 	  });
+
+	  viewPromise.then(function() {
+	    $scope.$watch('match.selected_competitors' 
+	      , function() {
+		$scope.matches.competitorSelected($scope.match);
+		$scope.matches.competitorUnselected($scope.match);
+	    },true);
+	  });
+
 	};
   }
 ]);

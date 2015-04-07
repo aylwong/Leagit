@@ -56,21 +56,24 @@
   </div>
   <br />
   <div class="row">
-    <div class="large-2 columns left"> Results</div>
-    <div class="large-8 columns left">
-      <select ng-model="match.results[0]" ng-options="result.name for result in matches.available_results">
-      </select>
-    </div>
-  </div>
-  <br />
-  <div class="row">
     <div class="large-2 columns left"> Competitors</div>
     <div class="large-8 columns left">
       <competitor-search list="match.selectable_competitors" parameters="tournamentId" ></competitor-search>
       <competitor-selects selectable="match.selectable_competitors" selected="match.selected_competitors"></competitor-selects>
     </div>
   </div>
-<br />
+  <br />
+  <div class="row">
+    <div class="large-2 columns left"> Results</div>
+    <div class="large-2 columns left">
+      <select ng-model="match.firstResult" ng-options="result.name for result in matches.available_results" data-ng-change="matches.changeResult(match.firstResult)">
+      </select>
+    </div>
+    <div class="large-6 columns left">
+      <competitor-selects selectable="match.competitor_winners" selected="match.competitor_losers" selectableheader="'Won'" selectedheader="'Lost'" ></competitor-selects>
+    </div>
+  </div>
+  <br />
   <div class="row">
     <div class="large-10 columns left">
       <input ng-click="create_match(match)" value="Create" class="button large-3 columns right">

@@ -22,11 +22,8 @@ module.exports = function(app) {
 		.get(matches.read)
 		.put(users.requiresLogin, matches.hasAuthorization, matches.update)
 		.delete(users.requiresLogin, matches.hasAuthorization, matches.delete);
-	// TODO - route to competitors
 	app.route('/matches/:matchId/competitors')
 		.get(competitors.listByMatch);
-
-	// app.route('/tournaments/:tournamentId/matches/') - see tournaments routes
 
 	// Finish by binding the tournament middleware
 	app.param('tournamentId', matches.tournamentByID);

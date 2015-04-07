@@ -3,9 +3,12 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-	Tournament = mongoose.model('Tournament'),
-	_ = require('lodash');
+var mongoose = require('mongoose')
+	,Tournament = mongoose.model('Tournament')
+	,TournamentsMiddlewareService = require('../../app/services/tournaments.middleware')
+	,_ = require('lodash');
+
+var tournamentsMiddlewareService = TournamentsMiddlewareService.createService(Tournament);
 
 /**
  * Get the error message from error object
@@ -161,16 +164,18 @@ exports.competitorList = function(req, res) {
 /**
  * Tournament middleware
  */
-exports.tournamentByID = function(req, res, next, id) {
-              // TODO: populate competitor, match
-	Tournament.findById(id).populate('user', 'displayName').exec(function(err, tournament) {
-		if (err) return next(err);
-		if (!tournament) return next(new Error('Failed to load tournament ' + id));
-		req.tournament = tournament;
-		console.log(req.tournament.user);
-		next();
-	});
-};
+exports.tournamentByID = tournamentsMiddlewareService.tournamentById;
+
+//exports.tournamentByID = function(req, res, next, id) {
+  //            // TODO: populate competitor, match
+//	Tournament.findById(id).populate('user', 'displayName').exec(function(err, tournament) {
+//		if (err) return next(err);
+//		if (!tournament) return next(new Error('Failed to load tournament ' + id));
+//		req.tournament = tournament;
+//		console.log(req.tournament.user);
+//		next();
+//	});
+//};
 
 /**
  * Tournament authorization middleware

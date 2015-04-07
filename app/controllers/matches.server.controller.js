@@ -10,9 +10,15 @@ var mongoose = require('mongoose')
 	,User = mongoose.model('User')
 	,errorService = require('../../app/services/errors.core')
 	,MatchService = require('../../app/services/matches')
+	,CompetitorsMiddlewareService = require('../../app/services/competitors.middleware')
+	,TournamentsMiddlewareService = require('../../app/services/tournaments.middleware')
+	,MatchesMiddlewareService = require('../../app/services/matches.middleware')
 	,_ = require('lodash');
 
 var matchService = MatchService.createService(Tournament);
+var competitorsMiddlewareService = CompetitorsMiddlewareService.createService(Competitor);
+var tournamentsMiddlewareService = TournamentsMiddlewareService.createService(Tournament);
+var matchesMiddlewareService = MatchesMiddlewareService.createService(Tournament);
 
 /**
  * Get the error message from error object
@@ -25,19 +31,7 @@ var sendError = errorService.sendError;
 // first check req.tournament.
 // then check req.param
 // then check req.query
-var getTournamentId = function(req) {
-	if(req.tournament) {
-	  return req.tournament.id;
-	  // tournament already recieved, no need to retrieve again.
-	} else if(req.params.tournamentId) {
-	  return req.params.tournamentId;
-	} else if (req.query.tournamentId) {
-	  return req.query.tournamentId;
-	} else {
-	  return null;
-	}
-};
-
+var getTournamentId = matchService.getTournamentId;
 
 // * Create a match, by finding tournament
 // tournament to add to is in request (mid tier?)
@@ -50,7 +44,6 @@ exports.create = function(req, res)
 	newMatch.user = req.user.id;
 
 	var tournamentId = getTournamentId(req);
-
 	var tournamentPromise =	matchService.getFullTournament(tournamentId);
 
 	tournamentPromise.onReject(sendError(res));
@@ -138,7 +131,7 @@ exports.list = function(req, res) {
 // get list of Tournaments with Matches for competitor
 exports.listByCompetitor = function(req, res) {
 	var competitorId = req.competitor.id;
-	var promise = matchService.getMatchesforCompetitor(competitorId);
+	var promise = matchService.getMatchesForCompetitor(competitorId);
 	promise.onReject(sendError(res));
 	promise.then(function(tournaments) {
 	  res.jsonp(tournaments);
@@ -147,92 +140,24 @@ exports.listByCompetitor = function(req, res) {
 
 // Get UserIds to search for Tournaments
 var getUserDisplayNamesForTournamentMatches = function(tournaments) {
-	var ids = tournaments.map(function(tournament) {
-	  var matchIds = tournament.matches.map(function(match) {
-	    return mongoose.Types.ObjectId(match.user);
-	  });
-	  return matchIds;
-	}).reduce(function(prevValue,curValue,index,array) {
-	  return prevValue.concat(curValue);
-	});
-
-	if(ids.length<=0) {
-	  ids=[];
-	}
-
-
-	// return Promise that gets users.
-	return  User.find()
-	  .where('_id').in(ids)
-	  .select('id displayName')
-	  .exec();
-
+  return matchService.getUserDisplayNamesForTournamentMatches(tournaments,User);
 };
 
 // replace userIds for tournament matches into user+displaynames
-var populateUserDisplayNamesToTournamentMatches = function(tournaments,userNames) {
-	var ids = tournaments.forEach(function(tournament) {
-	  tournament.matches.forEach(function(match) {
-	    // replace user with user.
-	    userNames.some(function(currentValue,index) {
-	      if(currentValue.id.toString()===match.user.toString())
-		{
-		  match.user = {id:currentValue.id, displayName:currentValue.displayName};
-		  return true;
-		} else {
-		  return false;
-		}
-	    });
-	  });
-	});
-};
+// function(tournaments, UserNames)
+var populateuserdisplaynamestotournamentmatches = matchService.populateUserDisplayNamesToTournamentMatches; 
 
 /**
  * Tournament middleware
  */
 
 exports.matchByID = function(req, res, next, id) {
-	var promise = matchService.getMatchById(id
-	  , function (err, tournaments) {
-		// need to get 1 tournament, and 1 match
-	      if (err || tournaments.length!==1 || tournaments[0].matches.length!==1) { 
-	        return next(err);
-	      } else {
-	  	// if there is a match, return with its tournament.
-		// get Usernames
-		var userPromise = getUserDisplayNamesForTournamentMatches(tournaments);
-		 userPromise
-		.then(function(users) {
-		  populateUserDisplayNamesToTournamentMatches(tournaments,users);
-	        req.tournament = tournaments[0];
-	        req.match=tournaments[0].matches[0];
-	        next();
-		}, function(err) {
-		  return next(err);
-		});
-	      }
-	  }
-  	);
+	return matchesMiddlewareService.matchByIdWithUser(req,res,next,id,matchService,User);
 };
 
-exports.tournamentByID = function(req, res, next, id) {
-	matchService.findTournamentById(id
-	  ,function(err, tournament) {
-		if (err) return next(err);
-		if (!tournament) return next(new Error('Failed to load tournament ' + id));
-		req.tournament = tournament;
-		next();
-	});
-};
+exports.tournamentByID = tournamentsMiddlewareService.tournamentById;
 
-exports.competitorByID = function(req, res, next, id) {
-	Competitor.findById(id).populate('user', 'displayName').exec(function(err, competitor) {
-		if (err) return next(err);
-		if (!competitor) return next(new Error('Failed to load tournament ' + id));
-		req.competitor = competitor;
-		next();
-	});
-};
+exports.competitorByID = competitorsMiddlewareService.competitorById;
 
 /**
  * Tournament authorization middleware
