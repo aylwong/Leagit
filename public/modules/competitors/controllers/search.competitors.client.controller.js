@@ -6,18 +6,14 @@ angular.module('competitor_searches').controller('CompetitorSearchesController',
 	
 	var ctrl = this;
 
-	ctrl.competitors_list=[{name:'example t1'}];
-
-	ctrl.searchTerm = "";
+	ctrl.competitors_list=[{name:''}];
+	ctrl.searchTerm = '';
 	ctrl.byEmailToo = false;
 	ctrl.orSearch = false;
 	
-	ctrl.initialParams = $scope.initial_parameters;	
-
 	ctrl.search = function(searchText) {
 
 	  var searchParams = createInitialParams(searchText);
-
 	  var competitors = CompetitorsSearch.query(searchParams);
 
 	  competitors.$promise.then(function(competitors) {
@@ -30,8 +26,8 @@ angular.module('competitor_searches').controller('CompetitorSearchesController',
 	  var params = {};
 
 	  // Add entry to params
-	  if(ctrl.initialParams) {
-	    angular.extend(params,ctrl.initialParams);
+	  if($scope.initial_parameters) {
+	   angular.extend(params,$scope.initial_parameters);	
 	  }
 
 	  // Merge. 
@@ -46,6 +42,6 @@ angular.module('competitor_searches').controller('CompetitorSearchesController',
 	  }
 
 	  return params;
-	}
+	};
   }
 ]);

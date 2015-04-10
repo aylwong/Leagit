@@ -1,30 +1,27 @@
 'use strict';
 
-angular.module('competitors').controller('CompetitorCreateController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors',
-function($scope, $stateParams, $location, Authentication, Competitors) {
+angular.module('competitors').controller('CompetitorCreateController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors','Competitor-Helper',
+function($scope, $stateParams, $location, Authentication, Competitors,CompHelper) {
 	$scope.authentication = Authentication;
 	var ctrl = this;
 	ctrl.competitor_selected_list = $scope.competitor_selected_list;
+	var blankCompetitor = {
+	  name:''
+	  ,email:''
+	  ,description:''
+	};
 
-	var getNewCompetitor = function(name,email,description)
+	var getNewCompetitor = function(competitorObj)
 	{
-	  var competitor = new Competitors({
-	    name:name
-	    ,email:email
-	    ,description:description
-	  });
+	  var competitor = CompHelper.createNewCompetitor(competitorObj);
 
 	  return competitor;
 	};
 
-	ctrl.competitor = getNewCompetitor('','','');
+	ctrl.competitor = CompHelper.createNewCompetitor(blankCompetitor);
 
 	ctrl.create = function(new_competitor) {
-	  var competitor = new Competitors({
-	    name: new_competitor.name
-	    ,email: new_competitor.email
-	    ,description: new_competitor.description
-	  });
+	  var competitor = CompHelper.createNewCompetitor(new_competitor);
 
 	  competitor.$save(function(competitor) {
 	    $scope.competitor_selected_list.push(competitor);
@@ -33,6 +30,6 @@ function($scope, $stateParams, $location, Authentication, Competitors) {
 	    $scope.error = errorResponse.data.message;
 	  });
 
-	  ctrl.competitor = getNewCompetitor('','','');
+	  ctrl.competitor = CompHelper.createNewCompetitor(blankCompetitor);
 	};
 }]);

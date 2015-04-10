@@ -23,7 +23,7 @@ angular.module('core').factory('Core-Helper', ['$filter', function($filter) {
 	// returns whether the two objects have the same Ids as strings
 	var sameIdStrings = function(obj1, obj2) {
 	  return getId(obj1).toString() === getId(obj2).toString();
-	}
+	};
 	
 	/// transform competitor objects to ids.
 	/// competitors = list to transform
@@ -99,13 +99,40 @@ angular.module('core').factory('Core-Helper', ['$filter', function($filter) {
 	       return compareFunction(newEntry,oldEntry);
 	    });
 
-	    if(comparison == false) {
+	    if(comparison === false) {
 	      currentArray.push(newEntry);
-	    } else {
-	    } 
+	    }
 	  });
 	  return currentArray;
 	};
+
+// Move Array Item from one to another array.
+    var moveArrayItem = function(item,popArray,pushArray) {
+      var itemIndex = popArray.indexOf(item);
+      if(itemIndex>=0) {
+	popArray.splice(itemIndex,1);
+      }
+
+      mergeArrays(pushArray, [item], sameIdStrings);
+    };
+
+
+    // remove all objects from child list if not in master list, based
+    // on object ids
+    var removeFromListIfNotInMasterList = function(childList,masterList) 
+    {
+      childList.forEach(function(competitor,index) {
+  	var competitorId = getId(competitor);
+	var selected = masterList.some(function(comp) 
+ 	{  
+	  return getId(comp) === competitorId;
+	});
+	
+  	if(!selected) {
+	  childList.splice(index,1);
+	}
+      });
+    };
 
 // return functions that service will use
     return {
@@ -114,7 +141,9 @@ angular.module('core').factory('Core-Helper', ['$filter', function($filter) {
 	,idsToList: idsToList
 	,getInArrayById: getInArrayById
 	,mergeArrays: mergeArrays
+	,moveArrayItem: moveArrayItem
 	,getId: getId
 	,sameIdStrings: sameIdStrings
+        ,removeFromListIfNotInMasterList: removeFromListIfNotInMasterList 
 	};
 }]);

@@ -1,23 +1,54 @@
 <section data-ng-controller="CompetitorsController" data-ng-init="find()">
+  <div class="row">
+    <div class="columns small-6 left ">
+      <small><a href="#!/competitors/search">search</a></small>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns small-6">
+    <h1>Competitors</h1>
+    </div>
+  </div>
+  <div data-ng-repeat="competitor in competitors">
     <div class="row">
-      <div class="columns small-3 left ">
+      <div class="small-2 columns left">
+        <label class="right">competitor</label>
       </div>
-      <div class="columns small-6 left ">
-	<small><a href="#!/competitors/search">search</a></small>
+      <div class="small-8 columns left">
+        <h4 class="list-group-item-heading">
+          <a data-ng-href="#!/competitors/{{competitor._id}}">
+	    {{competitor.name}}
+	  </a>
+        </h4>
       </div>
     </div>
-    <div class="page-header">
-          <h1>Competitors</h1>
-   </div>
-    <div class="list-group">
-        <a data-ng-repeat="competitor in competitors" data-ng-href="#!/competitors/{{competitor._id}}" class="list-group-item">
-            <small class="list-group-item-text">{{competitor.created | date:'medium'}} / {{competitor.user.displayName}}</small>
-            <h4 class="list-group-item-heading">{{competitor.name}}</h4>
-            <h4 class="list-group-item-heading">{{competitor.email}}</h4>
-            <p class="list-group-item-text">{{competitor.description}}</p>
-        </a>
+    <div class="row">
+      <div class="small-2 columns left">
+        <small><label class="right">date</label></small>
+      </div>
+      <div class="small-8 columns left">
+        <small>{{competitor.created | date:'medium'}} / {{competitor.user.displayName}}</small>
+      </div>
     </div>
-    <div class="alert alert-warning text-center" data-ng-hide="!competitors.$resolved || competitors.length">
-    	No competitors yet, why don't you <a href="/#!/competitors/create">create one</a>?
+    <div class="row">
+      <div class="small-2 columns left">
+        <label class="right">email</label>
+      </div>
+      <div class="small-8 columns left">
+        {{competitor.email}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-2 columns left">
+	<label class="right">description</label>
+      </div>
+      <div class="small-8 columns left">
+    	{{competitor.description}}
+      </div>
+    </div>
+    <br />
+  </div>
+  <div class="alert alert-warning text-center" data-ng-hide="!competitors.$resolved || competitors.length">
+    No competitors yet, why don't you <a href="/#!/competitors/create">create one</a>?
     </div>
 </section>

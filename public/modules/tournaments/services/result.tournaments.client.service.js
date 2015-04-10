@@ -9,21 +9,50 @@ angular.module('tournament.results').factory('Tournament.Results', function() {
 	key.loss = 'Loss';
 	key.tBD = 'TBD';
 
-    	var results = [{ 'key' : key.tBD, 'name': 'TBD', 'competitors' : []
-	  }, {
-	    'key' : key.win, 'name' : 'Win', 'competitors' : []
-	  }, {
-	    'key' : key.tie, 'name' : 'Tie', 'competitors' : []
-	  }, {
-	    'key' : key.loss, 'name' : 'Loss', 'competitors' : []
-	  }];
+	// return whether key exists
+	var keyExists = function(resultKey) {
+	  for(var keyEntry in Key)
+	  {
+	    if(keyEntry === resultKey) {
+	      return keyEntry;
+	    }
+	  }
+	};
 
-    	var selectResults = [{ 'key' : key.tBD, 'name': 'TBD', 'competitors' : [] 
-	  }, {
-	    'key' : key.win, 'name' : 'Win', 'competitors' : []
-	  }, {
-	    'key' : key.tie, 'name' : 'Tie', 'competitors' : []
-	  }];
+	// Get Name
+	var getName = function(resultKey) {
+	  if(resultKey === key.win) {
+	    return 'Win';
+	  } else if(resultKey === key.tie) {
+	    return 'Tie';
+	  } else if(resultKey === key.loss) {
+	    return 'Loss';
+	  } else if(resultKey === key.tBD) {
+	    return 'TBD';
+	  } else {
+	    return 'Unknown';
+	  }
+	};
+
+	var createResult = function(resultKey, competitorList) {
+
+	  return {
+	   'key': resultKey
+	    ,'name': getName(resultKey)
+	    ,'competitors':competitorList
+	  };
+
+	};
+
+    	var results = [ createResult(key.tBD, [])
+	  ,createResult(key.win, [])
+	  ,createResult(key.tie, [])
+	  ,createResult(key.loss, [])];
+
+    	var selectResults = [
+	  createResult(key.tBD,[])
+	  ,createResult(key.win,[])
+	  ,createResult(key.tie,[])];
 
 	var getResultWithKey = function(resultKey) {
 	  var selectResult;

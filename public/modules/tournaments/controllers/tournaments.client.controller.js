@@ -68,7 +68,6 @@ angular.module('tournaments')
 	  var searchParameters = {};
 
 	  if(competitorIds) {
-	    competitorsString=competitorIds.join();
 	    searchParameters.ids = competitorIds.join();
 	  }
 

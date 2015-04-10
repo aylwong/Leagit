@@ -144,7 +144,7 @@ angular.module('tournaments').factory('Tournament-Helper', ['$filter', function(
 	  } else {
 	    return null;
 	  }
-	}
+	};
 
 	// returns whether the val.toString exists in list
 	// list is an array of toStringable ids

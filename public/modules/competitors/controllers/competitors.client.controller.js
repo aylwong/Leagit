@@ -1,60 +1,58 @@
 'use strict';
 
-angular.module('competitors').controller('CompetitorsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors',
-	function($scope, $stateParams, $location, Authentication, Competitors) {
-		$scope.authentication = Authentication;
+angular.module('competitors').controller('CompetitorsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors','Competitor-Helper',
+  function($scope, $stateParams, $location, Authentication, Competitors, CompHelper) {
+    $scope.authentication = Authentication;
 
-		$scope.create = function() {
-			var competitor = new Competitors({
-				name: this.name,
-				email: this.email,
-				description: this.description
-			});
-			competitor.$save(function(response) {
-				$location.path('competitors/' + response._id);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
+    $scope.create = function() {
+      var competitor = CompHelper.createNewCompetitor(this);
 
-			this.name = '';
-			this.email = '';
-			this.discription ='';
-		};
+      competitor.$save(function(response) {
+	$location.path('competitors/' + response._id);
+	}, function(errorResponse) {
+	  $scope.error = errorResponse.data.message;
+	});
 
-		$scope.remove = function(competitor) {
-			if (competitor) {
-				competitor.$remove();
+	this.name = '';
+	this.email = '';
+	this.description ='';
+	this.imageLink = '';
+      };
 
-				for (var i in $scope.competitors) {
-					if ($scope.competitors[i] === competitor) {
-						$scope.competitors.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.competitor.$remove(function() {
-					$location.path('competitors');
-				});
-			}
-		};
+    $scope.remove = function(competitor) {
+      if (competitor) {
+	competitor.$remove();
 
-		$scope.update = function() {
-			var competitor = $scope.competitor;
+     	for (var i in $scope.competitors) {
+	  if ($scope.competitors[i] === competitor) {
+	    $scope.competitors.splice(i, 1);
+	  }
+        }
+      } else {
+	$scope.competitor.$remove(function() {
+	  $location.path('competitors');
+	});
+      }
+    };
 
-			competitor.$update(function() {
-				$location.path('competitors/' + competitor._id);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
+    $scope.update = function() {
+      var competitor = $scope.competitor;
+      
+      competitor.$update(function() {
+	  $location.path('competitors/' + competitor._id);
+	}, function(errorResponse) {
+	  $scope.error = errorResponse.data.message;
+	});
+    };
 
-		$scope.find = function() {
-			$scope.competitors = Competitors.query();
-		};
+    $scope.find = function() {
+      $scope.competitors = Competitors.query();
+    };
 
-		$scope.findOne = function() {
-			$scope.competitor = Competitors.get({
-				competitorId: $stateParams.competitorId
-			});
-		};
-	}
+    $scope.findOne = function() {
+      $scope.competitor = Competitors.get({
+	competitorId: $stateParams.competitorId
+      });
+    };
+  }
 ]);
