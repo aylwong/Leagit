@@ -32,7 +32,8 @@ module.exports = {
                                 'public/lib/angular-foundation/mm-foundation.js',
                                 'public/lib/ngQuickDate/dist/ng-quick-date.js',
                                 'public/lib/sugar/release/sugar-full.development.js',
-				'public/lib/isteven-angular-multiselect/angular-multi-select.js'
+				'public/lib/isteven-angular-multiselect/angular-multi-select.js',
+				'public/lib/lodash/lodash.js'
 
 			]
 		},

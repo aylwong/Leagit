@@ -17,6 +17,10 @@ angular.module('tournaments').config(['$stateProvider',
 			url: '/tournaments/:tournamentId',
 			templateUrl: 'modules/tournaments/views/view-tournament.client.view.html'
 		}).
+		state('adHocTournament', {
+			url: '/tournaments/:tournamentId/adhoc',
+			templateUrl: 'modules/tournaments/views/create.adhoc.tournament.client.view.html'
+		}).
 		state('editTournament', {
 			url: '/tournaments/:tournamentId/edit',
 			templateUrl: 'modules/tournaments/views/edit-tournament.client.view.html'

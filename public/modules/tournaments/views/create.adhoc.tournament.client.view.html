@@ -1,0 +1,29 @@
+<section data-ng-controller="MatchesController" data-ng-init="initCreateAdHocTournament()">
+  <div class="large-10 columns">
+    <div class="row">
+      <div class="small-6 columns">
+        <h2>Ad Hoc Tournament:{{tournament.name}}</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row"  data-ng-repeat="competitor in tournament.competitors_full">
+	<div class="columns large-2">
+	  <label class="right">competitors</label>
+	</div>
+	<div class="columns large-8 left">
+	  {{competitor.name}}
+	</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-6 columns" data-ng-controller="TournamentsController">
+        <a class="button" data-ng-click="updateSpecial(tournament)">Save</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-6 columns">
+        <create-ad-hoc-matches tournament="tournament"></create-ad-hoc-matches>
+      </div>
+    </div>
+  </div>
+</section>

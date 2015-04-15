@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('matches')
-  .controller('MatchesController', ['$scope', '$stateParams', '$location','$filter', '$q', 'Authentication', 'Competitors','Tournament.Results','Tournaments','Matches','CompetitorMatches','Core-Helper', 'Match-Helper' 
-  ,function($scope, $stateParams, $location, $filter, $q, Authentication, Competitors, TResults,Tournaments,Matches,CompetitorMatches,CHelper,MHelper) {
+  .controller('MatchesController', ['$scope', '$stateParams', '$location','$filter', '$q', 'Authentication', 'Competitors','Tournament.Results','Tournaments','Matches','CompetitorMatches','Core-Helper', 'Match-Helper','_service','Create-Match-Rounds-Core'
+  ,function($scope, $stateParams, $location, $filter, $q, Authentication, Competitors, TResults,Tournaments,Matches,CompetitorMatches,CHelper,MHelper,_s,CMRoundsCore) {
   // add auth
   $scope.authentication = Authentication;
 
@@ -76,11 +76,23 @@ angular.module('matches')
 
   // List Matches
   $scope.initListMatches = function() {
-    find()
+    findAllMatches()
       .then(function(results) {
         loadListResultsIntoScope(results.tournaments, results.competitors);
     });
   };
+
+  // Initialise competitor Matches
+  $scope.initCompetitorMatches = function() {
+    var competitorId = $stateParams.competitorId;
+    findCompetitorMatches(competitorId)
+      .then(function(results) {
+  	loadListResultsIntoScope(results.tournaments,results.competitors);
+
+	$scope.competitor = CHelper.getInArrayById(competitorId, results.competitors);
+    });
+  };
+
 
   //initialise edit match view
   $scope.initEditMatch = function() {
@@ -110,6 +122,7 @@ angular.module('matches')
     });
   };
 
+  // init create match
   $scope.initCreateMatch = function() {
     var newEmptyMatch = MHelper.createEmptyMatch();
     $scope.tournamentId = {tournamentId: $stateParams.tournamentId};
@@ -125,6 +138,23 @@ angular.module('matches')
       })
       .then(function() {
         watchMatchSelectionAndUpdateSelected('match.selected_competitors', $scope.match);
+    });
+  };
+
+  // Initialise a create Ad Hoc Tournament
+  $scope.initCreateAdHocTournament = function() {
+    var tournamentPromise = findTournament($stateParams.tournamentId);
+
+    tournamentPromise.then(function(results) {
+      $scope.tournament = results.tournament;
+      $scope.competitors = results.competitors;
+
+	$scope.tournament.competitors_full = CHelper.idsToList($scope.tournament.competitors, results.competitors);
+
+	$scope.tournament.matches.forEach(function(match) {
+	  match.competitors = CHelper.idsToList(match.competitors, results.competitors);
+	});
+
     });
   };
 
@@ -169,32 +199,80 @@ angular.module('matches')
     return promise;
   };
 
+  var findCompetitorMatches = function(competitorId) {
+    var tournamentsResult;
+    var promise = loadCompetitorMatches(competitorId).then(function(tList) {
+      
+//      var competitorPromise = loadCompetitorForMatches(tList);
+  //    return competitorPromise;
+      tournamentsResult = tList;
+
+      var competitorsList = getCompetitorsFromMatches(tList);
+      var competitorsPromise = load_competitors(competitorsList).$promise;
+
+      return competitorsPromise;
+    }).then(function(competitors) {
+	return {tournaments:tournamentsResult,
+	  competitors: competitors }
+    });
+
+    return promise;
+  }
+
   //  Load Matches based on competitors
-  var find = function() {
+  var findAllMatches = function() {
     // find all match, perhaps filtered by tournament
     var tournamentsResult;
+    var promise = loadTournaments().then(function(tList) {
+      tournamentsResult = tList;
 
-    var resultPromise = loadTournaments()
-      .then(function(tList) {
-        tournamentsResult = tList;	
-        var competitorsList = getCompetitorsFromTournaments(tList);
+      var competitorsList = getCompetitorsFromTournaments(tList);
 
-        return load_competitors(competitorsList).$promise;
-      })
-      .then(function(competitorsResult) {
+      var competitorsPromise = load_competitors(competitorsList).$promise;
+
+      return competitorsPromise;
+    })
+    .then(function(competitors) {
+//	competitorResult = competitor;
       return {
         tournaments: tournamentsResult
-        ,competitors: competitorsResult
+        ,competitors: competitors
       };
     });
 
-    return resultPromise;
-  };
+    return promise;
+   };
+
+//  var loadCompetitorForTournaments = function(tList) {
+  //  var tournamentsResult;
+
+//    var resultPromise = loadTournaments()
+//      tournamentMatchPromise.then(function(tList) {
+//        tournamentsResult = tList;	
+  //      var competitorsList = getCompetitorsFromTournaments(tList);
+
+//        var competitorsPromise = load_competitors(competitorsList).$promise;
+//      })
+      
+//      var resultPromise = competitorsPromise.then(function(competitorsResult) {
+//      return {
+  //      tournaments: tournamentsResult
+//        ,competitors: competitorsResult
+//      };
+  //  });
+
+    //return resultPromise;
+  //};
 
   // function 
   // load all tournaments
   var loadTournaments = function() {
     var tournaments = Matches.query();
+    return tournaments.$promise;
+  };
+
+  var loadCompetitorMatches = function(competitorId) {
+    var tournaments = CompetitorMatches.query({competitorId: competitorId});
     return tournaments.$promise;
   };
 
@@ -221,6 +299,7 @@ angular.module('matches')
   };
 
   // A competitor was selected
+  // Competitor selected for winners and losers
   var competitorSelected = function(match) {
     match.selected_competitors.forEach(function(competitor) {
       var competitorId = CHelper.getId(competitor);
@@ -254,9 +333,25 @@ angular.module('matches')
   };
 
   // Get Competitor list from Tournaments
+  var getCompetitorsFromMatches = function(tournamentList) {
+//    var competitorList = [];
+    var tournamentsCompetitors = tournamentList.map(function(tournament) {
+      var matchCompetitors = tournament.matches.map( function(match) {
+        return match.competitors;
+      });
+      return  competitorList = _s.union(matchCompetitors);
+    });
+
+     var competitorList =  _s.union(tournamentsCompetitors);
+     return _s.uniq(competitorList); 
+//,function(n) { return CHelper.getId(n); });
+    };
+
+  // Get Competitor list from Tournaments
   var getCompetitorsFromTournaments = function(tournamentList) {
     var competitorList = [];
     tournamentList.map(function(tournament) {
+	console.log(tournament)
       competitorList = CHelper.mergeArrays(
          competitorList
         ,tournament.competitors
