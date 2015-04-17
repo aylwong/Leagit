@@ -48,19 +48,43 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
     return result;
   };
 
+  // returns if number is Odd
+  var isOdd = function(num) { 
+    return (num % 2) === 1;
+  };
+
+  var createDefaultNameFunction = function(round) {
+    return function(matchNumber) {
+      return 'Match:'.concat(round.toString(),'-',matchNumber.toString());
+    };
+  };
+
 // Create Match Round with random pairings
-  var createMatchRoundWithRandomPairing = function(competitors, round, nameSuffixArg) {
-    var nameSuffix = nameSuffixArg? nameSuffixArg: '';
+  var createMatchRoundWithRandomPairing = function(competitors, round, matchNumber, nameFunction) {
+//    var nameSuffix = nameSuffixArg? nameSuffixArg: '';
+    matchNumber = matchNumber? matchNumber: 1;
+    nameFunction = nameFunction? nameFunction: createDefaultNameFunction(round);
+
     var competitorsList = [].concat(competitors);
     var maxLoop = competitorsList.length;
     var matches = [];
 
+
+    // If list would be odd, add a match.
+    if(isOdd(competitorsList.length)) {
+      var competitor = spliceRandomEntryFromList(competitorsList);
+      var matchName = nameFunction(matchNumber);
+      var match = createMatchWith1Competitor(competitor,round,matchName);
+
+      matches.push(match);
+      matchNumber = matchNumber+1;
+    }
+
     // Pair off competitors
-    for(var i=0;i<maxLoop && 0 < competitorsList.length; i++) {
-      var match = MHelper.createEmptyMatch();
-      match.round=round;
-      match.name="Match:".concat(match.round,"-",(i+1).toString(),nameSuffix);
-      match.competitors.push(spliceRandomEntryFromList(competitorsList));
+    for(var i=matchNumber; i<maxLoop+matchNumber && 0 < competitorsList.length; i++) {
+      var competitor = spliceRandomEntryFromList(competitorsList);
+      var matchName = nameFunction(i);
+      var match = createMatchWith1Competitor(competitor,round,matchName);
 
       if(competitorsList.length>0) {
         match.competitors.push(spliceRandomEntryFromList(competitorsList));
@@ -70,6 +94,21 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
     }
       
     return matches;
+  };
+
+  // Create Match with 1 Random Competitor
+  var createMatchWith1RandomCompetitor = function(competitors, round, name) {
+      var competitor = spliceRandomEntryFromList(competitors);
+      return createMatchWith1Competitor(competitor,round,name);
+  }
+
+  // creat Match with 1 Competitor
+  var createMatchWith1Competitor = function(competitor,round,name) {
+    var match = MHelper.createEmptyMatch();
+    match.round=round;
+    match.name=name;
+    match.competitors.push(competitor);
+    return match;
   };
 
   // Splice 1 random entry from list
@@ -104,7 +143,10 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
   };
 
   return {
-    getCompetitorMatchesFromMatches: getCompetitorMatchesFromMatches
+    isOdd: isOdd
+    ,createMatchWith1Competitor: createMatchWith1Competitor
+    ,spliceRandomEntryFromList: spliceRandomEntryFromList
+    ,getCompetitorMatchesFromMatches: getCompetitorMatchesFromMatches
     ,getCompetitorsInMatches: getCompetitorsInMatches
     ,removeEntryFromList: removeEntryFromList
     ,competitorInIdList: competitorInIdList

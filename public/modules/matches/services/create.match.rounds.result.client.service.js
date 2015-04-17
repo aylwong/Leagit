@@ -2,27 +2,94 @@
 
 //Matches service used for communicating with the tournaments REST endpoints
 // Match helper functions to manipulate match objects
-angular.module('match_rounds').factory('Create-Match-Rounds-Result', ['$filter', 'Core-Helper','Match-Helper','Tournament.Results','Create-Match-Rounds-Core', function($filter,CHelper, MHelper, TResults,CMRoundsC) {
+angular.module('match_rounds').factory('Create-Match-Rounds-Result', ['$filter', 'Core-Helper','Match-Helper','Tournament.Results','Create-Match-Rounds-Core','_service', function($filter,CHelper, MHelper, TResults,CMRoundsC,_s) {
 
   // Get Next Round
   var createRoundBasedOnWins = function(tournament,round) {
     var nextRound = round? round: CMRoundsC.getMaxRound(tournament)+1;
-    
-    // Get competitors.
     var competitors = tournament.competitors_full;
     var competitorWinsList = getListOfCompetitorListsGroupedByWins(competitors,tournament.matches);
-
     var finalMatches = [];
-    competitorWinsList.forEach(function(competitorsWithSameWins,index) {
-      var roundMatches = CMRoundsC.createMatchRoundWithRandomPairing(competitorsWithSameWins
-        ,nextRound
-        , '-'.concat(index.toString(),'wins') );
+    var remainderMatches = [];
+    var matchNumber = 1;
 
-      // Add Matches to tournament
-      finalMatches.push.apply(finalMatches,roundMatches);
+    // create matches for each win group
+    _s.forEachRight(competitorWinsList, function(competitorsWithSameWins,index) {
+      createAndHandleRoundMatches(competitorsWithSameWins
+        ,index
+        ,finalMatches
+        ,remainderMatches
+        ,matchNumber
+        ,nextRound);
     });
 
+    // add remainder Matches to final Matches, even if they don't have competitors
+    // These competitors effectively get a Bi.
+    if(remainderMatches && remainderMatches.length>0) {
+      finalMatches.push.apply(finalMatches,remainderMatches);
+    }
+
     return finalMatches;
+  };
+
+ // create and handle the round of Matches
+ // Adds entries to finalMatches array, and also RemainderMatches array for leftover round matches (competitors without matches)
+  var createAndHandleRoundMatches = function(competitorsWithSameWins, index, finalMatches ,remainderMatches, matchNumber, nextRound) {
+    var nameSuffix =  '-'.concat(index.toString(),'wins');
+    var competitorsList=[];
+    var createName = function(matchNum) {
+      return  createBasicName(nextRound, matchNum, nameSuffix);
+    };
+
+    if(competitorsWithSameWins) {
+      competitorsList.push.apply(competitorsList, competitorsWithSameWins);
+    }
+
+    // Handle remainder matches of last group, by pairing with this group.
+    // This means that members of top groups get priority in getting a match against
+    // a competitor of similar group
+    completeRemainderMatches(remainderMatches, finalMatches, competitorsList);
+
+    // If odd # of competitors, fix by pushing competitor into remainderMatch
+    // to be added to a member in next group.
+    if (CMRoundsC.isOdd(competitorsList.length)) {
+      var matchName =  createName(matchNumber);
+      var competitor = CMRoundsC.spliceRandomEntryFromList(competitorsList);
+      var match = CMRoundsC.createMatchWith1Competitor(competitor, nextRound, matchName);
+
+      matchNumber = matchNumber+1;
+      remainderMatches.push(match);
+    }
+
+    var roundMatches = CMRoundsC.createMatchRoundWithRandomPairing(competitorsList ,nextRound ,matchNumber ,createName);
+
+    // Add Matches to tournament
+    finalMatches.push.apply(finalMatches,roundMatches);
+  };
+
+  // Handle adding the 'odd' player for matches
+  var completeRemainderMatches = function(remainderMatches,finalMatches,competitorsList) {
+    if(remainderMatches && remainderMatches.length>0) {
+      // Count from right, so removing values from remainderMatches doesn't skip a value
+      for(var i = remainderMatches.length-1; i >= 0 && competitorsList.length > 0; i--)
+      {
+        var competitor = CMRoundsC.spliceRandomEntryFromList(competitorsList);
+        var match = remainderMatches.splice(i,1)[0];
+        match.competitors.push(competitor);
+        finalMatches.push(match);
+      }
+    }
+  };
+
+  // Create Basic Name
+  var createBasicName = function(nextRound, matchNumber, suffix) {
+        suffix = suffix? suffix: '';
+
+        return 'Match:'.concat(
+            nextRound
+            ,'-'
+            ,(matchNumber).toString()
+            ,suffix);
   };
 
   // Gets an array of competitors grouped by wins
@@ -192,6 +259,6 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Result', ['$filter',
   };
 
   return {
-    createRoundBasedOnWins:createRoundBasedOnWins
+    createRoundBasedOnWins: createRoundBasedOnWins
   };
 }]);

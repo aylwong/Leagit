@@ -9,10 +9,12 @@ angular.module('matches')
   ctrl.tournament = $scope.tournament;
 
   $scope.createRandomAdHocMatches = function(tournament) {
+//    console.log('Random Ad hoc Matches');
 
     var nextRound = CMRoundsCore.getMaxRound(tournament)+1;
     var roundMatches = CMRoundsCore.createMatchRoundWithRandomPairing(tournament.competitors_full, nextRound);
 
+  //  console.log(roundMatches);
     // Add Matches to tournament
     tournament.matches.push.apply(tournament.matches,roundMatches);
   };
