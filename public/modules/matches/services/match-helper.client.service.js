@@ -208,17 +208,17 @@ angular.module('matches').factory('Match-Helper', ['$filter', 'Core-Helper','Tou
 
   // helper function
   // add a new list of competitors
-  var addCompetitorsToMatch = function(val) {
+  var addCompetitorsToMatch = function(val, competitors) {
     var new_match_competitors = [];
-    for(var i=0; i<$scope.match_competitors.length; i++)
+    for(var i=0; i<competitors.length; i++)
     {
-      var competitor = $scope.match_competitors[i];
+      var competitor = competitors[i];
       var competitor_selected = false;
 
 	    // competitors already selected, pre-select
       for(var j=0; j<val.competitors.length; j++) {
 	var current_competitor=val.competitors[j];
-	if(current_competitor===competitor.id) {
+	if(current_competitor === competitor.id) {
 	  competitor_selected = true;
 	}
       }

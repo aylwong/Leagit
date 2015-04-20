@@ -240,7 +240,7 @@ angular.module('tournaments')
     }, function(errorResponse) {
       $scope.error = errorResponse.data.message;
     });
-  }
+  };
 
   $scope.initTournamentList = function() {
     $scope.find();

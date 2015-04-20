@@ -213,11 +213,11 @@ angular.module('matches')
       return competitorsPromise;
     }).then(function(competitors) {
 	return {tournaments:tournamentsResult,
-	  competitors: competitors }
+	  competitors: competitors };
     });
 
     return promise;
-  }
+  };
 
   //  Load Matches based on competitors
   var findAllMatches = function() {
@@ -339,7 +339,7 @@ angular.module('matches')
       var matchCompetitors = tournament.matches.map( function(match) {
         return match.competitors;
       });
-      return  competitorList = _s.union(matchCompetitors);
+      return  _s.union(matchCompetitors);
     });
 
      var competitorList =  _s.union(tournamentsCompetitors);
@@ -351,7 +351,7 @@ angular.module('matches')
   var getCompetitorsFromTournaments = function(tournamentList) {
     var competitorList = [];
     tournamentList.map(function(tournament) {
-	console.log(tournament)
+	console.log(tournament);
       competitorList = CHelper.mergeArrays(
          competitorList
         ,tournament.competitors

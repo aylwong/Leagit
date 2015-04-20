@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('matches')
-  .controller('CreateAdHocMatchesController', ['$scope', '$stateParams', 'Authentication', 'Competitors','Tournament.Results','Tournaments','Matches','Core-Helper', 'Match-Helper','_service','Create-Match-Rounds-Core','Create-Match-Rounds-Result'
-  ,function($scope, $stateParams, Authentication, Competitors, TResults,Tournaments,Matches,CHelper,MHelper,_s,CMRoundsCore, CMRoundsResult) {
+  .controller('CreateAdHocMatchesController', ['$scope', '$stateParams', 'Authentication', 'Competitors','Tournament.Results','Tournaments','Matches','Core-Helper', 'Match-Helper','_service','Create-Match-Rounds-Core','Create-Match-Rounds-Result', 'Create-Match-Rounds-Ladder'
+  ,function($scope, $stateParams, Authentication, Competitors, TResults,Tournaments,Matches,CHelper,MHelper,_s,CMRoundsCore, CMRoundsResult,CMRoundsLadder) {
 
   var ctrl = this;
 
@@ -25,6 +25,10 @@ angular.module('matches')
 
     // Add Matches to tournament
     tournament.matches.push.apply(tournament.matches,roundMatches);
+  };
+
+  $scope.updateMatchesBasedOnLadder = function(tournament) {
+    var roundMatches = CMRoundsLadder.updateMatchesBasedOnLadder(tournament);
   }
 
   $scope.createMatches = function(tournament) {

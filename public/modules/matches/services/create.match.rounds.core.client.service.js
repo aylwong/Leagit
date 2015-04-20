@@ -2,7 +2,8 @@
 
 //Matches service used for communicating with the tournaments REST endpoints
 // Match helper functions to manipulate match objects
-angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', 'Core-Helper','Match-Helper','Tournament.Results', function($filter,CHelper, MHelper, TResults) {
+angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', 'Core-Helper','Match-Helper','Tournament.Results','_service'
+, function($filter,CHelper, MHelper, TResults,_s) {
 
   // Get list of matches for competitor
   var getCompetitorMatchesFromMatches = function(competitor, listOfMatches) {
@@ -72,11 +73,11 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
 
     // If list would be odd, add a match.
     if(isOdd(competitorsList.length)) {
-      var competitor = spliceRandomEntryFromList(competitorsList);
-      var matchName = nameFunction(matchNumber);
-      var match = createMatchWith1Competitor(competitor,round,matchName);
+      var oddCompetitor = spliceRandomEntryFromList(competitorsList);
+      var oddMatchName = nameFunction(matchNumber);
+      var oddMatch = createMatchWith1Competitor(oddCompetitor,round,oddMatchName);
 
-      matches.push(match);
+      matches.push(oddMatch);
       matchNumber = matchNumber+1;
     }
 
@@ -100,7 +101,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
   var createMatchWith1RandomCompetitor = function(competitors, round, name) {
       var competitor = spliceRandomEntryFromList(competitors);
       return createMatchWith1Competitor(competitor,round,name);
-  }
+  };
 
   // creat Match with 1 Competitor
   var createMatchWith1Competitor = function(competitor,round,name) {

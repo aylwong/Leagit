@@ -11,7 +11,7 @@ angular.module('tournament.results').factory('Tournament.Results', function() {
 
 	// return whether key exists
 	var keyExists = function(resultKey) {
-	  for(var keyEntry in Key)
+	  for(var keyEntry in key)
 	  {
 	    if(keyEntry === resultKey) {
 	      return keyEntry;

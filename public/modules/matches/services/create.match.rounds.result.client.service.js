@@ -155,7 +155,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Result', ['$filter',
   };
 
   // Get Number of wins from results
-  var getNumberOfWinsFromResults = function (resultsTypeKey, results) {
+  var getNumberOfResultTypeFromResults = function (resultsTypeKey, results) {
     calculateResultTotal(function(currentElement,previousValue) {
       if(currentElement.key === resultsTypeKey) {
         return previousValue+1;
@@ -171,7 +171,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Result', ['$filter',
     match.results.forEach(function(result) {
       if(CMRoundsC.competitorInIdList(competitor,result)) {
 	results.push(result);
-      };
+      }
     });
     return results;
   };
@@ -215,7 +215,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Result', ['$filter',
 
   // Add The entries in two arrays into a new array that is the addition of both
   var addArrayEntries = function(result1, result2) {
-    var longerResult, shortResult, finalResult = [];
+    var longResult, shortResult, finalResult = [];
 
     if(result1.length > result2.length) {
       longResult = result1;

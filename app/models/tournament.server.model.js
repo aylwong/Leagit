@@ -67,9 +67,8 @@ var MatchSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'User'
 	}
-	,round: {
-		type: Number
-	}
+	,round: { type: Number }
+    ,number: {type: Number }
 	,image: {
 		type: String
 		,trim:true
