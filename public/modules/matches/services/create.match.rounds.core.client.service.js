@@ -34,9 +34,9 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
     return result;
   };
 
-  // Get max rounds
-  var getMaxRound = function(tournament){
-     var result = tournament.matches.reduce(
+  // Get max round of a set of Matches
+  var getMaxRound = function(matches){
+     var result = matches.reduce(
     function(previousValue, currentValue) {
       if(!currentValue.round || previousValue>currentValue.round) {
      	return previousValue;
@@ -105,10 +105,15 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
 
   // creat Match with 1 Competitor
   var createMatchWith1Competitor = function(competitor,round,name) {
+    var competitors = [].push(competitor);
+   return createMatchWithCompetitors(competitors,round,name);
+  };
+
+  var createMatchWithCompetitors = function(competitors,round,name) {
     var match = MHelper.createEmptyMatch();
     match.round=round;
     match.name=name;
-    match.competitors.push(competitor);
+    match.competitors.push.apply(match.competitors,competitors);
     return match;
   };
 
@@ -146,6 +151,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
   return {
     isOdd: isOdd
     ,createMatchWith1Competitor: createMatchWith1Competitor
+    ,createMatchWithCompetitors: createMatchWithCompetitors
     ,spliceRandomEntryFromList: spliceRandomEntryFromList
     ,getCompetitorMatchesFromMatches: getCompetitorMatchesFromMatches
     ,getCompetitorsInMatches: getCompetitorsInMatches

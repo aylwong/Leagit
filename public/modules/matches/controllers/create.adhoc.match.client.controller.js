@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('matches')
-  .controller('CreateAdHocMatchesController', ['$scope', '$stateParams', 'Authentication', 'Competitors','Tournament.Results','Tournaments','Matches','Core-Helper', 'Match-Helper','_service','Create-Match-Rounds-Core','Create-Match-Rounds-Result', 'Create-Match-Rounds-Ladder'
-  ,function($scope, $stateParams, Authentication, Competitors, TResults,Tournaments,Matches,CHelper,MHelper,_s,CMRoundsCore, CMRoundsResult,CMRoundsLadder) {
+  .controller('CreateAdHocMatchesController', ['$scope', '$stateParams', 'Authentication', 'Competitors','Tournament.Results','Tournaments','Matches','Core-Helper', 'Match-Helper','_service','Create-Match-Rounds-Core','Create-Match-Rounds-Result', 'Create-Match-Rounds-Ladder','Create-Match-Rounds-Round-Robin'
+  ,function($scope, $stateParams, Authentication, Competitors, TResults,Tournaments,Matches,CHelper,MHelper,_s,CMRoundsCore, CMRoundsResult,CMRoundsLadder,CMRoundsRoundRobin) {
 
   var ctrl = this;
 
@@ -11,7 +11,7 @@ angular.module('matches')
   $scope.createRandomAdHocMatches = function(tournament) {
 //    console.log('Random Ad hoc Matches');
 
-    var nextRound = CMRoundsCore.getMaxRound(tournament)+1;
+    var nextRound = CMRoundsCore.getMaxRound(tournament.matches)+1;
     var roundMatches = CMRoundsCore.createMatchRoundWithRandomPairing(tournament.competitors_full, nextRound);
 
   //  console.log(roundMatches);
@@ -20,7 +20,7 @@ angular.module('matches')
   };
 
   $scope.createNextRoundBasedOnWins = function(tournament) {
-    var nextRound = CMRoundsCore.getMaxRound(tournament)+1;
+    var nextRound = CMRoundsCore.getMaxRound(tournament.matches)+1;
     var roundMatches = CMRoundsResult.createRoundBasedOnWins(tournament,nextRound);
 
     // Add Matches to tournament
@@ -29,6 +29,10 @@ angular.module('matches')
 
   $scope.updateMatchesBasedOnLadder = function(tournament) {
     var roundMatches = CMRoundsLadder.updateMatchesBasedOnLadder(tournament);
+  };
+
+  $scope.createRoundsBasedOnRoundRobin = function(tournament) {
+    var roundMatches = CMRoundsRoundRobin.createRoundsBasedOnRoundRobin(tournament);
   }
 
   $scope.createMatches = function(tournament) {
@@ -41,7 +45,7 @@ angular.module('matches')
   };
 
   $scope.createNextRound = function(tournament) {
-    var maxRound = CMRoundsCore.getMaxRound(tournament);
+    var maxRound = CMRoundsCore.getMaxRound(tournament.matches);
     CMRoundsCore.createMatchRoundWithRandomPairing($scope.tournament.competitors_full,maxRound+1);
   }; 
   

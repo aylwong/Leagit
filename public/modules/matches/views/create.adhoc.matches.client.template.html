@@ -3,6 +3,8 @@
   <h3>Tournament: {{ tournament.name }} </h3>
    <a class="button" data-ng-click="createRandomAdHocMatches(tournament)">Ad Hoc</a> 
    <a class="button" data-ng-click="createNextRoundBasedOnWins(tournament)">Round By Wins</a> 
+   <a class="button" data-ng-click="updateMatchesBasedOnLadder(tournament)">Round By Ladder</a> 
+   <a class="button" data-ng-click="createRoundsBasedOnRoundRobin(tournament)">Rounds By Round Robin</a> 
   <div class="row">
     <div class="row">Matches</div>
     <div class="row" data-ng-repeat="match in tournament.matches">

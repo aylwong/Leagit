@@ -6,7 +6,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Result', ['$filter',
 
   // Get Next Round
   var createRoundBasedOnWins = function(tournament,round) {
-    var nextRound = round? round: CMRoundsC.getMaxRound(tournament)+1;
+    var nextRound = round? round: CMRoundsC.getMaxRound(tournament.matches)+1;
     var competitors = tournament.competitors_full;
     var competitorWinsList = getListOfCompetitorListsGroupedByWins(competitors,tournament.matches);
     var finalMatches = [];
