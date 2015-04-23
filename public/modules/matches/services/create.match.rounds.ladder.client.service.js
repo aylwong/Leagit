@@ -8,18 +8,15 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
     {
       throw new Error('Matches are Not Numbered');
     }
-
+    
+    var assignCompetitors;
     if (!tournament.matches || tournament.matches.length===0) {
       var finalMatches = createLadderMatches(tournament);
       tournament.matches = finalMatches;
-      var assignCompetitors = assignCompetitorsToMatches(tournament);
-      return finalMatches;
-    } else {
-      // create matches
-      var assignCompetitors = assignCompetitorsToMatches(tournament);
-      var finalMatches = tournament.matches;
-      return finalMatches;
     }
+
+    // create matches
+    assignCompetitorsToMatches(tournament);
   };
 
   var matchesAllHaveNumbers = function(matches) {
@@ -36,7 +33,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
 
   var assignCompetitorsToMatches = function(tournament) {
     var matches = tournament.matches;
-    var competitors = tournament.competitors;
+    var competitors = tournament.competitors_full;
 
     var matchWinProgressions = getMatchProgressions(tournament.matches, tournament.competitors.length);
 
@@ -77,8 +74,6 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
     // AdvanceResults
         var winningCompIds = getWinningCompetitors(match.results);
         var winningCompetitors = CHelper.idsToList(winningCompIds, match.competitors);
-//        console.log('winning competitors');
-//        console.log(winningCompetitors);
         if(winningCompetitors.length <= 0) {
           throw new Error('Ladders cannot have Ties.  Please Assign a competitor a Win');
         }
@@ -100,25 +95,26 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
           return aComp === comp;
        });
     });
+    return unassignedCompetitors;
   };
 
   // Competitors for Starting matches
   var addCompetitorsForStartingMatches = function(matchProgressionsWithStartingMatches, matches, unassignedCompetitors) {
     matchProgressionsWithStartingMatches.forEach(function(wM) {
       var competitorsToAdd = 0;
-      if (wM.comp1===0) { competitorsToAdd++ };
-      if (wM.comp2===0) { competitorsToAdd++ };
+      if (wM.comp1===0) { competitorsToAdd++; }
+      if (wM.comp2===0) { competitorsToAdd++; }
 
       var match = getMatchWithNumber(matches,wM.number);
       if(match.competitors.length < competitorsToAdd) {
         var numLeftToAdd = competitorsToAdd - match.competitors.length; 
-        match.competitors.push.apply(match.competitors,unassignedCompetitors.splice(0,numLeftToAdd));
+        match.competitors.push.apply(match.competitors, unassignedCompetitors.splice(0,numLeftToAdd));
       }
     });
   };
 
   var getTieingCompetitors = function(results) {
-    return getCompetitorsWithKey(match,TResults.key.tie);
+    return getCompetitorsWithKey(results,TResults.key.tie);
   };
 
   var getWinningCompetitors = function(results) {
@@ -213,16 +209,12 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
     if(competitorNumber > numMatchesPerRound*2) {
       round = round + 1;
       numMatchesPerRound = competitorNumber - numMatchesPerRound*2;
-      var matches = createLadderMatchRound(numMatchesPerRound,round,matchNumberStart,true);
+      var remainderMatches = createLadderMatchRound(numMatchesPerRound,round,matchNumberStart,true);
       matchNumberStart = matchNumberStart - numMatchesPerRound;
-      finalMatches.push.apply(finalMatches,matches);
+      finalMatches.push.apply(finalMatches,remainderMatches);
     }
 
     reverseRoundAndNumberForMatches(finalMatches,matchNumberStart,round);
-
-    var match = getMatchWithNumber(finalMatches, matchNumberStart*(-1));
-    var numRoundMatches = getNumRoundMatches(finalMatches,round);
-    var numRoundMatches = getNumRoundMatches(finalMatches,round);
 
     return finalMatches;
   };
@@ -242,13 +234,13 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
 
     // If prelim matches to fit in games
     if(numCompetitors > numRoundOne*2) {
-      var numRoundOne = getNumRoundMatches(allMatches,1);
-      var numRoundTwo = getNumRoundMatches(allMatches,2);
+      numRoundOne = getNumRoundMatches(allMatches,1);
+      numRoundTwo = getNumRoundMatches(allMatches,2);
       var matchesRound1 = getRoundMatches(allMatches,1);
       var matchesRound2 = getRoundMatches(allMatches,2);
 
-      matchesRound1 = _s.sortBy(matchesRound1,function(m) { return m.number });
-      matchesRound2 = _s.sortBy(matchesRound2,function(m) { return m.number });
+      matchesRound1 = _s.sortBy(matchesRound1,function(m) { return m.number; });
+      matchesRound2 = _s.sortBy(matchesRound2,function(m) { return m.number; });
 
       matchesRound1.forEach(function(match) {
         var matchProgression = {number:match.number, comp1:0, comp2:0};
@@ -258,7 +250,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
       var r1Index = 0;
       var currentStep=numRoundTwo;
       var R2CompSpots = calculateR2CompSpots(numRoundOne, numRoundTwo*2);
-      R2CompSpots = _s.sortBy(R2CompSpots,function(c) { return c});
+      R2CompSpots = _s.sortBy(R2CompSpots,function(c) { return c;});
       R2CompSpots.forEach(function(spot) {
         var index = Math.floor(spot/2);
         var secondSpot = (spot % 2) === 1;
@@ -303,18 +295,27 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
       });
 
       // Add progression spots for remaining Rounds.
-      var currentRound=2;
+      currentRound=2;
       var maxRound = CMRoundsC.getMaxRound(allMatches);
 
-      while(currentRound<maxRound) {
+
+
+      while(currentRound < maxRound) {
         var prevRound=currentRound;
         currentRound++;
-        var prevIndex=0;
         var prevRoundMatches = getRoundMatches(allMatches,prevRound);
         prevRoundMatches = sortMatchesByNumber(prevRoundMatches);
         var currentRoundMatches = getRoundMatches(allMatches,currentRound);
         currentRoundMatches = sortMatchesByNumber(currentRoundMatches);
 
+        createMatchProgressionsWithParentMatches(prevRoundMatches, currentRoundMatches, matchProgressions);
+      }
+    }
+    return matchProgressions;
+  };
+
+  var createMatchProgressionsWithParentMatches = function(prevRoundMatches, currentRoundMatches, matchProgressions) {
+        var prevIndex=0;
         currentRoundMatches.forEach(function(match) {
           var comp1Number = prevRoundMatches[prevIndex].number;
           prevIndex++;
@@ -323,14 +324,11 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
           var matchProgression = {number:match.number, comp1:comp1Number, comp2: comp2Number};
           matchProgressions.push(matchProgression);
         });
-      }
-    }
-    return matchProgressions;
   };
 
   var sortMatchesByNumber = function(matches) {
     return _s.sortBy(matches, function(m) {
-      m.number;
+      return m.number;
     });
   };
 
@@ -340,7 +338,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
       var currentAssignedR1Matches=0;
       var r2CompSpots=[];
       var r2CompSpot=0;
-      var maxCount = 0
+      var maxCount = 0;
       var maxLoop = numR2CompSpots*numR2CompSpots;
       var shift=0;
       while(currentAssignedR1Matches<numRoundOne && maxCount<maxLoop ) {
@@ -348,11 +346,10 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
          maxCount++;
 
         // If not already contained, add
-        if(!r2CompSpots.some(function(r2Comp) {
-          return r2Comp===r2CompSpot})){
+        if(doesNotExistInList(r2CompSpot, r2CompSpots)) {
           r2CompSpots.push(r2CompSpot);
           currentAssignedR1Matches= currentAssignedR1Matches+1;
-        };
+        }
 
         if(r2CompSpot<=0) {
           if(currentStep===2) {
@@ -374,22 +371,11 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
       return r2CompSpots;
   };
 
-  // Get Win Next Match
-//  var getWinNextMatchesForRound = function(finalMatches, currentRound, currentMatchNumber) {
-//    var nextMatches = [];
-//    var matches = finalMatches.filter(function(match) {
-//      return match.round === currentRound;
-//    });
-
-//    matches.forEach(function(match) {
-//      var numRoundMatches = getNumRoundMatches(finalMatches,currentRound);
-//      var match = getMatchWithNumber(finalMatches, currentMatchNumber);
-//
-//      nextMatches.push({match:match.number, a:match.number, b:match.number});
-//    });
-
-//    return nextMatches;
-//  };
+  var doesNotExistInList = function(selectEntry, list) {
+    return !list.some(function(entry) {
+          return entry === selectEntry;
+    });
+  };
 
   var getNumRoundMatches = function(matches, round) {
     var reduction = matches.reduce(function(reducedValue,currentElement) {
@@ -401,7 +387,6 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
     },0);
 
     return reduction;
-
   };
 
   var getRoundMatches = function(matches, round) {
@@ -449,7 +434,6 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Ladder', ['$filter',
 
     return matches;
   };
-
 
   return {
     createRoundBasedOnLadder: createRoundBasedOnLadder,

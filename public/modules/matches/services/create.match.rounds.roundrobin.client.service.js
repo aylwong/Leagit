@@ -6,9 +6,6 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Round-Robin', ['$fil
 
   // Get Next Round
   var createRoundsBasedOnRoundRobin = function(tournament,startRound) {
- //   console.log('creating Round Robin');
-//    console.log(tournament.competitors);
-//    console.log(tournament.competitors_full);
     var competitors = randomizeOrderOfList(tournament.competitors_full);
     var matches = tournament.matches;
     startRound = startRound ? startRound : 1;
@@ -32,7 +29,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Round-Robin', ['$fil
             
         matches.push(match);
       }
-      shiftCompetitorLists(competitorList1, competitorList2)
+      shiftCompetitorLists(competitorList1, competitorList2);
     }
     console.log('finished');
     console.log(tournament.matches);
@@ -41,7 +38,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Round-Robin', ['$fil
   var filterDummyCompetitors = function(competitors) {
     return competitors.filter(function(comp) {
         //console.log(comp);
-        return !(comp.isDummy && comp.isDummy===true)
+        return !(comp.isDummy && comp.isDummy===true);
     });
   };
 
@@ -65,7 +62,7 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Round-Robin', ['$fil
       maxLength--;
     }
     return randList;
-  ;}
+  };
 
   return {
     createRoundsBasedOnRoundRobin: createRoundsBasedOnRoundRobin

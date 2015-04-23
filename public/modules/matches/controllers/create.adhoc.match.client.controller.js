@@ -33,7 +33,7 @@ angular.module('matches')
 
   $scope.createRoundsBasedOnRoundRobin = function(tournament) {
     var roundMatches = CMRoundsRoundRobin.createRoundsBasedOnRoundRobin(tournament);
-  }
+  };
 
   $scope.createMatches = function(tournament) {
 

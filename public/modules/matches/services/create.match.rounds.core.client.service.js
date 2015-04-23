@@ -70,7 +70,6 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
     var maxLoop = competitorsList.length;
     var matches = [];
 
-
     // If list would be odd, add a match.
     if(isOdd(competitorsList.length)) {
       var oddCompetitor = spliceRandomEntryFromList(competitorsList);

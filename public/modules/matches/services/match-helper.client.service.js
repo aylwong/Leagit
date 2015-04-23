@@ -21,7 +21,6 @@ angular.module('matches').factory('Match-Helper', ['$filter', 'Core-Helper','Tou
     return match;
   };
 
-
   // creates an empty match
   var createEmptyMatch = function() {
     var match = {};
@@ -88,76 +87,12 @@ angular.module('matches').factory('Match-Helper', ['$filter', 'Core-Helper','Tou
 
     return new_match_competitors;
   };
-	
-  /// Transforms competitors array to select list ([{key, name, selected}]).
-  /// selected = current array of ids that is selected
-//  var competitorsToSelectList = function(competitors, selectedIds)
-//  {
-//    var currentlySelected = false;
-
-//    var selectList = selectedIds.map(function(val) {
-//      currentlySelected = valExistsInListAsString(val._id,selectedIds);
-//      return {'name':val.name, 'id':val._id, 'selected':currentlySelected};
-  //  });
-	  
-//    return selectList;
-//  };
-
-  /// converts idList full of ids (strings) into full entries based on the fullList array
-//  var idsToList = function(idList, fullList)
-//  {
-//    var currentlySelected=false;
-	
- //   var convertedList = idList.map(function(val) {
-   //   var valueIndex = getIndexOfIdInList(val,fullList);
- //     if (valueIndex<0) {
-//	throw new Error('Id does not exist in full List');
-//      } else {
-//	return fullList[valueIndex];
- //     }
-//    });
-//    return convertedList;
-//  };
-
-  /// returns the index of the first entry in the list that has id
-  /// if none found, returns -1
-//  var getIndexOfIdInList = function(id, list)
-//  {
-//    var existingVal = -1;
-//    list.some( function (val,index) {
-//      if( CHelper.getId(val).toString()===id.toString()) {
-//	existingVal=index;
-//	return true;
- //     } else {
-//	return false;
-//      }
-//    });
-		
-//    return existingVal;
-//  };
-
-  // returns whether the val.toString exists in list
-  // list is an array of toStringable ids
-  // if list does not exist, will return false
-  // val and lists must be 'toString' able.
-//  var valExistsInListAsString = function(val, list)
-  //  {
-    //  if(list && list.length>0)
-//      {
-//	return list.some(function(selectedValue) {
-//	  return selectedValue.toString() === val.toString();
-//	});
-  //    } else {
-//	return false;
-  //    }
-  //  };
 
   // Selects the competitors from the list and returns as a list of Ids
   var getSelectedCompetitorsAsIds = function(competitorsList) {
     var selectedCompetitors = CHelper.filterListOnSelected(competitorsList);
     return CHelper.listToIds(selectedCompetitors);
   };
-
   
   // Init match based on tournament.
   var initMatchSelectResult = function(match) {
@@ -189,7 +124,6 @@ angular.module('matches').factory('Match-Helper', ['$filter', 'Core-Helper','Tou
     });
   };
 
-  
   // Fill Results
   // first result 
   var fillResultsForMatch = function(match, results, winList, lossList) {
@@ -204,7 +138,6 @@ angular.module('matches').factory('Match-Helper', ['$filter', 'Core-Helper','Tou
       match.results = [{'key':TResults.key.tBD, 'name':'TBD', 'competitors':match.competitors.slice(0) }];
     }
   };
-
 
   // helper function
   // add a new list of competitors
@@ -229,7 +162,6 @@ angular.module('matches').factory('Match-Helper', ['$filter', 'Core-Helper','Tou
     val.competitors_list = new_match_competitors;
   };
 
-//    ,competitorsToSelectList: competitorsToSelectList
   return {
     createNewMatch: createNewMatch
     ,createEmptyMatch: createEmptyMatch
