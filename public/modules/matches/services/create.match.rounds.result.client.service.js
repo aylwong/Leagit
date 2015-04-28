@@ -110,6 +110,8 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Result', ['$filter',
     return competitorWinsList;
   };
 
+  // TODO: MOVE To Match Results !!!
+
   // Get Competitr wins from list of matches
   var getCompetitorWinsFromMatches = function(competitor,matches) {
     var reduceFunction = resultWinsReduceFunction;

@@ -15,6 +15,10 @@ exports.createService = function(competitorModel) {
  var _Competitor = competitorModel;
 
   // Filter Queries
+  // Filter as 'And' or 'Or' of params
+  // possible params (single): tournamentId
+  // possible params (comma delimited str): ids, tournaments, emails, names
+  // possible regex params (match substring): name, email
   var competitorFilters = function(params, query) {
 	var isAnd = true;
 	var name, email, tournaments;
@@ -83,6 +87,14 @@ exports.createService = function(competitorModel) {
 	    orParams.push({'name':{$regex: regXName}});
 	  }
 	}
+    if(params.names && params.names.length>0) {
+	    var names = params.names.split(',');
+	  if(isAnd) {
+	    query.where('name').in(names);
+	  } else {
+	    orParams.push({'name':names});
+	  }
+    }
 
 	if(params.email) {
 	  var regXEmail = new RegExp(params.email,'i');
@@ -92,6 +104,15 @@ exports.createService = function(competitorModel) {
 	    orParams.push({'email':{$regex: regXEmail}});
 	  }
 	}
+
+    if(params.emails && params.emails.length>0) {
+	    var emails = params.emails.split(',');
+	  if(isAnd) {
+	    query.where('email').in(emails);
+	  } else {
+	    orParams.push({'email':emails});
+	  }
+    }
 
 	// or 
 	if(isAnd) {

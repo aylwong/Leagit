@@ -21,6 +21,10 @@ angular.module('matches').config(['$stateProvider',
 			url: '/matches/:matchId/edit',
 			templateUrl: 'modules/matches/views/edit-match.client.view.html'
 		})
+		.state('massEditMatch', {
+			url: '/tournaments/:tournamentId/matches/edit',
+			templateUrl: 'modules/matches/views/mass.edit.matches.client.view.html'
+        })
 		.state('createMatch', {
 			url: '/tournaments/:tournamentId/matches/create',
 			templateUrl: 'modules/matches/views/create-match.client.view.html'

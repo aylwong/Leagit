@@ -155,6 +155,14 @@ angular.module('core').factory('Core-Helper', ['$filter','_service', function($f
     });
   };
 
+  // Remove the entry from the list and return it, matching on Id
+  var removeEntryFromList = function(entry, list) {
+    var index =  list.some(function(listItem) {
+      return sameIdStrings(listItem,entry);
+    });
+    return list.splice(index,1);
+  };
+
   // return functions that service will use
   return {
     listToIds: listToIds
@@ -167,5 +175,6 @@ angular.module('core').factory('Core-Helper', ['$filter','_service', function($f
     ,sameIdStrings: sameIdStrings
     ,removeFromListIfNotInMasterList: removeFromListIfNotInMasterList
     ,mergeArraysUnique: mergeArraysUnique 
+    ,removeEntryFromList: removeEntryFromList
   };
 }]);

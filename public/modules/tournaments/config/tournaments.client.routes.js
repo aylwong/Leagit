@@ -21,6 +21,14 @@ angular.module('tournaments').config(['$stateProvider',
 			url: '/tournaments/:tournamentId/adhoc',
 			templateUrl: 'modules/tournaments/views/create.adhoc.tournament.client.view.html'
 		}).
+		state('viewTournamentByMatch', {
+			url: '/tournaments/:tournamentId/viewbymatch',
+			templateUrl: 'modules/tournaments/views/view.by.match.tournament.client.view.html'
+		}).
+		state('viewTournamentByCompetitor', {
+			url: '/tournaments/:tournamentId/viewbycompetitor',
+			templateUrl: 'modules/tournaments/views/view.by.competitor.tournament.client.view.html'
+		}).
 		state('editTournament', {
 			url: '/tournaments/:tournamentId/edit',
 			templateUrl: 'modules/tournaments/views/edit-tournament.client.view.html'

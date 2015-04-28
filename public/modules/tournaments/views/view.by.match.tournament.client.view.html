@@ -1,0 +1,31 @@
+<section data-ng-controller="PopulatedTournamentController" data-ng-init="initViewMatchesOfTournament()">
+  <div class="row">
+    <div class="small-6 columns">
+      <h2>Tournament:{{tournament.name}}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <table>
+      <thead>
+        <tr>
+          <th>Round</th>
+          <th>Match</th>
+          <th>Result</th>
+          <th>Competitor</th>
+          <th>Competitor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-ng-repeat="match in tournament.matches" >
+          <td>{{ match.round }}</td>
+          <td>{{match.name }}</td>
+          <td>{{ getMatchResultName(match) }}</td>
+          <td data-ng-repeat="competitor in match.competitors">
+              {{ competitor.name }} - 
+              {{ getCompetitorResultName(match, competitor) }} 
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

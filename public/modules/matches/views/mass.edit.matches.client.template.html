@@ -1,0 +1,15 @@
+<div>
+  <ul class="listTable">
+    <li>
+      N:{{ match.name }}
+    </li>
+    <li>
+    R:
+      <a class="button" data-ng-click="switchResult(match)">{{ getMatchResultName(match) }}</a> 
+    </li>
+    <li data-ng-repeat="competitor in match.competitors_full">
+      C:<a class="button" data-ng-click="swapWinner(match,competitor)">{{ getCompetitorResultName(match, competitor) }}</a> 
+      {{ competitor.name }}
+    </li>
+  </ul>
+</div>

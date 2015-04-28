@@ -28,9 +28,9 @@ var ResultSchema = new Schema({
 		,enum: ['Win', 'Loss', 'Tie', 'Other', 'TBD']
 		,required: 'Result must have a name'
 	}
-	,points: { type: String, 
+	,points: [{ type: String, 
 		Required: false
-	}
+	}]
 	,description: { type: String,
 		Required: false 
 	}

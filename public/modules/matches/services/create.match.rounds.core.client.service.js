@@ -104,7 +104,8 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
 
   // creat Match with 1 Competitor
   var createMatchWith1Competitor = function(competitor,round,name) {
-    var competitors = [].push(competitor);
+    var competitors = [];
+      competitors.push(competitor);
    return createMatchWithCompetitors(competitors,round,name);
   };
 

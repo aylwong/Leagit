@@ -9,10 +9,13 @@ var users = require('../../app/controllers/users'),
 	matches = require('../../app/controllers/matches');
 module.exports = function(app) {
 	// Competitor Routes
+	app.route('/competitors/public')
+      .get(competitors.publicList);
 	app.route('/competitors')
 		.get(competitors.list)
 		.post(users.requiresLogin, competitors.create);
-
+    app.route('/competitors/mass')
+        .post(users.requiresLogin, competitors.massCreate);
 	app.route('/competitors/search')
 		.get(competitors.currentList);
 	// TODO: possibly remove archive enumerations

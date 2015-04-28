@@ -8,5 +8,11 @@ angular.module('competitors').factory('Competitors', ['$resource', function($res
         update: {
             method: 'PUT'
         }
+        ,massCreate: {
+            method: 'POST'
+            ,isArray:true
+            ,url:'competitors/mass/'
+        }
+
     });
 }]);

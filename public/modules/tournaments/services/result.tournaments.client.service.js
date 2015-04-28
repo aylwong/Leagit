@@ -1,9 +1,9 @@
 'use strict';
 
 //Tournaments service used for communicating with the tournaments REST endpoints
-angular.module('tournament.results').factory('Tournament.Results', function() {
+angular.module('tournament.results').factory('Tournament.Results', ['_service', function(_s) {
 
-	var key = {};
+    var key = {};
 	key.win = 'Win';
 	key.tie = 'Tie';
 	key.loss = 'Loss';
@@ -35,21 +35,19 @@ angular.module('tournament.results').factory('Tournament.Results', function() {
 	};
 
 	var createResult = function(resultKey, competitorList) {
-
 	  return {
 	   'key': resultKey
 	    ,'name': getName(resultKey)
 	    ,'competitors':competitorList
 	  };
-
 	};
 
-    	var results = [ createResult(key.tBD, [])
-	  ,createResult(key.win, [])
-	  ,createResult(key.tie, [])
-	  ,createResult(key.loss, [])];
+   var results = [ createResult(key.tBD, [])
+     ,createResult(key.win, [])
+     ,createResult(key.tie, [])
+	 ,createResult(key.loss, [])];
 
-    	var selectResults = [
+    var selectResults = [
 	  createResult(key.tBD,[])
 	  ,createResult(key.win,[])
 	  ,createResult(key.tie,[])];
@@ -66,10 +64,19 @@ angular.module('tournament.results').factory('Tournament.Results', function() {
 	  return selectResult;
 	};
 
+    var getResultFromResults = function(results, resultKey) {
+      return _s.find(results,function(result) {
+        return result.key === resultKey;
+      });
+    };
+
     return  {
         results: results
 	,selectResults: selectResults
 	,getResultWithKey: getResultWithKey
+    ,getResultFromResults: getResultFromResults
 	,key: key
+    ,getName: getName
+    ,createResult: createResult
         };
-});
+}]);
