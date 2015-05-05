@@ -45,6 +45,16 @@ angular.module('matches')
     var maxRound = CMRoundsCore.getMaxRound(tournament.matches);
     CMRoundsCore.createMatchRoundWithRandomPairing($scope.tournament.competitors_full,maxRound+1);
   }; 
-  
+
+  $scope.removeRound = function(tournament, round) {
+    CMRoundsCore.removeRoundFromMatches(tournament,round);
+  };
+
+  $scope.removeMaxRound = function(tournament) {
+    //console.log(tournament);
+    var maxRound = CMRoundsCore.getMaxRound(tournament.matches);
+    $scope.removeRound(tournament,maxRound);
+  };
+
 }
 ]);

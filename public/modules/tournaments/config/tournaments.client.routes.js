@@ -39,7 +39,11 @@ angular.module('tournaments').config(['$stateProvider',
 		}).
         state('createTournamentMatches', {
 			url: '/tournaments/:tournamentId/createtournamentmatches',
-			templateUrl: 'modules/tournaments/views/create.tournament.matches.client.view.html'
+			templateUrl: 'modules/tournaments/views/create.matches.for.tournament.client.view.html'
+		}).
+        state('createMatchesForTournament', {
+			url: '/tournaments/:tournamentId/creatematches',
+			templateUrl: 'modules/tournaments/views/create.matches.for.tournament.client.view.html'
 		}).
 		state('editTournament', {
 			url: '/tournaments/:tournamentId/edit',

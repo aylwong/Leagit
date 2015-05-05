@@ -16,7 +16,7 @@
           <td>{{match.name }}</td>
           <td>{{ getMatchResultName(match) }}</td>
           <td data-ng-repeat="competitor in match.competitors">
-              {{ competitor.name }} - 
+              {{ competitor.name ? competitor.name : '' }} - 
               {{ getCompetitorResultName(match, competitor) }} 
           </td>
         </tr>

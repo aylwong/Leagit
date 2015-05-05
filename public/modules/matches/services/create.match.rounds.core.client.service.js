@@ -148,6 +148,14 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
     return list.splice(index,1);
   };
 
+  var removeRoundFromMatches = function(tournament, round) {
+    if(round) {
+      tournament.matches = _s.filter(tournament.matches, function(match) {
+        return match.round !== round;
+      });
+    } 
+  };
+
   return {
     isOdd: isOdd
     ,createMatchWith1Competitor: createMatchWith1Competitor
@@ -159,5 +167,6 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Core', ['$filter', '
     ,competitorInIdList: competitorInIdList
     ,getMaxRound: getMaxRound
     ,createMatchRoundWithRandomPairing: createMatchRoundWithRandomPairing
+    ,removeRoundFromMatches: removeRoundFromMatches
   };
 }]);

@@ -148,7 +148,7 @@ angular.module('tournaments')
       $scope.tournaments.selectable_competitors =CompetitorHelper.selectableCompetitors(competitors);
 
       // All competitors for matches starts unchecked 
-      tournament_complete.resolve();
+      tournament_complete.resolve(tournament);
     });
 
     return tournament_complete.promise;
@@ -232,11 +232,14 @@ angular.module('tournaments')
   $scope.updateSpecial = function(tournament, bounceLink) {
     bounceLink = bounceLink ? bounceLink : 'tournaments/{0}';
     // clean match competitors.
-    angular.forEach(tournament.matches, function(value,key) {
+    //angular.forEach(tournament.matches, function(value,key) {
       // turn selected competitors into list of ids
-    });
+    //});
     
     tournament.$update(function() {
+  //    console.log('update complete');
+     // $location.path('tournaments');
+
       bounceLocation([tournament._id],$scope.nextButton);
     }, function(errorResponse) {
       $scope.error = errorResponse.data.message;
@@ -258,13 +261,16 @@ angular.module('tournaments')
 
   $scope.initTournamentView = function() {
     $scope.findOne();
-    $scope.tournaments.tournament_complete.then(function() {
+    loadFullMatchCompetitorsForTournament($scope.tournaments.tournament_complete);
+  };
+
+  var loadFullMatchCompetitorsForTournament = function(tournamentLoadedPromise) {
+    return tournamentLoadedPromise.then(function() {
       var tournament = $scope.tournaments.tournament;
 
       tournament.matches.forEach(function(match) {
         match.competitors = CHelper.idsToList(match.competitors,tournament.competitors_full);
       });
-      $scope.tournaments.tournament = tournament;
     });
   };
 

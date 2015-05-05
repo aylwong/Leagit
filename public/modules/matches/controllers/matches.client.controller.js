@@ -166,11 +166,7 @@ angular.module('matches')
   };
 
   $scope.initCreateMassMatchesTournament = function () {
-   
     var promise = $scope.initMatchDetailsOfTournament();
-    promise.then(function() {
-      console.log($scope.tournament.type);
-    });
   };
 
   // Initialise a create Ad Hoc Tournament
@@ -180,14 +176,12 @@ angular.module('matches')
     return tournamentPromise.then(function(results) {
       $scope.tournament = results.tournament;
       $scope.competitors = results.competitors;
+	  $scope.tournament.competitors_full = CHelper.idsToList($scope.tournament.competitors, results.competitors);
 
-	$scope.tournament.competitors_full = CHelper.idsToList($scope.tournament.competitors, results.competitors);
-
-	$scope.tournament.matches.forEach(function(match) {
-	  match.competitors_full = CHelper.idsToList(match.competitors, results.competitors);
-	  match.competitors = CHelper.idsToList(match.competitors, results.competitors);
-	});
-
+	  $scope.tournament.matches.forEach(function(match) {
+	    match.competitors_full = CHelper.idsToList(match.competitors, results.competitors);
+	    match.competitors = CHelper.idsToList(match.competitors, results.competitors);
+	  });
     });
   };
 
@@ -260,13 +254,11 @@ angular.module('matches')
       tournamentsResult = tList;
 
       var competitorsList = getCompetitorsFromTournaments(tList);
-
       var competitorsPromise = load_competitors(competitorsList).$promise;
 
       return competitorsPromise;
     })
     .then(function(competitors) {
-//	competitorResult = competitor;
       return {
         tournaments: tournamentsResult
         ,competitors: competitors
@@ -346,7 +338,6 @@ angular.module('matches')
 
   // Get Competitor list from Tournaments
   var getCompetitorsFromMatches = function(tournamentList) {
-//    var competitorList = [];
     var tournamentsCompetitors = tournamentList.map(function(tournament) {
       var matchCompetitors = tournament.matches.map( function(match) {
         return match.competitors;
@@ -356,8 +347,7 @@ angular.module('matches')
 
      var competitorList =  _s.union(tournamentsCompetitors);
      return _s.uniq(competitorList); 
-//,function(n) { return CHelper.getId(n); });
-    };
+  };
 
   // Get Competitor list from Tournaments
   var getCompetitorsFromTournaments = function(tournamentList) {

@@ -26,7 +26,8 @@ angular.module('matches').factory('Match-Rounds-Results-Helper', ['$filter', 'Co
 
   var getCompetitorResultName = function(match, competitor) {
     var result = _s.find(match.results,function(result) {
-      return existsInList(result.competitors, CHelper.getId(competitor));
+      var competitorId = CHelper.hasId(competitor) ? CHelper.getId(competitor) : competitor;
+      return existsInList(result.competitors, competitorId);
     });
     if(!result) {
       return TResults.getName(TResults.key.tBD);

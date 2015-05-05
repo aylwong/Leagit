@@ -9,6 +9,10 @@ angular.module('core').factory('Core-Helper', ['$filter','_service', function($f
     return $filter('filter')(list,{'selected':true});
   };
 
+  var hasId = function(value) {
+    return value.id || value._id;
+  };
+
   /// Gets the Id for the value.
   var getId = function(value) {	
     if(value.id) {
@@ -16,7 +20,7 @@ angular.module('core').factory('Core-Helper', ['$filter','_service', function($f
     } else if (value._id) {
       return value._id;
     } else {
-      throw 'value does not have an Id property.';
+      throw new Error('value does not have an Id property');
     }
   };
 
@@ -189,6 +193,7 @@ function stringSubstitute(str, substituteValues)
     ,mergeArrays: mergeArrays
     ,moveArrayItem: moveArrayItem
     ,getId: getId
+    ,hasId: hasId
     ,sameIdStrings: sameIdStrings
     ,removeFromListIfNotInMasterList: removeFromListIfNotInMasterList
     ,mergeArraysUnique: mergeArraysUnique 

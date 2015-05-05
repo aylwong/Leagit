@@ -9,6 +9,7 @@
       <a class="button " ng-show="tournament.type==='Ad Hoc'" data-ng-click="createRandomAdHocMatches(tournament)">Ad Hoc</a> 
       <a class="button " ng-show="tournament.type==='Ad Hoc' || tournament.type==='Swiss'" data-ng-click="createNextRoundBasedOnWins(tournament)">Round By Wins</a> 
       <a class="button " ng-show="tournament.type==='Ad Hoc' || tournament.type==='Round Robin'" data-ng-click="createRoundsBasedOnRoundRobin(tournament)">Rounds By Round Robin</a> 
+      <a class="button " data-ng-click="removeMaxRound(tournament)">Remove Last Round</a> 
     </div>
   </div>
   <div class="row">
