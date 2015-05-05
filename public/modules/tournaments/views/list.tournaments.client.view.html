@@ -2,28 +2,31 @@
     <div class="page-header">
         <h1>Tournaments</h1>
     </div>
-    <div class="list-group">
-        <div data-ng-repeat="tournament in tournaments.list" class="list-group-item">
-            <small class="list-group-item-text">{{tournament.created | date:'medium'}} / {{tournament.user.displayName}}</small>
-            <h4 class="list-group-item-heading"><a data-ng-href="#!/tournaments/{{tournament._id}}">{{tournament.name}}</a></h4>
-            <h4 class="list-group-item-heading">{{tournament.start_date}}</h4>
-            <h4 class="list-group-item-heading">{{tournament.end_date}}</h4>
-            <h4 class="list-group-item-heading">{{tournament.type}}</h4>
-            <h4 class="list-group-item-heading">Matches:{{tournament.matches.length}}</h4>
-	    <ul>
-	      <li data-ng-repeat="match in tournament.matches" class="list-group-item-heading">
-		<a data-ng-href="#!/matches/{{match._id}}">{{ match.name }}</a>
-	     </li>
-	    </ul>
-            <h4 class="list-group-item-heading">Competitors:{{tournament.selected_competitors.length}}</h4>
-	    <ul>
-	      <li data-ng-repeat="competitor in tournament.selected_competitors" class="list-group-item-heading">
-		<a data-ng-href="#!/competitors/{{competitor.id}}">{{ competitor.name }}</a>
-	     </li>
-	    </ul>
-            <p class="list-group-item-text">{{tournament.description}}</p>
-        </div>
-    </div>
+    <table>
+     <thead>
+       <tr>
+         <th>Name</th>
+         <th>Start Date</th>
+         <th>End Date</th>
+         <th>Type</th>
+         <th>Matches</th>
+         <th>Competitors</th>
+         <th>Description</th>
+       </tr>
+     </thead>
+     <tbody>
+       <tr data-ng-repeat="tournament in tournaments.list">
+         <td><a data-ng-href="#!/tournaments/{{tournament._id}}">{{tournament.name}}</a></td>
+         <td>{{ tournament.start_date | full_normal_date }}</td>
+         <td>{{ tournament.end_date | full_normal_date }}</td>
+         <td>{{ tournament.type }}</td>
+         <td>{{ tournament.matches.length }}</td>
+         <td>{{ tournament.competitors.length }}</td>
+         <td>{{ tournament.description }}</td>
+       </tr>
+     </tbody>
+    </table>
+
     <div class="alert alert-warning text-center" data-ng-hide="!tournaments.list.$resolved || tournaments.list.length">
     	No tournaments yet, why don't you <a href="/#!/tournaments/create">create one</a>?
     </div>
