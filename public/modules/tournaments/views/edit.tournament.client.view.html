@@ -1,0 +1,78 @@
+<section data-ng-controller="TournamentsController" data-ng-init="initTournamentEdit()">
+  <div class="page-header row">
+    <h1 class="large-12 columns">Edit Tournament: {{tournaments.tournament.name}}</h1>
+  </div>
+  <div class="row">
+    <div class="column">
+	  <a href="#!/tournaments/{{tournaments.tournament._id}}">back to view</a>
+	</div>
+  </div>
+  <div class="row">
+    <form class="form-horizontal large-12 columns" data-ng-submit="update(tournaments.tournament)" novalidate>
+      <fieldset>
+        <div class="form-group row">
+          <div class="large-11 columns left">
+            <input type="submit" value="{{nextButton.next.text}}" class="button right">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="control-label large-2 columns">
+            <label class="right inline" for="tournaments.tournament.name">Name</label>
+          </div>
+        <div class="controls large-4 columns left">
+          <input type="text" data-ng-model="tournaments.tournament.name" id="name" class="form-control" placeholder="Name" required>
+        </div>
+        <div class="control-label large-2 columns">
+          <label class="right inline" for="tournaments.tournament.type">Type</label>
+        </div>
+        <div class="controls large-3 columns left">
+		  <select data-native-menu="false" data-ng-model="tournaments.tournament.type" data-role="listview">
+		    <option ng-repeat="available_type in tournaments.available_types" value="{{available_type.id}}">{{available_type.name}}</option>
+		  </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="control-label large-2 columns">
+          <label class="right inline" for="tournaments.tournaments.start_date">Start Date</label>
+        </div>
+		<div class="controls large-4 columns left">
+		  <quick-datepicker ng-model="tournaments.tournament.start_date"></quick-datepicker>
+		</div>
+        <div class="control-label large-2 columns">
+          <label class="right inline" for="tournaments.tournament.end_date">End Date</label>
+        </div>
+		<div class="controls large-3 columns left">
+		  <quick-datepicker ng-model="tournaments.tournament.end_date"></quick-datepicker>
+		</div>
+      </div>
+	  <div class="form-group row">
+        <div class="control-label large-2 columns">
+          <label class="right inline" for="tournament.image">Image Link</label>
+        </div>
+		<div class="controls large-9 columns left">
+		  <input type="text" data-ng-model="tournaments.tournament.image" placeholder="Image Link" ></input>
+		</div>
+	  </div>
+      <div class="form-group row">
+        <div class="control-label large-2 columns">
+          <label class="right inline" for="tournament.description">Description</label>
+        </div>
+        <div class="controls large-9 columns left">
+          <textarea data-ng-model="tournaments.tournament.description" id="description" class="form-control" rows="2" placeholder="Description"></textarea>
+        </div>
+      </div>
+      <br />
+      <div class="form-group row">
+	    <div data-ng-show="error" class="text-danger">
+		  <strong>{{error}}</strong>
+		</div>
+      </div>
+      <div class="form-group row">
+        <div class="large-8 columns large-offset-2 right">
+          <input type="submit" value="{{nextButton.next.text}}" class="button right">
+        </div>
+      </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

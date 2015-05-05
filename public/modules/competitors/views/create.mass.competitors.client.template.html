@@ -1,17 +1,14 @@
 <div class="row">  
   <div class="row">
-    <div class="columns"><h4>
-    Create Mass Competitors
-    </h4></div>
-  </div>
-  <div class="row">
-  <textarea data-ng-model="massCompetitors" id="massCompetitors" cols="30" rows="3" placeholder="massCompetitors"></textarea>
-  </div>
-  <div class="row">
-    <div class="small-4 columns">
+    <div class="large-10 columns">
+      <textarea data-ng-model="massCompetitors" id="massCompetitors" rows="3" placeholder="massCompetitors"></textarea>
+    </div>
+    <div class="large-2 columns">
       <a data-ng-click="createMassCompetitors(massCompetitors)" class="button">Create Mass Competitors</a>
     </div>
-    <div class="small-8 columns">
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
       <div data-ng-show="ctrl.message" class="alert-box info radius">
 	    <strong>{{ctrl.message}}</strong>
       </div>

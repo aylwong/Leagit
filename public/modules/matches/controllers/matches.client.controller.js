@@ -142,7 +142,7 @@ angular.module('matches')
   };
 
   $scope.initViewMatchesByCompetitor = function () {
-    $scope.initMatchDetailsOfTournament();
+    var promise = $scope.initMatchDetailsOfTournament();
   };
 
   $scope.initViewMatchesOfTournament = function () {
@@ -157,15 +157,27 @@ angular.module('matches')
     return MRHelper.getCompetitorResultName(match, competitor);
   };
 
-  $scope.initCreateAdHocTournament = function () {
-    $scope.initMatchDetailsOfTournament();
+  $scope.initResolveMatchesForTournament = function () {
+    var promise = $scope.initMatchDetailsOfTournament();
+    promise.then(function() {
+      
+      $scope.tournament.matches = _s.sortByOrder($scope.tournament.matches,['round','name'],[false,true]);
+    });
+  };
+
+  $scope.initCreateMassMatchesTournament = function () {
+   
+    var promise = $scope.initMatchDetailsOfTournament();
+    promise.then(function() {
+      console.log($scope.tournament.type);
+    });
   };
 
   // Initialise a create Ad Hoc Tournament
   $scope.initMatchDetailsOfTournament = function() {
     var tournamentPromise = findTournament($stateParams.tournamentId);
 
-    tournamentPromise.then(function(results) {
+    return tournamentPromise.then(function(results) {
       $scope.tournament = results.tournament;
       $scope.competitors = results.competitors;
 

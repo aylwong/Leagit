@@ -13,8 +13,12 @@
 }
 
 .portraitImage {
-max-height:14em;
-max-width:14em
+max-height:16em;
+max-width:16em;
 }
 
+.portraitThumbnail {
+max-height:3em;
+max-width:3em;
 
+}

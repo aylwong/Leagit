@@ -1,0 +1,83 @@
+<section data-ng-controller="MatchesController" data-ng-init="initCreateMatch()">
+  <div class="row">
+    <div class="large-12 columns">
+      <h4>Create Adhoc Match</h4> 
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <a href="/#!/tournaments/{{tournament._id}}">Tournament: {{tournament.name}}</a>
+	<br/>
+      <a data-ng-click="create_match(match)" class="button columns right large-2 round">Create</a>
+    </div>
+  </div>
+  <div class="row"> 
+    <div class="large-2 columns">
+      Name
+    </div>
+    <div class="large-4 columns left"> 
+	  <input type="text" data-ng-model="match.name" class="form-control" placeholder="Name" id="name" required />
+    </div>
+    <div class="large-2 columns ">
+      Round
+    </div>
+    <div class="large-4 columns left">
+	  <input type="text" data-ng-model="match.round" class="form-control" placeholder="Round" id="round" required />
+    </div>
+  </div>
+  <div class="row"> 
+    <div class="large-2 columns">
+      Start Date
+    </div>
+    <div class="large-4 columns"> 
+	  <quick-datepicker ng-model="match.start_date" date-format="MMMM d yyyy (EEE)"></quick-datepicker>
+    </div>
+    <div class="large-2 columns">
+      End Date
+    </div>
+    <div class="large-4 columns"> 
+	  <quick-datepicker ng-model="match.end_date" date-format=" MMMM d yyyy (EEE)"></quick-datepicker>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="large-2 columns left">
+      Location
+    </div>
+    <div class="large-10 columns left">
+      <input type="text" data-ng-model="match.location" id="location" class="form-control" placeholder="Location" required />
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-2 columns left">
+      Description
+    </div>
+    <div class="large-10 columns left">
+      <textarea data-ng-model="match.description" id="description" class="form-control" placeholder="Description" rows="2" required></textarea>
+      <br />
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-2 columns left"> Competitors</div>
+    <div class="large-10 columns left">
+      <competitor-search list="match.selectable_competitors" parameters="tournamentId" ></competitor-search>
+      <competitor-selects selectable="match.selectable_competitors" selected="match.selected_competitors"></competitor-selects>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="large-2 columns left"> Results</div>
+    <div class="large-2 columns left">
+      <select ng-model="match.firstResult" ng-options="result.name for result in matches.available_results" data-ng-change="matches.changeResult(match.firstResult)">
+      </select>
+    </div>
+    <div class="large-8 columns left">
+      <competitor-selects selectable="match.competitor_winners" selected="match.competitor_losers" selectableheader="'Won'" selectedheader="'Lost'" ></competitor-selects>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns left">
+      <a data-ng-click="create_match(match)" class="button columns right large-2 round">Create</a>
+    </div>
+  </div>
+</section>

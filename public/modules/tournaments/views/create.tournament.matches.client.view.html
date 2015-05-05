@@ -1,0 +1,86 @@
+<section data-ng-controller="MatchesController" data-ng-init="initCreateMassMatchesTournament()">
+  <div class="row">
+    <div class="large-10 columns">
+      <h4>Edit Tournament:{{tournament.name}}</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+	  <a href="#!/tournaments/{{tournament._id}}">back to view</a>
+	</div>
+  </div>
+  <div class="row">
+    <div class="label large-2 columns">
+      <label class="right" for="tournament.name">Name</label>
+    </div>
+    <div class=" large-4 columns left">
+      {{ tournament.name }}
+    </div>
+    <div class="label large-2 columns">
+      <label class="right" for="tournament.type">Type</label>
+    </div>
+    <div class="large-4 columns left">
+      {{ tournament.type }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="label large-2 columns">
+      <label class="right" for="tournaments.start_date">Start Date</label>
+    </div>
+	<div class="large-4 columns left">
+      {{ tournament.start_date  | full_normal_date }}
+	</div>
+    <div class="label large-2 columns">
+      <label class="right" for="tournament.end_date">End Date</label>
+    </div>
+	<div class="large-4 columns left">
+      {{ tournament.end_date | full_normal_date }}
+	</div>
+  </div>
+  <div class="row">
+    <div class="label large-2 columns">
+      <label class="right " for="tournament.image">Image Link</label>
+    </div>
+	<div class="large-9 columns left">
+      {{ tournament.image }}
+	</div>
+  </div>
+  <div class="row">
+    <div class="label large-2 columns">
+      <label class="right" for="tournament.description">Description</label>
+    </div>
+    <div class="large-9 columns left">
+      {{ tournament.description }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="label large-2 columns">
+      <label class="right" for="tournament.description">Competitors</label>
+    </div>
+    <div class="large-9 columns left">
+      <div class="row">
+        <div class="large-3 columns left" data-ng-repeat="competitor in tournament.competitors_full" >
+          <li>{{ competitor.name }}</li>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <fieldset >
+      <div class="row" data-ng-controller="TournamentsController" data-ng-init="initNextButtons()">
+        <div class="large-6 columns">
+	      <a class="button" href="{{ getBackButtonUrl(tournament._id)}}">{{ nextButton.back.text }}</a>
+         </div>
+        <div class="large-6 columns" data-ng-controller="TournamentsController">
+          <a class="button right" data-ng-click="updateSpecial(tournament,'tournaments/{0}/matches/edit')">{{ nextButton.next.text }}</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns">
+          <auto-create-matches tournament="tournament"></auto-create-matches>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</section>

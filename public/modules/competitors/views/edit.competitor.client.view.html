@@ -1,0 +1,60 @@
+<section data-ng-controller="CompetitorsController" data-ng-init="findOne()">
+    <div class="page-header row">
+        <h1 class="large-10 columns">Edit Competitor</h1>
+    </div>
+    <div class="col-md-12 row">
+        <form class="form-horizontal large-10 columns" data-ng-submit="update()" novalidate>
+            <fieldset>
+                <div class="form-group row">
+                  <div class="control-label large-2 columns">
+                    <label class="right inline" for="name">Name</label>
+                  </div>
+                    <div class="controls large-8 columns left">
+                        <input type="text" data-ng-model="competitor.name" id="name" class="form-control" placeholder="Name" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                  <div class="control-label large-2 columns">
+                    <label class="right inline" for="email">Email</label>
+                  </div>
+                  <div class="controls large-8 columns left">
+                    <input type="text" data-ng-model="competitor.email" id="email" class="form-control" placeholder="Email" required>
+                  </div>
+                </div>
+	        <div class="form-group row">
+		  <div class="control-label large-2 columns">
+		    <label class="right inline" for="state">State</label>
+		  </div>
+		  <div class="control large-8 columns left">
+		    <input type="text" data-ng-model="competitor.archived">
+		  </div>
+		</div>
+	        <div class="form-group row">
+		  <div class="control-label large-2 columns">
+		    <label class="right inline" for="state">Image Link</label>
+		  </div>
+		  <div class="control large-8 columns left">
+		    <input type="text" data-ng-model="competitor.image">
+		  </div>
+		</div>
+                <div class="form-group row">
+                  <div class="control-label large-2 columns">
+                    <label class="right inline" for="competitor.description">Description</label>
+                  </div>
+                    <div class="controls large-8 columns left">
+                        <textarea data-ng-model="competitor.description" id="description" class="form-control" cols="30" rows="4" placeholder="Description"></textarea>
+                    </div>
+                </div>
+               <br />
+                <div class="form-group row">
+                  <div class="large-8 columns large-offset-2 left">
+                    <input type="submit" value="Update" class="button">
+                  </div>
+                </div>
+				<div data-ng-show="error" class="text-danger">
+					<strong>{{error}}</strong>
+				</div>
+            </fieldset>
+        </form>
+    </div>
+</section>

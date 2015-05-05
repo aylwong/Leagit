@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tournaments')
-    .controller('TournamentsController', ['$scope', '$stateParams', '$location','$filter', '$q', 'Authentication', 'Tournaments', 'Competitors','Tournament.Results','Tournament-Helper','Core-Helper','Competitor-Helper'
-  ,function($scope, $stateParams, $location, $filter, $q, Authentication, Tournaments, Competitors, TResults,THelper,CHelper,CompetitorHelper) {
+    .controller('TournamentsController', ['$scope', '$stateParams', '$location','$filter', '$q', 'Authentication', 'Tournaments', 'Competitors','Tournament.Results','Tournament-Helper','Core-Helper','Competitor-Helper','_service'
+  ,function($scope, $stateParams, $location, $filter, $q, Authentication, Tournaments, Competitors, TResults,THelper,CHelper,CompetitorHelper,_s) {
   // add auth
   $scope.authentication = Authentication;
 
@@ -21,11 +21,7 @@ angular.module('tournaments')
   }, {
     'id': 'Round Robin', 'name': 'Round Robin'
   }, {
-    'id': 'Joust', 'name': 'Joust'
-  }, {
-    'id': 'Elimination', 'name': 'Elimination'
-  }, {
-    'id': 'Soft Elimination', 'name': 'Soft Elimination'
+    'id': 'Swiss', 'name': 'Swiss'
   }];
 
   $scope.tournaments.available_results = TResults.results;
@@ -60,8 +56,14 @@ angular.module('tournaments')
     $scope.view_state.show_new_match = $scope.view_state.show_new_match !== true;
   };
 
-  // INIT
+  $scope.massCompetitorsAdded = function(allCompetitors,response) {
+    CHelper.mergeArrays($scope.tournaments.selected_competitors, allCompetitors, CHelper.sameIdStrings);
+    allCompetitors.forEach(function(sCompetitor) {
+      CHelper.removeEntryFromList(sCompetitor, $scope.tournaments.selectable_competitors);
+    });
+  };
 
+  // INIT
   // This is competitor INIT stuff:
   $scope.competitor_init = function(competitorIds) {
     // getting available competitors (defered until loaded?)
@@ -82,6 +84,7 @@ angular.module('tournaments')
       return list;
     });
   };
+
 
   // init multiple tournaments
   $scope.tournaments.init_tournaments = function(tournaments) {
@@ -119,7 +122,7 @@ angular.module('tournaments')
   };
 
   // init tournament based on initial tournament
-  // Test - Init Tournament
+  // Test - Init a single Tournament
   $scope.tournaments.init_tournament = function(tournamentId,competitors_loaded) {
     var tournament_loaded =  Tournaments.get({
       tournamentId: $stateParams.tournamentId
@@ -140,6 +143,7 @@ angular.module('tournaments')
       $scope.tournaments.loadCompetitorsIntoTournament(tournament,competitors);
       // load tournaments into competitors list
       $scope.tournaments.selected_competitors = CHelper.idsToList(tournament.competitors,competitors);
+      tournament.competitors_full = CHelper.idsToList(tournament.competitors,competitors);
 
       $scope.tournaments.selectable_competitors =CompetitorHelper.selectableCompetitors(competitors);
 
@@ -152,7 +156,8 @@ angular.module('tournaments')
 
   // CALLABLE FUNCTIONS
   // function create a new tournament
-  $scope.create = function() {
+  $scope.create = function(tournament,bounceLink) {
+    bounceLink = bounceLink ? bounceLink : createNextLink;
     // turn match results into arrays with results
     var tournament = $scope.tournaments.tournament;
 
@@ -180,14 +185,16 @@ angular.module('tournaments')
     });
 
     newTournament.$save(function(response) {
-	$location.path('tournaments/' + response._id);
+        bounceCreatedLocation([response._id]);
+	    $location.url(CHelper.stringSubstitute(bounceLink,[response._id]));
       }, function(errorResponse) {
-	$scope.error = errorResponse.data.message;
+	    $scope.error = errorResponse.data.message;
     });
   };
 
   // function remove a tournament
-  $scope.remove = function(tournament) {
+  $scope.remove = function(tournament,bounceLink) {
+    bounceLink = bounceLink ? bounceLink : 'tournaments';
     if (tournament) {
       tournament.$remove();
 
@@ -198,16 +205,14 @@ angular.module('tournaments')
       }
     } else {
       $scope.tournaments.tournament.$remove(function() {
-        $location.path('tournaments');
+        $location.path(bounceLink);
       });
     }
   };
 
   // function 
   // update tournament.
-  $scope.update = function(tournament) {
-//    var tournament = $scope.tournaments.tournament;
-
+  $scope.update = function(tournament, bounceLink) {
     // turns the selected competitors into a list of ids
     tournament.competitors=CHelper.listToIds($scope.tournaments.selected_competitors);
 
@@ -218,43 +223,53 @@ angular.module('tournaments')
     });
 			
     tournament.$update(function() {
-      $location.path('tournaments/' + tournament._id);
+      bounceLocation([tournament._id],$scope.nextButton);
     }, function(errorResponse) {
       $scope.error = errorResponse.data.message;
     });
   };
 
-  $scope.updateSpecial = function(tournament) {
-    console.log('update special');
-    console.log(tournament);
-    //$scope.update(tournament);
+  $scope.updateSpecial = function(tournament, bounceLink) {
+    bounceLink = bounceLink ? bounceLink : 'tournaments/{0}';
     // clean match competitors.
     angular.forEach(tournament.matches, function(value,key) {
       // turn selected competitors into list of ids
-	console.log(value);
-      //value.competitors = THelper.getSelectedCompetitorsAsIds(value.competitors);
     });
     
     tournament.$update(function() {
-      $location.path('tournaments/' + tournament._id);
+      bounceLocation([tournament._id],$scope.nextButton);
     }, function(errorResponse) {
       $scope.error = errorResponse.data.message;
     });
-  };
-
-  $scope.initTournamentList = function() {
-    $scope.find();
   };
 
   $scope.find = function() {
     $scope.tournaments.init_tournaments();
   };
 
-  $scope.initTournamentView = function() {
+  $scope.initTournamentList = function() {
+    $scope.find();
+  };
+
+  $scope.initAddCompetitorsToTournament = function() {
+    $scope.nextButton = loadNextButton($location.search());
     $scope.findOne();
   };
 
+  $scope.initTournamentView = function() {
+    $scope.findOne();
+    $scope.tournaments.tournament_complete.then(function() {
+      var tournament = $scope.tournaments.tournament;
+
+      tournament.matches.forEach(function(match) {
+        match.competitors = CHelper.idsToList(match.competitors,tournament.competitors_full);
+      });
+      $scope.tournaments.tournament = tournament;
+    });
+  };
+
   $scope.initTournamentEdit = function() {
+    $scope.nextButton = loadNextButton($location.search());
     $scope.findOne();
   };
 
@@ -267,12 +282,167 @@ angular.module('tournaments')
     });
   };
 
+  $scope.initNextButtons = function( ) {
+    $scope.nextButton = loadNextButton($location.search());
+  };
+
   $scope.findOne = function() {
     // load all competitors - as competitors grows, will probably have to load after initial load of tournaments, and filter for competitors only of the tournament
     $scope.competitors.competitors_complete = $scope.competitor_init();
     $scope.tournaments.tournament = [];
     $scope.tournaments.tournament_complete = $scope.tournaments.init_tournament($scope.tournamentId,$scope.competitors.competitors_complete);
   };
+
+  $scope.getBackButtonUrl = function(id) {
+    var nextButton = $scope.nextButton;
+    var path = $scope.nextButton.back.link;
+    var next, back;
+    var backUrlPart;
+    if(nextButton.back.list.length>0) {
+      var current = nextButton.back.list[nextButton.back.list.length-1];
+      next = [current].concat(nextButton.next.list).join(',');
+      if(nextButton.back.list.length>1) {
+        back = nextButton.back.list.slice(0,nextButton.back.list.length-1).join(',');
+      } else {
+        back = null; 
+      }
+    } else {
+      next = null;
+      back = null;
+    }
+    var result;
+    var paramsResultPart;
+    if(back!== null) {
+      paramsResultPart="?next=".concat(next,"&back=",back);
+    }
+    if(back===null && next === null) {
+      paramsResultPart='';
+    }
+
+    result = "/#!".concat(CHelper.stringSubstitute(path,[id]),paramsResultPart);
+    return result;
+  };
+
+  var bounceCreatedLocation = function(ids) {
+    var createNextLink = '/tournaments/{0}/addcompetitors?next=createMatches,view&back=edit,addCompetitors';
+    var createNextLink = '/tournaments/{0}/addcompetitors';
+    $location.search('next','createMatches,view');
+    $location.search('back','edit,addCompetitors');
+    $location.path(CHelper.stringSubstitute(createNextLink,ids));
+  }
+
+  var bounceBackLocation = function(ids,nextButton) {
+    if(nextButton) {
+      if(nextButton.back.list && nextButton.back.list[0]) {
+        var currentNext = nextButton.back.list.splice(0,1);
+        if(currentNext==='view' || nextButton.next.list.length===0) {
+          $location.search('next', null);
+          $location.search('back', null);
+        } else {
+          if(nextButton.next.list.length>0) {
+            $location.search('next', nextButton.next.list.join(','));
+          } else {
+            $location.search('next', null);
+          }
+          nextButton.back.list.push(currentNext);
+          $location.search('back',nextButton.back.list.join(','));
+        }
+      }
+
+      if(nextButton.next.link) {
+        $location.path(CHelper.stringSubstitute(nextButton.next.link,ids));
+        console.log($location.url());
+      }
+    }
+  };
+
+  var bounceLocation = function(ids, nextButton) {
+    if(nextButton) {
+      if(nextButton.next.list && nextButton.next.list[0]) {
+        var currentNext = nextButton.next.list.splice(0,1);
+        if(currentNext==='view' || nextButton.next.list.length===0) {
+          $location.search('next', null);
+          $location.search('back', null);
+        } else {
+          if(nextButton.next.list.length>0) {
+            $location.search('next', nextButton.next.list.join(','));
+          } else {
+            $location.search('next', null);
+          }
+          nextButton.back.list.push(currentNext);
+          $location.search('back',nextButton.back.list.join(','));
+        }
+      }
+
+      if(nextButton.next.link) {
+        $location.path(CHelper.stringSubstitute(nextButton.next.link,ids));
+      }
+    }
+  };
+
+  var nextLinks = [
+    {key: 'addCompetitors', text:'Add Competitors', link:'/tournaments/{0}/addcompetitors'}
+    ,{key: 'createMatches', text:'Create Matches', link:'/tournaments/{0}/createtournamentmatches'}
+    ,{key: 'view', text:'Done', link:'/tournaments/{0}',done:true}
+    ,{key: 'edit', text:'Edit Tournament', link:'/tournaments/{0}/edit'}
+    ];
+
+  var createNextLink = '/tournaments/{0}/addcompetitors?next=createMatches,view&back=edit,addCompetitors';
+
+  var loadNextButton = function(urlParams) {
+    var nextButton = {next:{list:[]},back:{list:[]}};
+    var useDefault = false;
+    var nextLinkInfo, backLinkInfo;
+
+    if($location.search().next) {
+      var urlNext = $location.search().next;
+      var nextArray = $location.search().next.split(',');
+      nextButton.next.list = nextArray;
+
+      if(nextArray[0]) {
+        nextLinkInfo =_s.find(nextLinks,function(link) {
+          return link.key === nextArray[0];
+        });
+      }
+    }
+
+    if(nextLinkInfo) {
+      nextButton.next.text = nextLinkInfo.done ? 'Done': 'Next';
+      nextButton.next.done = true;
+      nextButton.next.link = nextLinkInfo.link;
+    } else {
+      nextButton.next.text = 'Update';
+      nextButton.next.link = '/tournaments/{0}';
+    }
+
+    if($location.search().back) {
+      var backArray = $location.search().back.split(',');
+      nextButton.back.list = backArray;
+
+      if(backArray.length>1) {
+        backLinkInfo =_s.find(nextLinks,function(link) {
+          return link.key === backArray[backArray.length-2];
+        });
+      } else if(backArray.length===1) {
+        backLinkInfo =_s.find(nextLinks,function(link) {
+          return link.key === backArray[0];
+        });
+        nextButton.back.first=true;
+      }
+    } 
+    
+    if (backLinkInfo) {
+      nextButton.back.text = 'Back';
+      nextButton.back.link = backLinkInfo.link;
+    } else {
+      nextButton.back.text = 'Back';
+      nextButton.back.link = '/tournaments/{0}';
+    }
+
+    $scope.nextButton = nextButton;
+
+    return nextButton;
+  }
 }
 ]);
 

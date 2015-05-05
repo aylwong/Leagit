@@ -4,6 +4,5 @@
 angular.module('matches').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Matches', 'matches');
 	}
 ]);

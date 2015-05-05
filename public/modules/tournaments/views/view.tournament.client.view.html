@@ -1,0 +1,100 @@
+<section data-ng-controller="TournamentsController" data-ng-init="initTournamentView()">
+  <div class="large-12 columns">
+    <div class="row">
+      <div class="large-6 columns left">
+        <h2>{{tournaments.tournament.name}}</h2>
+      </div>
+      <div class="large-2 columns right" data-ng-show="authentication.user._id == tournaments.tournament.user._id">
+	    <br />
+        <a data-ng-show="authentication.user._id == tournaments.tournament.user._id" data-ng-click="remove();" class="right">remove</a>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-2 columns right" data-ng-show="authentication.user._id == tournaments.tournament.user._id">
+	    <a class="button round small right" href="/#!/tournaments/{{tournaments.tournament._id}}/edit">edit</a>
+    </div>
+    <div class="large-6 columns">
+      <div class="row">
+        <div class="large-12 columns left">
+          <small>
+	        <em class="text-muted">Created on {{tournaments.tournament.created | date:'mediumDate'}} by {{tournaments.tournament.user.displayName}}</em>
+	      </small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns label">
+          Type
+        </div>
+        <div class="large-9 columns left"> 
+          {{tournaments.tournament.type}}
+        </div>
+	  </div>    
+	  <div class="row">
+        <div class="large-3 columns label">
+          Start Date
+        </div>
+        <div class="large-9 columns left"> 
+          {{tournaments.tournament.start_date | full_normal_date}}
+     	</div>
+      </div>
+	  <div class="row">
+        <div class="large-3 columns label">
+          End Date
+        </div>
+        <div class="large-9 columns left"> 
+          {{tournaments.tournament.end_date | full_normal_date}}
+        </div>
+      </div>
+      <div class="row">
+	    <div class="large-3 columns left label">
+          Description
+        </div>
+        <div class="large-9 columns left">
+          {{tournaments.tournament.description}}
+        </div>
+      </div>
+    </div>
+    <div class="large-4 columns portraitImage" >
+	  <img src="{{tournaments.tournament.image}}" />
+    </div>
+  </div>
+    <br />
+  <div class="row"> 
+    <div class="large-12 columns">
+      Matches 
+    </div>
+	<div class="large-2 columns right">
+      <div class="row">
+        <div class="large-12">
+    	  <a class="button small round right" href="/#!/tournaments/{{tournaments.tournament._id}}/matches/edit">Resolve Matches</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12">
+    	  <a class="button small round right" href="/#!/tournaments/{{tournaments.tournament._id}}/createtournamentmatches">Mass Create Matches</a>
+        </div>
+      </div>
+	</div>
+    <div class="large-10 columns">
+      <view-by-match-tournament tournament="tournaments.tournament"></view-by-match-tournament>
+    </div>
+  <div class="row"> 
+    <div class="large-12 columns">
+      Competitors 
+    </div>
+    <div class="large-2 columns right">
+	  <a class="button small round right" href="/#!/tournaments/{{tournaments.tournament._id}}/addcompetitors">Add Competitors</a>
+    </div>
+    <div class="large-10 columns">
+      <view-by-competitor-tournament tournament="tournaments.tournament"></view-by-competitor-tournament>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns right" data-ng-show="authentication.user._id == tournaments.tournament.user._id">
+	  <a class="button small round right large-2 right" href="/#!/tournaments/{{tournaments.tournament._id}}/edit">
+        <i class="glyphicon glyphicon-edit">edit</i>
+	  </a>
+	</div>
+  </div>
+</section>

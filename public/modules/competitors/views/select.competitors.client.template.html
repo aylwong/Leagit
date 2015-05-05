@@ -1,18 +1,18 @@
 	<div class="row">
-	  <div class="column small-3">
-	    <h4>{{selectable_header}}</h4>
-	    <ul>
-	      <li data-ng-repeat="entry in selectable_list">
-		<a data-ng-click="ctrl.selectSelectable(entry)">{{entry.name}}</a>
-	      </li>
-	    </ul>
+	  <div class="column large-6">
+	    <h4>{{ctrl.selectable_header}}</h4>
+	    <div class="row">
+	      <div class="columns large-6 left" data-ng-repeat="entry in selectable_list">
+		<li><a data-ng-click="ctrl.selectSelectable(entry)">{{entry.name}}</a></li>
+	      </div>
+	    </div>
 	  </div>
-	  <div class="column small-3 left">
-	    <h4>{{selected_header}}</h4>
-	    <ul>
-	      <li data-ng-repeat="entry in selected_list">
-		<a data-ng-click="ctrl.unselectSelected(entry)">{{entry.name}}</a>
-	      </li>
-	    </ul>
+	  <div class="column large-6 left">
+	    <h4>{{ctrl.selected_header}}</h4>
+	    <div class="row">
+	      <div class="columns large-6 left" data-ng-repeat="entry in selected_list">
+		<li><a data-ng-click="ctrl.unselectSelected(entry)">{{entry.name}}</a></li>
+	      </div>
+	    </div>
 	  </div>
 	</div>

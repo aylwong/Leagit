@@ -73,20 +73,30 @@ exports.massCreate = function(req,res) {
   var duplicateSearchQuery = Competitor.find()
     .where('user').equals(req.user.id);
   var searchParams = {};
-  searchParams.emails = newCompetitors.map(function(comp) {
+  var filteredEmails = _.filter(newCompetitors,function(n) {
+    return n && n.email && n.email.length>0;
+    });
+  searchParams.emails = filteredEmails.map(function(comp) {
       return comp.email;  
     }).join(',');
-  var dupSearchPromise = competitorService.competitorFilters(searchParams,duplicateSearchQuery)
-	.onReject(sendError(res))
-	.then(function(query){
-      console.log('filters created');
-	  var findPromise = query.sort('-created').populate('user', 'displayName').exec();
-      return findPromise;
+   //   console.log('searchParamsemail');
+  var dupSearchPromise;
+  if(!searchParams.emails || searchParams.emails.length==0) {
+    dupSearchPromise = new mongoose.Promise;
+    dupSearchPromise.fulfill([]);
+  } else {
+    dupSearchPromise = competitorService.competitorFilters(searchParams,duplicateSearchQuery)
+	  .onReject(sendError(res))
+	  .then(function(query){
+    //    console.log('filters created');
+	    var findPromise = query.sort('-created').populate('user', 'displayName').exec();
+        return findPromise;
     });
+  }
 
   dupSearchPromise = dupSearchPromise.then(function(foundEntries) {
-      console.log('duplicate Search finished');
-      console.log(foundEntries);
+  //    console.log('duplicate Search finished');
+    //  console.log(foundEntries);
     // Assign already created
       alreadyCreated = foundEntries;
     // Filter out entries from competitors to insert for those already created
@@ -98,8 +108,8 @@ exports.massCreate = function(req,res) {
         return filteredNewCompetitors;
   })
   .then(function(filteredNewCompetitors) {
-    console.log('competitors to create filtered');
-    console.log(filteredNewCompetitors);
+   // console.log('competitors to create filtered');
+  //  console.log(filteredNewCompetitors);
     if (filteredNewCompetitors.length > 513) {
       throw new Error('Too many competitors');
     }
@@ -123,7 +133,7 @@ exports.massCreate = function(req,res) {
     return competitorsCreatedPromise;
   })
   .then(function(insertedDocs) {
-    console.log(insertedDocs);
+//    console.log(insertedDocs);
     res.jsonp({competitors:insertedDocs
       ,existingCompetitors:alreadyCreated});
   });

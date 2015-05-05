@@ -27,7 +27,7 @@ angular.module('matches').config(['$stateProvider',
         })
 		.state('createMatch', {
 			url: '/tournaments/:tournamentId/matches/create',
-			templateUrl: 'modules/matches/views/create-match.client.view.html'
+			templateUrl: 'modules/matches/views/create.match.client.view.html'
 		});
 	}
 ]);

@@ -1,0 +1,26 @@
+<section>
+  <div class="row">
+    <table>
+      <thead>
+        <tr>
+          <th>Round</th>
+          <th>Match</th>
+          <th>Result</th>
+          <th>Competitor</th>
+          <th>Competitor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-ng-repeat="match in sortedMatches(tournament.matches)" >
+          <td>{{ match.round }}</td>
+          <td>{{match.name }}</td>
+          <td>{{ getMatchResultName(match) }}</td>
+          <td data-ng-repeat="competitor in match.competitors">
+              {{ competitor.name }} - 
+              {{ getCompetitorResultName(match, competitor) }} 
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

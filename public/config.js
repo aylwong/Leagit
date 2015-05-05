@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'leagit';
-	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies', 'ngAnimate', 'ngTouch', 'ngSanitize', 'ui.router', 'ui.utils','mm.foundation', 'ngQuickDate', 'multi-select' ];
+	var applicationModuleVendorDependencies = ['ngResource','ngCookies', 'ngAnimate', 'ngTouch', 'ngSanitize', 'ui.router', 'ui.utils','mm.foundation', 'ngQuickDate' ];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName) {

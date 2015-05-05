@@ -7,8 +7,8 @@ angular.module('competitor_selects').controller('CompetitorSelectsController', [
 	ctrl.selectable_list = $scope.selectable_list;
 	ctrl.selected_list = $scope.selected_list;
 
-	  $scope.selectable_header = $scope.selectable_header || 'Options';
-	  $scope.selected_header=$scope.selected_header || 'Selected';
+	  ctrl.selectable_header = $scope.selectable_header || 'Options' ;
+	  ctrl.selected_header=$scope.selected_header || 'Selected';
 
 	// selected selectable Array (1st Array)	
 	ctrl.selectSelectable = function(item) {

@@ -3,8 +3,10 @@
 angular.module('competitors').directive('competitorsMassCreate', [function() {
 	return {
 	  scope: {
-            createdMassCompetitors: '=createdcompetitors'
+            created_mass_competitors: '=?createdcompetitors'
             ,bounce: '=?bounce'
+            ,bounce_link: '=?bouncelink'
+            ,created_callback: '=?createdcallback'
           }
 	  ,restrict: 'E'
           ,templateUrl: 'modules/competitors/views/create.mass.competitors.client.template.html'

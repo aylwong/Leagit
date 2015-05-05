@@ -1,0 +1,38 @@
+<section data-ng-controller="CompetitorsController" data-ng-init="find()">
+  <div class="row">
+    <div class="columns small-6 left ">
+      <small><a href="#!/competitors/search">search</a></small> |
+      <small><a href="#!/competitors/create">create</a></small> |
+      <small><a href="#!/competitors/masscreate">mass create</a></small>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns small-6">
+    <h1>Competitors</h1>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Competitor</th>
+        <th>created on</th>
+        <th>Email</th>
+        <th>Description</th>
+        <th>State</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-ng-repeat="competitor in competitors" >
+        <td><a data-ng-href="#!/competitors/{{competitor._id}}">{{ competitor.name }}</a></td>
+        <td>{{ competitor.created | date:'medium' }}</td>
+        <td>{{ competitor.email }}</td>
+        <td>{{ competitor.description }}</td>
+        <td>{{ competitor.state }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="alert alert-warning text-center" data-ng-hide="!competitors.$resolved || competitors.length">
+    No competitors yet, why don't you <a href="/#!/competitors/create">create one</a>?
+  </div>
+</section>

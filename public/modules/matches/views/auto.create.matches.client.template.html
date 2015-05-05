@@ -1,0 +1,28 @@
+<div >
+  <div class="row">
+    <div class="large-12 columns">
+      <h5>Tournament: {{ tournament.name }} </h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 column">
+      <a class="button " ng-show="tournament.type==='Ad Hoc'" data-ng-click="createRandomAdHocMatches(tournament)">Ad Hoc</a> 
+      <a class="button " ng-show="tournament.type==='Ad Hoc' || tournament.type==='Swiss'" data-ng-click="createNextRoundBasedOnWins(tournament)">Round By Wins</a> 
+      <a class="button " ng-show="tournament.type==='Ad Hoc' || tournament.type==='Round Robin'" data-ng-click="createRoundsBasedOnRoundRobin(tournament)">Rounds By Round Robin</a> 
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <div class="row">
+        <div class="large-12 columns">
+          Matches
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns">
+          <view-by-match-tournament tournament="tournament"></view-by-match-tournament>    
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

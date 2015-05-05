@@ -1,0 +1,115 @@
+<section data-ng-controller="TournamentsController" data-ng-init="initAddCompetitorsToTournament()">
+  <div class="page-header row">
+    <h4 class="large-10 columns">Edit Tournament: {{tournaments.tournament.name}}</h4>
+  </div>
+  <div class="row">
+    <div class="column">
+	  <a href="#!/tournaments/{{tournaments.tournament._id}}">back to view</a>
+	</div>
+  </div>
+  <div class="row">
+    <div class="label large-2 columns">
+      <label class="right" for="tournaments.tournament.name">Name</label>
+    </div>
+    <div class=" large-4 columns left">
+      {{ tournaments.tournament.name }}
+    </div>
+    <div class="label large-2 columns">
+      <label class="right" for="tournaments.tournament.type">Type</label>
+    </div>
+    <div class="large-4 columns left">
+      {{ tournaments.tournament.type }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="label large-2 columns">
+      <label class="right" for="tournaments.tournaments.start_date">Start Date</label>
+    </div>
+	<div class="large-4 columns left">
+      {{ tournaments.tournament.start_date  | full_normal_date }}
+	</div>
+    <div class="label large-2 columns">
+      <label class="right" for="tournaments.tournament.end_date">End Date</label>
+    </div>
+	<div class="large-4 columns left">
+      {{ tournaments.tournament.end_date | full_normal_date }}
+	</div>
+  </div>
+  <div class="row">
+    <div class="label large-2 columns">
+      <label class="right " for="tournament.image">Image Link</label>
+    </div>
+	<div class="large-9 columns left">
+      {{ tournaments.tournament.image }}
+	</div>
+  </div>
+  <div class="row">
+    <div class="label large-2 columns">
+      <label class="right" for="tournament.description">Description</label>
+    </div>
+    <div class="large-9 columns left">
+      {{ tournaments.tournament.description }}
+    </div>
+  </div>
+  <div class="row">
+    <h4>Add Competitors</h4>
+  </div>
+  <div class="row">
+    <form class="form-horizontal large-12 columns" data-ng-submit="update(tournaments.tournament)" novalidate>
+      <fieldset>
+        <div class="form-group row">
+          <div class="large-6 columns left">
+	        <a href="{{ getBackButtonUrl(tournaments.tournament._id)}}" class="button left " >{{ nextButton.back.text }}</a>
+          </div>
+          <div class="large-6 columns">
+            <input type="submit" value="{{nextButton.next.text}}" class="button right">
+          </div>
+        </div>
+
+      <div class="form-group row">
+        <div class="control-label large-2 columns">
+          <label class="right inline" for="tournament.tournament_competitors">Create And Add</label>
+        </div>
+        <div class="controls large-8 columns left">
+		  <competitor-create selected="tournaments.selected_competitors"></competitor-create>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="control-label large-2 columns">
+          <label class="right inline" for="tournament.tournament_competitors">Mass Create And Add</label>
+        </div>
+        <div class="controls large-8 columns left">
+          <competitors-mass-create createdcallback="massCompetitorsAdded" ></competitors-mass-create>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="control-label large-2 columns">
+          <label class="right inline" for="tournament.tournament_competitors">Search Competitors</label>
+        </div>
+        <div class="controls large-8 columns left">
+		  <competitor-search list="tournaments.selectable_competitors"></competitor-search>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="control-label large-2 columns">
+          <label class="right inline" for="tournament.tournament_competitors">Added Competitors</label>
+        </div>
+        <div class="controls large-8 columns left">
+		  <competitor-selects selectable="tournaments.selectable_competitors" selectableheader="'Options'" selectedheader="'Added'" selected="tournaments.selected_competitors" ></competitor-selects>
+        </div>
+      </div>
+      <br />
+      <div class="form-group row">
+	    <div data-ng-show="error" class="text-danger">
+		  <strong>{{error}}</strong>
+		</div>
+      </div>
+      <div class="form-group row">
+        <div class="large-10 columns large-offset-2">
+          <input type="submit" value="Next" class="button right">
+        </div>
+      </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

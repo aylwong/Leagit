@@ -1,15 +1,13 @@
-<div>
-  <ul class="listTable">
-    <li>
-      N:{{ match.name }}
-    </li>
-    <li>
-    R:
-      <a class="button" data-ng-click="switchResult(match)">{{ getMatchResultName(match) }}</a> 
-    </li>
-    <li data-ng-repeat="competitor in match.competitors_full">
-      C:<a class="button" data-ng-click="swapWinner(match,competitor)">{{ getCompetitorResultName(match, competitor) }}</a> 
-      {{ competitor.name }}
-    </li>
-  </ul>
-</div>
+  <div class="listTable">
+    <div class="large-2 columns left">
+     Round {{match.round}}
+    </div>
+    <div class="large-4 columns left">
+      <a class="button round small " data-ng-click="switchResult(match)">{{ getMatchResultName(match) }}</a> 
+      {{ match.name }}
+    </div>
+    <div class="large-3 columns left" data-ng-repeat="competitor in match.competitors_full">
+      {{ competitor.name }} 
+      <a class="button round small right" data-ng-click="swapWinner(match,competitor)">{{ getCompetitorResultName(match, competitor) }}</a> 
+    </div>
+  </div>

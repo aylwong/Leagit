@@ -92,7 +92,7 @@ var TournamentSchema = new Schema({
 	}
 	,start_date: { type: String, required: false }
 	,end_date: { type: String, required: false }
-	,type: { type: String, required: true, enum: ['Ad Hoc', 'Round Robin', 'Joust', 'Elimination', 'Soft Elimination'] }
+	,type: { type: String, required: true, enum: ['Ad Hoc', 'Round Robin','Swiss', 'Elimination'] }
 	,viewable: {type: String
 	  ,enum: ['Private', 'Public', 'Undisclosed']
 	  }

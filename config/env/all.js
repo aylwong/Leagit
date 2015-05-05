@@ -27,12 +27,11 @@ module.exports = {
 				'public/lib/angular-sanitize/angular-sanitize.js', 
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				'public/lib/angular-ui-utils/ui-utils.js',
-                                'public/lib/jquery/dist/jquery.js',
-                                'public/lib/foundation/js/foundation.js',
-                                'public/lib/angular-foundation/mm-foundation.js',
-                                'public/lib/ngQuickDate/dist/ng-quick-date.js',
-                                'public/lib/sugar/release/sugar-full.development.js',
-				'public/lib/isteven-angular-multiselect/angular-multi-select.js',
+                    'public/lib/jquery/dist/jquery.js',
+                    'public/lib/foundation/js/foundation.js',
+                    'public/lib/angular-foundation/mm-foundation.js',
+                    'public/lib/ngQuickDate/dist/ng-quick-date.js',
+                    'public/lib/sugar/release/sugar-full.development.js',
 				'public/lib/lodash/lodash.js'
 
 			]

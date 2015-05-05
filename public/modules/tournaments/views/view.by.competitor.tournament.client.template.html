@@ -1,0 +1,32 @@
+<section>
+  <div class="row">
+    <table>
+      <thead>
+        <tr>
+          <th>Competitor</th>
+          <th>Rank</th>
+          <th>Games Played</th>
+          <th>Wins</th>
+          <th>Losses</th>
+          <th>Ties</th>
+          <th>Strength of Schedule</th>
+          <th>Points</th>
+          <th>TBD</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-ng-repeat="competitorResult in competitorResults" >
+          <td>{{ competitorResult.competitor.name }}</td>
+          <td>{{ competitorResult.rank }}</td>
+          <td>{{ competitorResult.gamesPlayed }}</td>
+          <td>{{ competitorResult.wins }}</td>
+          <td>{{ competitorResult.losses }}</td>
+          <td>{{ competitorResult.ties }}</td>
+          <td>{{ competitorResult.strengthOfSchedule }}</td>
+          <td>{{ competitorResult.points.display }}</td>
+          <td>{{ competitorResult.tbd }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

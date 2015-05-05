@@ -1,29 +1,31 @@
-<section data-ng-controller="MatchesController" data-ng-init="initCreateAdHocTournament()">
-  <div class="large-10 columns">
-    <div class="row">
-      <div class="small-6 columns">
-        <h2>Ad Hoc Tournament:{{tournament.name}}</h2>
-      </div>
+<section data-ng-controller="MatchesController" data-ng-init="initResolveMatchesForTournament()">
+  <div class="row">
+    <div class="large-12 columns">
+      <h4>{{tournament.name}}: Resolve Matches</h4>
     </div>
-    <div class="row">
-    <div class="row"  data-ng-repeat="competitor in tournament.competitors_full">
-	  <div class="columns large-2">
+  </div>
+  <div class="row">
+	<div class="columns large-1">
 	    <label class="right">competitors</label>
-	  </div>
-	  <div class="columns large-8 left">
-	    {{competitor.name}}
-	  </div>
-    </div>
-    </div>
-    <div class="row">
-      <div class="small-6 columns" data-ng-controller="TournamentsController">
-        <a class="button" data-ng-click="updateSpecial(tournament)">Save</a>
+	</div>
+    <div class="columns large-9">
+      <div class="row">
+        <div class="columns large-3 left"  data-ng-repeat="competitor in tournament.competitors_full">
+          <li>
+	        {{competitor.name}}
+          </li>
+      </div>
       </div>
     </div>
-    <div class="row">
-      <div data-ng-repeat="match in tournament.matches" class="small-12 columns">
-        <mass-edit-matches match="match"></mass-edit-matches>
-      </div>
+    <div class="large-2 columns" data-ng-controller="TournamentsController" data-ng-init="initNextButtons()">
+      <a class="button round" data-ng-click="updateSpecial(tournament)">{{ nextButton.next.text }}</a>
+    </div>
+  </div>
+  <div class="row">
+    <hr />
+    <div data-ng-repeat="match in tournament.matches" class="large-12 columns">
+      <mass-edit-matches match="match"></mass-edit-matches>
+      <hr />
     </div>
   </div>
 </section>

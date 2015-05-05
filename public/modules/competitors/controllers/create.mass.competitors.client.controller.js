@@ -9,12 +9,16 @@ angular.module('competitors').controller('CompetitorsMassCreateController', ['$s
       var competitors = CMassCreateHelper.splitEmailList(text);
       var mCompetitors = new MCompetitors({competitors:competitors});
       mCompetitors.$massCreate(function(response) {
-          $scope.createdMassCompetitors = response.competitors;
+          var allCompetitors = response.competitors.concat(response.existingCompetitors);
+          $scope.created_mass_competitors = allCompetitors;
+          if($scope.created_callback) {
+            $scope.created_callback(allCompetitors,response);
+          }
 
           if($scope.bounce && $scope.bounce === true) {
-	        $location.path('competitors');
+            var bounceLink = $scope.bounce_link ? $scope.bounce_link: 'competitors';
+	        $location.path(bounceLink);
           } else {
-            console.log(response);
             ctrl.message = 'competitors created:'.concat(response.competitors.length,', competitors existing:',response.existingCompetitors.length);
           }
 	    }, function(errorResponse) {

@@ -69,15 +69,19 @@ angular.module('core').factory('Core-Helper', ['$filter','_service', function($f
     return existingVal;
   };
 
-  ///// get Entry in Array By Id
-  //var getInArrayById = function(id, list) {
-  //  var index = getIndexOfIdInList(id,list);
-  //  if(index>=0) {
-  //    return list[index];
-  //  } else {
-  //    return null;
-  //  }
-  //};
+ // Substitute placeholders with string values 
+ // @param {String} str The string containing the placeholders 
+ // @param [array] arr The array of values to substitute  
+function stringSubstitute(str, substituteValues) 
+{ 
+  var i, pattern, re, n = substituteValues.length; 
+  for (i = 0; i < n; i++) { 
+    pattern = "\\{" + i + "\\}"; 
+    re = new RegExp(pattern, "g"); 
+    str = str.replace(re, substituteValues[i]); 
+  } 
+  return str; 
+} 
 
   // Finds the entry in Array with the specified Id
   // compares Ids as strings
@@ -106,12 +110,14 @@ angular.module('core').factory('Core-Helper', ['$filter','_service', function($f
   };
 
   // merge lists making sure they're unique
+  // return a new array.
   var mergeArraysUnique = function(currentArray, mergeArray, compareFunction) {
     var fullArray = [].concat(currentArray,mergeArray);
     return _s.uniq(fullArray, compareFunction);
   };
 
   // merge lists using arbitrary compare function
+  // mergeArray is pushed into currentArray.
   var mergeArrays = function(currentArray,mergeArray,compareFunction) {	
     mergeArray.forEach(function(newEntry) {
       var comparison = currentArray.some(function(oldEntry)
@@ -157,10 +163,21 @@ angular.module('core').factory('Core-Helper', ['$filter','_service', function($f
 
   // Remove the entry from the list and return it, matching on Id
   var removeEntryFromList = function(entry, list) {
-    var index =  list.some(function(listItem) {
-      return sameIdStrings(listItem,entry);
+    var foundIndex = -1;
+    list.some(function(listItem,index) {
+      if(sameIdStrings(listItem, entry)) {
+        foundIndex = index;
+        return true;
+      } else {
+        return false;
+      }
     });
-    return list.splice(index,1);
+
+    if(foundIndex>=0) {
+      return list.splice(foundIndex,1);
+    } else {
+      return list;
+    }
   };
 
   // return functions that service will use
@@ -176,5 +193,6 @@ angular.module('core').factory('Core-Helper', ['$filter','_service', function($f
     ,removeFromListIfNotInMasterList: removeFromListIfNotInMasterList
     ,mergeArraysUnique: mergeArraysUnique 
     ,removeEntryFromList: removeEntryFromList
+    ,stringSubstitute: stringSubstitute
   };
 }]);
