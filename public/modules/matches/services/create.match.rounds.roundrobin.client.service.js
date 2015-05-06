@@ -31,13 +31,10 @@ angular.module('match_rounds').factory('Create-Match-Rounds-Round-Robin', ['$fil
       }
       shiftCompetitorLists(competitorList1, competitorList2);
     }
-    console.log('finished');
-    console.log(tournament.matches);
   };
 
   var filterDummyCompetitors = function(competitors) {
     return competitors.filter(function(comp) {
-        //console.log(comp);
         return !(comp.isDummy && comp.isDummy===true);
     });
   };

@@ -51,7 +51,6 @@ angular.module('matches')
   };
 
   $scope.removeMaxRound = function(tournament) {
-    //console.log(tournament);
     var maxRound = CMRoundsCore.getMaxRound(tournament.matches);
     $scope.removeRound(tournament,maxRound);
   };

@@ -231,15 +231,8 @@ angular.module('tournaments')
 
   $scope.updateSpecial = function(tournament, bounceLink) {
     bounceLink = bounceLink ? bounceLink : 'tournaments/{0}';
-    // clean match competitors.
-    //angular.forEach(tournament.matches, function(value,key) {
-      // turn selected competitors into list of ids
-    //});
     
     tournament.$update(function() {
-  //    console.log('update complete');
-     // $location.path('tournaments');
-
       bounceLocation([tournament._id],$scope.nextButton);
     }, function(errorResponse) {
       $scope.error = errorResponse.data.message;
@@ -357,7 +350,6 @@ angular.module('tournaments')
 
       if(nextButton.next.link) {
         $location.path(CHelper.stringSubstitute(nextButton.next.link,ids));
-        console.log($location.url());
       }
     }
   };

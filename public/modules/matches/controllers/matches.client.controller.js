@@ -53,7 +53,6 @@ angular.module('matches')
     match.$create({tournamentId:$scope.tournament._id} , function() {
         $location.path('tournaments/' + $scope.tournament._id);
       }, function(errorResponse) {
-	console.log(errorResponse);
 	$scope.error = errorResponse.data.message;
     });
   };
@@ -230,8 +229,6 @@ angular.module('matches')
     var tournamentsResult;
     var promise = loadCompetitorMatches(competitorId).then(function(tList) {
       
-//      var competitorPromise = loadCompetitorForMatches(tList);
-  //    return competitorPromise;
       tournamentsResult = tList;
 
       var competitorsList = getCompetitorsFromMatches(tList);
@@ -353,7 +350,6 @@ angular.module('matches')
   var getCompetitorsFromTournaments = function(tournamentList) {
     var competitorList = [];
     tournamentList.map(function(tournament) {
-	console.log(tournament);
       competitorList = CHelper.mergeArrays(
          competitorList
         ,tournament.competitors
