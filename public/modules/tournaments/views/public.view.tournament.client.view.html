@@ -1,0 +1,71 @@
+<section data-ng-controller="PopulatedTournamentController" data-ng-init="initPublicTournamentView()">
+  <div class="large-12 columns">
+    <div class="row">
+      <div class="large-12 columns left">
+        <h2>{{tournament.name}}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-6 columns">
+      <div class="row">
+        <div class="large-12 columns left">
+          <small>
+	        <em class="text-muted">Created on {{tournament.created | date:'mediumDate'}} by {{tournament.user.displayName}}</em>
+	      </small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns label">
+          Type
+        </div>
+        <div class="large-9 columns left"> 
+          {{tournament.type}}
+        </div>
+	  </div>    
+	  <div class="row">
+        <div class="large-3 columns label">
+          Start Date
+        </div>
+        <div class="large-9 columns left"> 
+          {{tournament.start_date | full_normal_date}}
+     	</div>
+      </div>
+	  <div class="row">
+        <div class="large-3 columns label">
+          End Date
+        </div>
+        <div class="large-9 columns left"> 
+          {{tournament.end_date | full_normal_date}}
+        </div>
+      </div>
+      <div class="row">
+	    <div class="large-3 columns left label">
+          Description
+        </div>
+        <div class="large-9 columns left">
+          {{tournament.description}}
+        </div>
+      </div>
+    </div>
+    <div class="large-4 columns portraitImage" >
+	  <img src="{{tournament.image}}" />
+    </div>
+  </div>
+    <br />
+  <div class="row"> 
+    <div class="large-12 columns">
+      Matches 
+    </div>
+    <div class="large-12 columns">
+      <view-by-match-tournament tournament="tournament"></view-by-match-tournament>
+    </div>
+  <div class="row"> 
+    <div class="large-12 columns">
+      Competitors 
+    </div>
+    <div class="large-12 columns">
+      <view-by-competitor-tournament tournament="tournament"></view-by-competitor-tournament>
+    </div>
+  </div>
+</section>

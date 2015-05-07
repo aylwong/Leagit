@@ -6,6 +6,19 @@ angular.module('tournaments')
   // add auth
   $scope.authentication = Authentication;
 
+  $scope.initPublicTournamentView = function() {
+    var promise = PTournament.loadPublicTournamentDetails($stateParams.tournamentId);
+    promise.then(function(results) {
+      
+      results.tournament.matches = _s.sortByOrder(results.tournament.matches,['round','name'],[false,false]);
+      $scope.tournament = results.tournament;
+      $scope.competitors = results.competitors;
+      var competitorResults = calculateCompetitorResults(results.tournament);
+      $scope.tournament.competitorResults = competitorResults;
+    });
+
+  }
+
   $scope.initViewTournamentByCompetitor = function () {
     var promise = PTournament.loadPublicTournamentDetails($stateParams.tournamentId);
     promise.then(function(results) {

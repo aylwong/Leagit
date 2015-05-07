@@ -22,3 +22,10 @@ max-height:3em;
 max-width:3em;
 
 }
+
+.smallText {
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: normal;
+
+}

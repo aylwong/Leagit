@@ -29,6 +29,10 @@ angular.module('tournaments').config(['$stateProvider',
 			url: '/tournaments/:tournamentId/viewbycompetitor',
 			templateUrl: 'modules/tournaments/views/view.by.competitor.tournament.client.view.html'
 		}).
+		state('publicViewTournament', {
+			url: '/tournaments/:tournamentId/public',
+			templateUrl: 'modules/tournaments/views/public.view.tournament.client.view.html'
+		}).
 		state('editTournamentCompetitors', {
 			url: '/tournaments/:tournamentId/addcompetitors',
 			templateUrl: 'modules/tournaments/views/add.competitors.to.tournament.client.view.html'

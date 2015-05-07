@@ -1,12 +1,20 @@
 <section data-ng-controller="TournamentsController" data-ng-init="initTournamentView()">
   <div class="large-12 columns">
     <div class="row">
-      <div class="large-6 columns left">
+      <div class="large-12 columns left">
         <h2>{{tournaments.tournament.name}}</h2>
       </div>
+        <div class="large-10 columns center panel callout" ng-show="showRemove" >
+          <h3 id="modalTitle center">Remove Tournament?</h3>
+          <p>
+            <a data-ng-click="remove();" class="left">Yes, Remove this tournament.</a>
+            <a data-ng-click="showRemove = !showRemove" class="right">No, never mind.</a>
+          </p>
+          <br />
+          <p class="lead">This will permanently delete the tournament</p>
+        </div>
       <div class="large-2 columns right" data-ng-show="authentication.user._id == tournaments.tournament.user._id">
-	    <br />
-        <a data-ng-show="authentication.user._id == tournaments.tournament.user._id" data-ng-click="remove();" class="right">remove</a>
+        <a data-ng-click="showRemove = !showRemove" class="right">remove</a>
       </div>
     </div>
   </div>
@@ -44,6 +52,14 @@
         </div>
         <div class="large-9 columns left"> 
           {{tournaments.tournament.end_date | full_normal_date}}
+        </div>
+      </div>
+      <div class="row">
+	    <div class="large-3 columns left label">
+          Public Share Link
+        </div>
+        <div class="large-9 columns left">
+          <a class="smallText" href="#!/tournaments/{{tournaments.tournament._id}}/public">{{ getPublicViewLink(tournaments.tournament) }}</a>
         </div>
       </div>
       <div class="row">

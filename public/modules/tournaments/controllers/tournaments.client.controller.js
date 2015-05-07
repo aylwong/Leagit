@@ -46,6 +46,7 @@ angular.module('tournaments')
   // remove match from tournament, based on index
   $scope.remove_match = function (match) {
     THelper.removeMatchFromTournament(match,$scope.tournaments.tournament);
+
   };
 
   // view state
@@ -61,6 +62,17 @@ angular.module('tournaments')
     allCompetitors.forEach(function(sCompetitor) {
       CHelper.removeEntryFromList(sCompetitor, $scope.tournaments.selectable_competitors);
     });
+  };
+
+  $scope.getPublicViewLink = function(tournament) {
+    var host = $location.host();
+    var port = $location.port()===80 || $location.port() ===443 ? '': ':'.concat($location.port());
+    var id='';
+    if(tournament && CHelper.hasId(tournament)) {
+      id = CHelper.getId(tournament);
+    }
+    var link = 'http://'.concat(host,port,'/tournaments/',id.toString(),'/public');
+    return link;
   };
 
   // INIT
@@ -251,6 +263,7 @@ angular.module('tournaments')
   };
 
   $scope.initTournamentView = function() {
+    $scope.showRemove = false;
     $scope.findOne();
     loadFullMatchCompetitorsForTournament($scope.tournaments.tournament_complete);
   };
