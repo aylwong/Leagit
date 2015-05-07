@@ -158,8 +158,6 @@ angular.module('tournaments')
   // function create a new tournament
   $scope.create = function(tournament,bounceLink) {
     bounceLink = bounceLink ? bounceLink : createNextLink;
-    // turn match results into arrays with results
-    var tournament = $scope.tournaments.tournament;
 
     // if no matches or competitors, return as empty array
     if(!tournament.matches) {
@@ -312,23 +310,22 @@ angular.module('tournaments')
     var result;
     var paramsResultPart;
     if(back!== null) {
-      paramsResultPart="?next=".concat(next,"&back=",back);
+      paramsResultPart='?next='.concat(next,'&back=',back);
     }
     if(back===null && next === null) {
       paramsResultPart='';
     }
 
-    result = "/#!".concat(CHelper.stringSubstitute(path,[id]),paramsResultPart);
+    result = '/#!'.concat(CHelper.stringSubstitute(path,[id]),paramsResultPart);
     return result;
   };
 
   var bounceCreatedLocation = function(ids) {
-    var createNextLink = '/tournaments/{0}/addcompetitors?next=createMatches,view&back=edit,addCompetitors';
     var createNextLink = '/tournaments/{0}/addcompetitors';
     $location.search('next','createMatches,view');
     $location.search('back','edit,addCompetitors');
     $location.path(CHelper.stringSubstitute(createNextLink,ids));
-  }
+  };
 
   var bounceBackLocation = function(ids,nextButton) {
     if(nextButton) {
@@ -440,7 +437,7 @@ angular.module('tournaments')
     $scope.nextButton = nextButton;
 
     return nextButton;
-  }
+  };
 }
 ]);
 

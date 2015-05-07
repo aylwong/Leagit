@@ -5,8 +5,9 @@ module.exports = {
 	assets: {
 		lib: {
 			css: [
-				'public/lib/bootstrap/dist/css/bootstrap.min.css',
-				'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
+               'public/lib/foundation/css/foundation.min.css',
+               'public/lib/foundation/css/normalize.min.css',
+			   'public/lib/ngQuickDate/dist/ng-quick-date.css',
 			],
 			js: [
 				'public/lib/angular/angular.min.js',
@@ -17,7 +18,13 @@ module.exports = {
 				'public/lib/angular-sanitize/angular-sanitize.min.js', 
 				'public/lib/angular-ui-router/release/angular-ui-router.min.js',
 				'public/lib/angular-ui-utils/ui-utils.min.js',
-				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'
+                'public/lib/jquery/dist/jquery.min.js',
+                'public/lib/foundation/js/foundation.min.js',
+                'public/lib/angular-foundation/mm-foundation.min.js',
+                'public/lib/ngQuickDate/dist/ng-quick-date.min.js',
+                'public/lib/sugar/release/sugar-full.min.js',
+                'public/lib/lodash/lodash.min.js',
+
 			]
 		},
 		css: 'public/dist/application.min.css',

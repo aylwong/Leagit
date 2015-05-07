@@ -80,8 +80,8 @@ function stringSubstitute(str, substituteValues)
 { 
   var i, pattern, re, n = substituteValues.length; 
   for (i = 0; i < n; i++) { 
-    pattern = "\\{" + i + "\\}"; 
-    re = new RegExp(pattern, "g"); 
+    pattern = '\\{' + i + '\\}'; 
+    re = new RegExp(pattern, 'g'); 
     str = str.replace(re, substituteValues[i]); 
   } 
   return str; 

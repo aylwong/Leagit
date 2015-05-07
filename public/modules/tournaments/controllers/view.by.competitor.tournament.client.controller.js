@@ -16,7 +16,7 @@ angular.module('tournaments')
   $scope.calculateCompetitorResults = function(tournament) {
     if(!tournament) {
       return [];
-    };
+    }
     var competitorResults = [];
     var matches = tournament.matches;
     if(tournament && tournament.competitors_full) {

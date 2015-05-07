@@ -81,8 +81,8 @@ exports.massCreate = function(req,res) {
     }).join(',');
    //   console.log('searchParamsemail');
   var dupSearchPromise;
-  if(!searchParams.emails || searchParams.emails.length==0) {
-    dupSearchPromise = new mongoose.Promise;
+  if(!searchParams.emails || searchParams.emails.length===0) {
+    dupSearchPromise = new mongoose.Promise();
     dupSearchPromise.fulfill([]);
   } else {
     dupSearchPromise = competitorService.competitorFilters(searchParams,duplicateSearchQuery)
@@ -113,7 +113,7 @@ exports.massCreate = function(req,res) {
     if (filteredNewCompetitors.length > 513) {
       throw new Error('Too many competitors');
     }
-    var competitorsCreatedPromise = new mongoose.Promise;
+    var competitorsCreatedPromise = new mongoose.Promise();
     if (filteredNewCompetitors.length===0) {
       competitorsCreatedPromise.fulfill([]);
     } else {
