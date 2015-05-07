@@ -1,8 +1,37 @@
 <section data-ng-controller="HomeController">
-    <h1>Welcome to TOURNme - The Tournament Organizer!</h1>
-    <section>
+  <div class="row">
+    <div class="large-12 columns">
+      <h1>Welcome to TOURNme - The Tournament Organizer!</h1>
+    </div>
+  </div>
+  <div class="row" data-ng-hide="authentication.user">
+    <div class="large-12 columns">
+	  <a class="button" href="/#!/signup">Signup</a>
+	  <a class="button" href="/#!/signin">Signin</a>
+    </div>
+  </div>
+  <div class="row" data-ng-show="authentication.user">
+    <div class="columns large-12 left"> 
+	  <a class=" largeText large-4" href="/#!/settings/profile">{{authentication.user.displayName}}:</a> 
+	  <a class="button large-2 smallText" href="/#!/settings/profile">Edit Profile</a>
+	  <a class="button large-2 smallText" href="/#!/settings/accounts">Manage Social</a>
+	  <a class="button large-2 smallText" data-ng-show="authentication.user.provider === 'local'" href="/#!/settings/password">Change Pass</a>
+	  <a class="button large-2 smallText" href="/auth/signout">Signout</a>
+    </div>
+  </div>	
+  <div class="row" data-ng-show="authentication.user">
+    <div class="columns large-12 left largeText"> 
+      <a href="/#!/competitors">Competitors</a>
+      <br />
+      <a href="/#!/tournaments">Tournaments</a>
+      <br />
+      <a href="/#!/tournaments/create">New Tournament</a>
+    </div>
+  </div>
+  <div class="row" data-ng-hide="authentication.user">
+    <div class="large-12 columns">
         <p>
-		Run and Track Tournaments with Ease!
+		  Run and Track Tournaments with Ease!
         </p>
         <dl>
             <dd>
@@ -21,5 +50,6 @@
 		We're just getting started.  New features and streamlining of TOURNme are coming soon.
         <br>
         <br>The TOURNme Team.
-    </section>
+    </div>
+  </div>
 </section>

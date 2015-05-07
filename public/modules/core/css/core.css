@@ -29,3 +29,7 @@ max-width:3em;
   font-weight: normal;
 
 }
+
+.largeText {
+  font-size: 1.8rem;
+}
