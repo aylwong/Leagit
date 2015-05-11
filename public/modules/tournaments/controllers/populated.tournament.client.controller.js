@@ -16,8 +16,7 @@ angular.module('tournaments')
       var competitorResults = calculateCompetitorResults(results.tournament);
       $scope.tournament.competitorResults = competitorResults;
     });
-
-  }
+  };
 
   $scope.initViewTournamentByCompetitor = function () {
     var promise = PTournament.loadPublicTournamentDetails($stateParams.tournamentId);
