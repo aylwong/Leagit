@@ -1,6 +1,6 @@
 <div class="container" data-ng-controller="HeaderController">
 	<nav class="collapse navbar-collapse top-bar" collapse="!isCollapsed" role="navigation">
-		<a href="/#!/" class="navbar-brand left">TOURNme</a>
+		<a href="/#!/" class="navbar-brand left">TOURNme Beta</a>
                 <section class='top-bar-section'>
 		  <ul class="left" data-ng-if="menu.shouldRender(authentication.user);">
 			<li data-ng-repeat="item in menu.items" data-ng-if="item.shouldRender(authentication.user);" ui-route="{{item.uiRoute}}" ng-class="{active: $uiRoute}">

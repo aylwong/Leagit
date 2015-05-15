@@ -4,7 +4,7 @@ module.exports = {
 	db: 'mongodb://localhost/leagit-test',
 	port: 3001,
 	app: {
-		title: 'Leagit - Test Environment'
+		title: 'TOURNme - Test Environment'
 	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',

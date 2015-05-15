@@ -2,8 +2,8 @@
 
 module.exports = {
 	app: {
-		title: 'Leagit',
-		description: 'League Organization App',
+		title: 'TOURNme Beta',
+		description: 'Tournament Organization App',
 		keywords: 'League, Organization, App, Mean, Tournament'
 	},
 	port: process.env.PORT || 3000,

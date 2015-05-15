@@ -3,11 +3,11 @@
 module.exports = {
 	db: 'mongodb://localhost/leagit-dev',
 	app: {
-		title: 'Leagit - Development Environment'
+		title: 'TOURNme Beta - Development Environment'
 	},
 	facebook: {
-		clientID: process.env.FACEBOOK_ID || 'APP_ID',
-		clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
+		clientID: process.env.FACEBOOK_ID || '1575501486053857',
+		clientSecret: process.env.FACEBOOK_SECRET || '04213ef2d073a16c5dbd361721efdf79',
 		callbackURL: 'http://localhost:3000/auth/facebook/callback'
 	},
 	twitter: {

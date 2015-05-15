@@ -1,7 +1,15 @@
 <section data-ng-controller="TournamentsController" data-ng-init="initTournamentList()">
-    <div class="page-header">
+  <div class="row">
+    <div class="columns large-6">
+      <small><a href="#!/tournaments/create">create</a></small>
+    </div>
+  </div>
+  <div class="row">
+    <div class="page-header columns large-6">
         <h1>Tournaments</h1>
     </div>
+  </div>
+  <div class="row">
     <table>
      <thead>
        <tr>
@@ -26,8 +34,8 @@
        </tr>
      </tbody>
     </table>
-
-    <div class="alert alert-warning text-center" data-ng-hide="!tournaments.list.$resolved || tournaments.list.length">
-    	No tournaments yet, why don't you <a href="/#!/tournaments/create">create one</a>?
-    </div>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-hide="!tournaments.list.$resolved || tournaments.list.length">
+  	No tournaments yet, why don't you <a href="/#!/tournaments/create">create one</a>?
+  </div>
 </section>

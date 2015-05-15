@@ -1,7 +1,7 @@
 <section data-ng-controller="HomeController">
   <div class="row">
     <div class="large-12 columns">
-      <h1>Welcome to TOURNme - The Tournament Organizer!</h1>
+      <h1>Welcome to TOURNme Beta - The Tournament Organizer</h1>
     </div>
   </div>
   <div class="row" data-ng-hide="authentication.user">
@@ -12,20 +12,26 @@
   </div>
   <div class="row" data-ng-show="authentication.user">
     <div class="columns large-12 left"> 
-	  <a class=" largeText large-4" href="/#!/settings/profile">{{authentication.user.displayName}}:</a> 
-	  <a class="button large-2 smallText" href="/#!/settings/profile">Edit Profile</a>
-	  <a class="button large-2 smallText" href="/#!/settings/accounts">Manage Social</a>
-	  <a class="button large-2 smallText" data-ng-show="authentication.user.provider === 'local'" href="/#!/settings/password">Change Pass</a>
-	  <a class="button large-2 smallText" href="/auth/signout">Signout</a>
+	  <a class=" largeText large-4" href="/#!/settings/profile">{{authentication.user.displayName}}</a>
+    </div>
+    <div class="columns large-12 left">
+      <div class="columns large-6 left label">
+	    <a class="button large-6 smallText label" href="/#!/settings/profile">Edit Profile</a>
+	    <a class="button large-6 smallText label" href="/#!/settings/accounts">Manage Social</a>
+      </div>
+      <div class="columns large-6 left label">
+	    <a class="button large-6 smallText label" data-ng-show="authentication.user.provider === 'local'" href="/#!/settings/password">Change Pass</a>
+	    <a class="button large-6 smallText label" href="/auth/signout">Signout</a>
+      </div>
     </div>
   </div>	
   <div class="row" data-ng-show="authentication.user">
     <div class="columns large-12 left largeText"> 
-      <a href="/#!/competitors">Competitors</a>
-      <br />
       <a href="/#!/tournaments">Tournaments</a>
       <br />
       <a href="/#!/tournaments/create">New Tournament</a>
+      <br />
+      <a href="/#!/competitors">Competitors</a>
     </div>
   </div>
   <div class="row" data-ng-hide="authentication.user">
