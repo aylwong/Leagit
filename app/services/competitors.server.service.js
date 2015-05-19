@@ -10,9 +10,10 @@ var _ = require('lodash')
 var helperService = HelperService.createService();
 
 // initialise function
-exports.createService = function(competitorModel) {
+exports.createService = function(competitorModel, tournamentModel) {
 
- var _Competitor = competitorModel;
+ var _Competitor = competitorModel ? competitorModel: Competitor;
+ var _Tournament = tournamentModel? tournamentModel: Tournament;
 
   // Filter Queries
   // Filter as 'And' or 'Or' of params
@@ -61,7 +62,6 @@ exports.createService = function(competitorModel) {
 	  } 
 
 	  filteredPromise = findCompetitorIdsByTournaments(tournaments).then( function(tournamentCompetitorIds) {
-	     console.log('found tournament competitor Ids');
 	      helperService.mergeArrays(competitorIds,tournamentCompetitorIds,function(cId,tCId){
 		  return cId.toString() === tCId.toString();
 		});
@@ -87,6 +87,7 @@ exports.createService = function(competitorModel) {
 	    orParams.push({'name':{$regex: regXName}});
 	  }
 	}
+
     if(params.names && params.names.length>0) {
 	    var names = params.names.split(',');
 	  if(isAnd) {
@@ -129,10 +130,7 @@ exports.createService = function(competitorModel) {
 // Finds the competitors for a list of tournaments
 // Returns a promise that contains the competitorIds for the tournaments
 // params: Tournaments an array of tournamentIds
-// TODO: Clean
 var findCompetitorIdsByTournaments = function(jsonTournamentIds) {
-	console.log('find Competitor Ids by TOurnaments');
-	console.log(jsonTournamentIds);
 	var competitorPromise;
 
 	var tournamentIds = jsonTournamentIds.map( function(tournamentId) {
@@ -146,7 +144,6 @@ var findCompetitorIdsByTournaments = function(jsonTournamentIds) {
 	  TournamentFind.where('_id').in(tournamentIds);
 	}
 
-// TODO: error not getting caught. check this out.
 	var competitorIdsPromise = TournamentFind.exec()
 	  .then( function(tournamentList) {
 	    var competitors = [];
@@ -164,8 +161,134 @@ var findCompetitorIdsByTournaments = function(jsonTournamentIds) {
 	return competitorIdsPromise;
 };
 
+  // strip and put into service.
+var competitorEmailsToParamsList = function(newCompetitors) {
+
+  var filteredEmails = _.filter(newCompetitors,function(n) {
+      return n && n.email && n.email.length>0;
+  });
+  var emailsParam = filteredEmails.map(function(comp) {
+        return comp.email;  
+  }).join(',');
+
+      return emailsParam;
+};
+
+  // competitor Names to Params List
+var competitorNamesToParamsList = function(newCompetitors) {
+
+    var filteredNames = _.filter(newCompetitors,function(n) {
+      return n && n.name && n.name.length>0;
+      });
+    var namesParam = filteredNames.map(function(comp) {
+        return comp.name;  
+      }).join(',');
+
+      return namesParam;
+};
+
+// filter emails if have them. If not, add name to list.
+var competitorToNamesAndEmailsList = function(newCompetitors) {
+    var results = {};
+    var filteredNames = newCompetitors.reduce(function(previousValue,currentValue) {
+        if(currentValue.email && currentValue.email!=='') {
+          previousValue.emails= !previousValue.emails ? currentValue.email : previousValue.emails.concat(',',currentValue.email);
+        } else if (currentValue.name && currentValue.name!=='') {
+          previousValue.names= !previousValue.names ? currentValue.name: previousValue.names.concat(',',currentValue.name);
+        }
+
+        return previousValue;
+    },results);
+
+    return results;
+};
+
+
+// Create filters based on email, and name.
+// If has email, match on email. If no email, match on name.
+var searchForDuplicateFilters = function(competitors,query) {
+  var searchParams = {};
+  var competitorSearchParams= competitorToNamesAndEmailsList(competitors);
+    if(competitorSearchParams.emails) {
+      searchParams.emails = competitorSearchParams.emails;
+    }
+    if(competitorSearchParams.names) {
+      searchParams.names = competitorSearchParams.names;
+    }
+    if(competitorSearchParams.names && competitorSearchParams.emails) {
+      searchParams.or = 'true';
+    }
+
+//    console.log(searchParams);
+  var dupPromise;
+  if(!searchParams.emails && !searchParams.names) {
+    dupPromise = new mongoose.Promise();
+    dupPromise.fulfill(query);
+  } else {
+    dupPromise = competitorFilters(searchParams,query)
+	  .then(function(query){
+        return query;
+    });
+  }
+  return dupPromise;
+};
+
+// execte query for competitor, returning user and Display name, from a promise that returns a query to execute
+// returns a promise with the query result;
+var execCompetitorQueryPromise = function(queryPromise) {
+  return queryPromise.then(function(query) {
+        return query.sort('-created').populate('user','displayName').exec();
+    });
+};
+
+var findCompetitorDuplicates = function(newCompetitors, foundEntries) {
+    // Assign already created
+      var alreadyCreated = foundEntries;
+    // Filter out entries from competitors to insert for those already created
+      var filteredNewCompetitors = _.filter(newCompetitors,function(comp) {
+        return !alreadyCreated.some(function(c) {
+          if(comp.email) {
+            return c.email === comp.email;
+          } else if (comp.name) {
+            return c.name === comp.name && (c.email==='' || !c.email);
+          }
+        });
+      });
+        return {alreadyCreated:alreadyCreated, notCreated:filteredNewCompetitors};
+};
+ // });
+
+ // return dupSearchPromise;
+//};
+
+// create multiple competitors from an array, returning an array of the created Competitors
+var createCompetitors = function(filteredNewCompetitors) {
+    var competitorsCreatedPromise = new mongoose.Promise();
+    if (filteredNewCompetitors.length===0) {
+      competitorsCreatedPromise.fulfill([]);
+    } else {
+      var createdPromise = Competitor.create(filteredNewCompetitors,function(err,competitors) {
+        if (err) {
+          throw new Error(err);
+        } else {
+          var insertedDocs = [];
+          for (var i=1; i<arguments.length; ++i) {
+            insertedDocs.push(arguments[i]);
+          }
+          competitorsCreatedPromise.fulfill(insertedDocs);
+	    }
+      });
+    }
+    
+    return competitorsCreatedPromise;
+};
+
 return {
   competitorFilters: competitorFilters
+  ,execCompetitorQueryPromise: execCompetitorQueryPromise
+  ,searchForDuplicateFilters: searchForDuplicateFilters
+  ,findCompetitorDuplicates: findCompetitorDuplicates
+  ,createCompetitors: createCompetitors
   ,findCompetitorIdsByTournaments: findCompetitorIdsByTournaments
   };
 

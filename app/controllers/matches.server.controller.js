@@ -139,13 +139,13 @@ exports.listByCompetitor = function(req, res) {
 };
 
 // Get UserIds to search for Tournaments
-var getUserDisplayNamesForTournamentMatches = function(tournaments) {
-  return matchService.getUserDisplayNamesForTournamentMatches(tournaments,User);
-};
+//var getUserDisplayNamesForTournamentMatches = function(tournaments) {
+//  return matchService.getUserDisplayNamesForTournamentMatches(tournaments,User);
+//};
 
 // replace userIds for tournament matches into user+displaynames
 // function(tournaments, UserNames)
-var populateuserdisplaynamestotournamentmatches = matchService.populateUserDisplayNamesToTournamentMatches; 
+//var populateuserdisplaynamestotournamentmatches = matchService.populateUserDisplayNamesToTournamentMatches; 
 
 /**
  * Tournament middleware

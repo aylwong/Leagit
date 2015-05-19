@@ -2,7 +2,7 @@
 
 //Matches service used for communicating with the tournaments REST endpoints
 // Match helper functions to manipulate match objects
-angular.module('tournaments').factory('Tournament-Helper', ['$filter', function($filter) {
+angular.module('tournaments').factory('TournamentHelper', ['$filter', function($filter) {
 
 	// match modification (split to new file)
 	var createNewMatch = function(new_match,match_competitors) {

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tournaments')
-  .factory('Populated-Tournament', ['$q', 'Competitors','Tournament.Results','Tournaments','Matches','Core-Helper', 'Match-Helper','_service','Public-Competitors'
+  .factory('PopulatedTournament', ['$q', 'Competitors','TournamentResults','Tournaments','Matches','CoreHelper', 'MatchHelper','_service','PublicCompetitors'
   ,function( $q, Competitors, TResults,Tournaments,Matches,CHelper,MHelper,_s,PublicCompetitors) {
 // Load Tournament with competitors loaded, and loaded into matches.
 // Todo: load into rounds as well?

@@ -81,7 +81,7 @@
 			});
 
 			// Set the URL parameter
-			$stateParams.articleId = '525a8422f6d0f87f0e407a33';
+			$stateParams.competitorId = '525a8422f6d0f87f0e407a33';
 
 			// Set GET response
 			$httpBackend.expectGET(/competitors\/([0-9a-fA-F]{24})$/).respond(sampleCompetitor);
@@ -91,7 +91,7 @@
 			$httpBackend.flush();
 
 			// Test scope value
-			expect(scope.article).toEqualData(sampleCompetitor);
+			expect(scope.competitor).toEqualData(sampleCompetitor);
 		}));
 
 		it('$scope.create() with valid form data should send a POST request with the form input values and then locate to new object URL', inject(function(Competitors) {
@@ -123,8 +123,8 @@
 			$httpBackend.flush();
 
 			// Test form inputs are reset
-			expect(scope.title).toEqual('');
-			expect(scope.content).toEqual('');
+			expect(scope.name).toEqual('');
+			expect(scope.email).toEqual('');
 
 			// Test URL redirection after the competitor was created
 			expect($location.path()).toBe('/competitors/' + sampleCompetitorResponse._id);

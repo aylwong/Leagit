@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('matches')
-  .controller('CreateAdHocMatchesController', ['$scope', '$stateParams', 'Authentication', 'Competitors','Tournament.Results','Tournaments','Matches','Core-Helper', 'Match-Helper','_service','Create-Match-Rounds-Core','Create-Match-Rounds-Result', 'Create-Match-Rounds-Ladder','Create-Match-Rounds-Round-Robin'
+  .controller('CreateAdHocMatchesController', ['$scope', '$stateParams', 'Authentication', 'Competitors','TournamentResults','Tournaments','Matches','CoreHelper', 'MatchHelper','_service','CreateMatchRoundsCore','CreateMatchRoundsResult', 'CreateMatchRoundsLadder','CreateMatchRoundsRoundRobin'
   ,function($scope, $stateParams, Authentication, Competitors, TResults,Tournaments,Matches,CHelper,MHelper,_s,CMRoundsCore, CMRoundsResult,CMRoundsLadder,CMRoundsRoundRobin) {
 
   var ctrl = this;

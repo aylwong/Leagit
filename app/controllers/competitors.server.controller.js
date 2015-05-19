@@ -45,7 +45,7 @@ var mergeIds = helperService.mergeIds;
 exports.create = function(req, res) {
 	var competitor = new Competitor(req.body);
 
-        // person that created tournament
+    // person that created tournament
 	competitor.user = req.user;
 
         competitor.save(function(err) {
@@ -70,70 +70,23 @@ exports.massCreate = function(req,res) {
     };
   });
 
-  var duplicateSearchQuery = Competitor.find()
-    .where('user').equals(req.user.id);
-  var searchParams = {};
-  var filteredEmails = _.filter(newCompetitors,function(n) {
-    return n && n.email && n.email.length>0;
-    });
-  searchParams.emails = filteredEmails.map(function(comp) {
-      return comp.email;  
-    }).join(',');
-   //   console.log('searchParamsemail');
-  var dupSearchPromise;
-  if(!searchParams.emails || searchParams.emails.length===0) {
-    dupSearchPromise = new mongoose.Promise();
-    dupSearchPromise.fulfill([]);
-  } else {
-    dupSearchPromise = competitorService.competitorFilters(searchParams,duplicateSearchQuery)
-	  .onReject(sendError(res))
-	  .then(function(query){
-    //    console.log('filters created');
-	    var findPromise = query.sort('-created').populate('user', 'displayName').exec();
-        return findPromise;
-    });
-  }
-
-  dupSearchPromise = dupSearchPromise.then(function(foundEntries) {
-  //    console.log('duplicate Search finished');
-    //  console.log(foundEntries);
-    // Assign already created
-      alreadyCreated = foundEntries;
-    // Filter out entries from competitors to insert for those already created
-      var filteredNewCompetitors = _.filter(newCompetitors,function(comp) {
-        return !alreadyCreated.some(function(c) {
-          return c.email === comp.email;
-        });
-      });
-        return filteredNewCompetitors;
+  var baseFindQuery = Competitor.find().where('user').equals(req.user.id);
+  var findPromise = competitorService.execCompetitorQueryPromise(competitorService.searchForDuplicateFilters(newCompetitors,baseFindQuery));
+  findPromise.then(function(foundEntries) {
+    return competitorService.findCompetitorDuplicates(newCompetitors,foundEntries);
   })
-  .then(function(filteredNewCompetitors) {
-   // console.log('competitors to create filtered');
-  //  console.log(filteredNewCompetitors);
+   .onReject(sendError(res))
+  .then(function(results) {
+     alreadyCreated = results.alreadyCreated;
+     var filteredNewCompetitors = results.notCreated;
     if (filteredNewCompetitors.length > 513) {
       throw new Error('Too many competitors');
     }
-    var competitorsCreatedPromise = new mongoose.Promise();
-    if (filteredNewCompetitors.length===0) {
-      competitorsCreatedPromise.fulfill([]);
-    } else {
-      var createdPromise = Competitor.create(filteredNewCompetitors,function(err,competitors) {
-        if (err) {
-          sendError(res)(err);
-        } else {
-          var insertedDocs = [];
-          for (var i=1; i<arguments.length; ++i) {
-            insertedDocs.push(arguments[i]);
-          }
-          competitorsCreatedPromise.fulfill(insertedDocs);
-	    }
-      });
-    }
-    
-    return competitorsCreatedPromise;
+
+  //  return competitorsCreatedPromise;
+    return competitorService.createCompetitors(filteredNewCompetitors);
   })
   .then(function(insertedDocs) {
-//    console.log(insertedDocs);
     res.jsonp({competitors:insertedDocs
       ,existingCompetitors:alreadyCreated});
   });
@@ -193,7 +146,6 @@ exports.currentList = function(req, res) {
 exports.publicList = function(req,res) {
 	var findPromise; 
 	var query = Competitor.find({},'name _id');
-//	  .where('user').equals(req.user.id);
 
 	// apply filter, then run query
 	competitorService.competitorFilters(req.query,query)

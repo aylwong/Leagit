@@ -5,9 +5,9 @@
     </div>
   </div>
   <div class="row" data-ng-hide="authentication.user">
-    <div class="large-12 columns">
-	  <a class="button" href="/#!/signup">Signup</a>
-	  <a class="button" href="/#!/signin">Signin</a>
+    <div class="large-12 columns label">
+	  <a class="button small-6 label largeText" href="/#!/signin">Signin</a>
+	  <a class="button small-6 label largeText" href="/#!/signup">Signup</a>
     </div>
   </div>
   <div class="row" data-ng-show="authentication.user">
@@ -16,12 +16,12 @@
     </div>
     <div class="columns large-12 left">
       <div class="columns large-6 left label">
-	    <a class="button large-6 smallText label" href="/#!/settings/profile">Edit Profile</a>
-	    <a class="button large-6 smallText label" href="/#!/settings/accounts">Manage Social</a>
+	    <a class="button small-6 smallText label" href="/#!/settings/profile">Edit Profile</a>
+	    <a class="button small-6 smallText label" href="/#!/settings/accounts">Manage Social</a>
       </div>
       <div class="columns large-6 left label">
-	    <a class="button large-6 smallText label" data-ng-show="authentication.user.provider === 'local'" href="/#!/settings/password">Change Pass</a>
-	    <a class="button large-6 smallText label" href="/auth/signout">Signout</a>
+	    <a class="button small-6 smallText label" data-ng-show="authentication.user.provider === 'local'" href="/#!/settings/password">Change Pass</a>
+	    <a class="button small-6 smallText label" href="/auth/signout">Signout</a>
       </div>
     </div>
   </div>	
@@ -54,8 +54,9 @@
 		</dd>
 	</dl>
 		We're just getting started.  New features and streamlining of TOURNme are coming soon.
-        <br>
-        <br>The TOURNme Team.
+        <br />
+        <br />
+        The TOURNme Team.
     </div>
   </div>
 </section>

@@ -39,7 +39,8 @@ exports.getErrorMessage = getErrorMessage;
 // creates a function that sends the error code using the passed in res
 exports.sendError = function(res) {
 	return function(err) {
-	  console.log(err); 
+      var largeError = new Error(err);
+	  console.log(largeError); 
 		res.send(400, {
 		message: getErrorMessage(err)
 		});

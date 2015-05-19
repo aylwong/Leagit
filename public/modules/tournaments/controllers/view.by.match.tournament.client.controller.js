@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tournaments')
-    .controller('ViewByMatchTournamentController', ['$scope','Match-Rounds-Results-Helper','_service'
+    .controller('ViewByMatchTournamentController', ['$scope','MatchRoundsResultsHelper','_service'
   ,function($scope,MRHelper,_s) {
   // add auth
   var ctrl = this;

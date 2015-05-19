@@ -100,7 +100,6 @@ exports.delete = function(req, res) {
  * List of Tournament
  */
 exports.list = function(req, res) {
-
           // TODO: populate tournaments, matches
 	Tournament.find().sort('-created').populate('user', 'displayName').exec(function(err, tournaments) {
 		if (err) {
@@ -141,8 +140,6 @@ exports.listByCompetitor = function(req, res) {
 };
 
 // Get Competitors that have a competitor list.
-// Get Competitors that have a competitor list.
-// TODO: remove?
 exports.competitorList = function(req, res) {
 	var competitorId = req.competitor.id;
 
@@ -165,17 +162,6 @@ exports.competitorList = function(req, res) {
  * Tournament middleware
  */
 exports.tournamentByID = tournamentsMiddlewareService.tournamentById;
-
-//exports.tournamentByID = function(req, res, next, id) {
-  //            // TODO: populate competitor, match
-//	Tournament.findById(id).populate('user', 'displayName').exec(function(err, tournament) {
-//		if (err) return next(err);
-//		if (!tournament) return next(new Error('Failed to load tournament ' + id));
-//		req.tournament = tournament;
-//		console.log(req.tournament.user);
-//		next();
-//	});
-//};
 
 /**
  * Tournament authorization middleware

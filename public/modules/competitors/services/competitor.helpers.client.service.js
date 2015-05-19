@@ -1,7 +1,7 @@
 'use strict';
 
 //Competitors service used for communicating with the competitors REST endpoints
-angular.module('competitors').factory('Competitor-Helper', ['Core-Helper','Competitors', function(CHelper,Competitors) {
+angular.module('competitors').factory('CompetitorHelper', ['CoreHelper','Competitors', function(CHelper,Competitors) {
 
 	var getCompetitorArchiveEnumerations = function() {
 	  return ['Archived', 'Current'];

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('competitor_searches').controller('CompetitorSearchesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors', 'Core-Helper','CompetitorsSearch',
+angular.module('competitor_searches').controller('CompetitorSearchesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors', 'CoreHelper','CompetitorsSearch',
 
 	function($scope, $stateParams, $location, Authentication, Competitors, CHelper,CompetitorsSearch) {
 	

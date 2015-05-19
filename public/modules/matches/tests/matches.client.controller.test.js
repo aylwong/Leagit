@@ -50,30 +50,30 @@
 			});
 		}));
 
-		it('$scope.find() should create an array with at least one competitor object fetched from XHR', inject(function(Matches) {
-			// Create sample match using the Matches service
-
-			// Todo: Fill in match with real info
-			var sampleMatch = new Matches({
-				name: 'Tournament Name',
-				start_date: '2014/01/01@00:01',
-				end_date: '2014/01/01@00:01',
-				competitors: [],
-				description: 'Test Competitor'
-			});
-
-			// Create a sample matches array that includes the new tournament
-			var sampleMatches = [sampleMatch];
-
-			// Set GET response
-			$httpBackend.expectGET('matches').respond(sampleMatches);
-
-			// Run controller functionality
-			scope.find();
-			$httpBackend.flush();
-
-			// Test scope value
-			//expect(scope.matches).toEqualData(sampleMatches);
-		}));
+//		it('$scope.findOne() should create an array with at least one match object fetched from XHR', inject(function(Matches) {
+//			// Create sample match using the Matches service
+//
+//			// Todo: Fill in match with real info
+//			var sampleMatch = new Matches({
+//				name: 'Tournament Name',
+//				start_date: '2014/01/01@00:01',
+//				end_date: '2014/01/01@00:01',
+//				competitors: [],
+//				description: 'Test Competitor'
+//			});
+//
+//			// Create a sample matches array that includes the new tournament
+//			var sampleMatches = [sampleMatch];
+//
+//			// Set GET response
+//			$httpBackend.expectGET('matches').respond(sampleMatches);
+//
+//			// Run controller functionality
+//			scope.findOne();
+//			$httpBackend.flush();
+//
+//			// Test scope value
+//			//expect(scope.matches).toEqualData(sampleMatches);
+//		}));
 	});
 }());

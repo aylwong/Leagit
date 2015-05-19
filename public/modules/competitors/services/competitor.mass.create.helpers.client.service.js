@@ -1,7 +1,7 @@
 'use strict';
 
 //Competitors service used for communicating with the competitors REST endpoints
-angular.module('competitors').factory('Competitor-Mass-Create-Helper', ['Core-Helper','Competitors','_service', function(CHelper,Competitors,_s) {
+angular.module('competitors').factory('CompetitorMassCreateHelper', ['CoreHelper','Competitors','_service', function(CHelper,Competitors,_s) {
 
 // Examples of email chain:
 //Amy Lim <amy.e.lim@gmail.com>, Alan Wong <alanyinglongwong@gmail.com>, Felix Lo <sedul.lo@gmail.com>, Idy Chiu <idy.chiu@gmail.com>, Jessica Li <jessi.li@gmail.com>, Brandon Andre <brandonkandre@gmail.com>

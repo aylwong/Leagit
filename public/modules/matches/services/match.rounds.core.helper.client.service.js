@@ -2,7 +2,7 @@
 
 //Matches service used for communicating with the tournaments REST endpoints
 // Match helper functions to manipulate match objects
-angular.module('match_rounds').factory('Match-Rounds-Core-Helper', ['$filter', 'Core-Helper','Match-Helper','Tournament.Results','_service'
+angular.module('match_rounds').factory('MatchRoundsCoreHelper', ['$filter', 'CoreHelper','MatchHelper','TournamentResults','_service'
 , function($filter,CHelper, MHelper, TResults,_s) {
 
   // Get list of matches for competitor

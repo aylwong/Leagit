@@ -2,7 +2,7 @@
 
 //Matches service used for communicating with the tournaments REST endpoints
 // Match helper functions to manipulate match objects
-angular.module('match_rounds').factory('Create-Match-Rounds-Round-Robin', ['$filter', 'Core-Helper','Match-Helper','Tournament.Results','Create-Match-Rounds-Core','_service', function($filter,CHelper, MHelper, TResults,CMRoundsC,_s) {
+angular.module('match_rounds').factory('CreateMatchRoundsRoundRobin', ['$filter', 'CoreHelper','MatchHelper','TournamentResults','CreateMatchRoundsCore','_service', function($filter,CHelper, MHelper, TResults,CMRoundsC,_s) {
 
   // Get Next Round
   var createRoundsBasedOnRoundRobin = function(tournament,startRound) {

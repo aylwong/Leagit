@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('competitors').controller('CompetitorsMassCreateController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors','Competitor-Helper','Competitor-Mass-Create-Helper','Mass-Competitors'
+angular.module('competitors').controller('CompetitorsMassCreateController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors','CompetitorHelper','CompetitorMassCreateHelper','MassCompetitors'
  ,function($scope, $stateParams, $location, Authentication, Competitors,CompHelper,CMassCreateHelper, MCompetitors) {
 
     var ctrl = this;

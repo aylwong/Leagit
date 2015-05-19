@@ -1,7 +1,7 @@
 'use strict';
 
 //Tournaments service used for communicating with the tournaments REST endpoints
-angular.module('tournament.results').factory('Tournament.Results', ['_service', function(_s) {
+angular.module('tournament.results').factory('TournamentResults', ['_service', function(_s) {
 
     var key = {};
 	key.win = 'Win';

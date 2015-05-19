@@ -2,7 +2,7 @@
 
 //General helpers for Lists and IDs service 
 // Match helper functions to manipulate match objects
-angular.module('core').factory('Core-Helper', ['$filter','_service', function($filter,_s) {
+angular.module('core').factory('CoreHelper', ['$filter','_service', function($filter,_s) {
 
   // Filters a list on competitors
   var filterListOnSelected = function(list) {
@@ -10,7 +10,11 @@ angular.module('core').factory('Core-Helper', ['$filter','_service', function($f
   };
 
   var hasId = function(value) {
-    return value.id || value._id;
+    if(value.id || value._id) {
+        return true;
+    } else {
+        return false;
+    }
   };
 
   /// Gets the Id for the value.
@@ -180,21 +184,21 @@ function stringSubstitute(str, substituteValues)
     if(foundIndex>=0) {
       return list.splice(foundIndex,1);
     } else {
-      return list;
+      return [];
     }
   };
 
   // return functions that service will use
   return {
-    listToIds: listToIds
-    ,filterListOnSelected: filterListOnSelected
+    getId: getId
+    ,hasId: hasId
+    ,listToIds: listToIds
     ,idsToList: idsToList
+    ,sameIdStrings: sameIdStrings
     ,getInArrayById: getInArrayById
     ,mergeArrays: mergeArrays
     ,moveArrayItem: moveArrayItem
-    ,getId: getId
-    ,hasId: hasId
-    ,sameIdStrings: sameIdStrings
+    ,filterListOnSelected: filterListOnSelected
     ,removeFromListIfNotInMasterList: removeFromListIfNotInMasterList
     ,mergeArraysUnique: mergeArraysUnique 
     ,removeEntryFromList: removeEntryFromList
