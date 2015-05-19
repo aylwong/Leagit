@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('matches')
-  .controller('MassEditMatchesController', ['$scope', '$stateParams', 'Authentication', 'Competitors','TournamentResults','Tournaments','Matches','CoreHelper', 'MatchHelper','_service','MatchRoundsResultsHelper'
-  ,function($scope, $stateParams, Authentication, Competitors, TResults,Tournaments,Matches,CHelper,MHelper,_s, MRHelper) {
+  .controller('MassEditMatchesController', ['$scope', 'TournamentResults','CoreHelper', 'MatchRoundsResultsHelper'
+  ,function($scope, TResults, CHelper, MRHelper) {
 
   var ctrl = this;
 

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('matches')
-  .controller('MatchesController', ['$scope', '$stateParams', '$location','$filter', '$q', 'Authentication', 'Competitors','TournamentResults','Tournaments','Matches','CompetitorMatches','CoreHelper', 'MatchHelper','_service','CreateMatchRoundsCore','MatchRoundsResultsHelper'
-  ,function($scope, $stateParams, $location, $filter, $q, Authentication, Competitors, TResults,Tournaments,Matches,CompetitorMatches,CHelper,MHelper,_s,CMRoundsCore,MRHelper) {
+  .controller('MatchesController', ['$scope', '$stateParams', '$location', 'Authentication','Competitors', 'TournamentResults','Tournaments','Matches','CompetitorMatches','CoreHelper', 'MatchHelper','_service','MatchRoundsResultsHelper'
+  ,function($scope, $stateParams, $location, Authentication,Competitors, TResults,Tournaments,Matches,CompetitorMatches,CHelper,MHelper,_s,MRHelper) {
   // add auth
   $scope.authentication = Authentication;
 

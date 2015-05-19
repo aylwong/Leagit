@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('competitor_searches').controller('CompetitorSearchesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors', 'CoreHelper','CompetitorsSearch',
+angular.module('competitor_searches').controller('CompetitorSearchesController', ['$scope', 'CompetitorsSearch',
 
-	function($scope, $stateParams, $location, Authentication, Competitors, CHelper,CompetitorsSearch) {
+	function($scope, CompetitorsSearch) {
 	
 	var ctrl = this;
 

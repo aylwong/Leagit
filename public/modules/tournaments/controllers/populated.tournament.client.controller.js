@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tournaments')
-    .controller('PopulatedTournamentController', ['$scope', '$stateParams', '$location','$filter', '$q', 'Authentication', 'Tournaments', 'Competitors','TournamentResults','TournamentHelper','CoreHelper','CompetitorHelper','PopulatedTournament','MatchRoundsResultsHelper','_service'
-  ,function($scope, $stateParams, $location, $filter, $q, Authentication, Tournaments, Competitors, TResults,THelper,CHelper,CompetitorHelper,PTournament,MRHelper,_s) {
+    .controller('PopulatedTournamentController', ['$scope', '$stateParams',  'Authentication', 'PopulatedTournament','MatchRoundsResultsHelper','_service'
+  ,function($scope, $stateParams, Authentication, PTournament,MRHelper,_s) {
   // add auth
   $scope.authentication = Authentication;
 

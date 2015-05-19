@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('competitors').controller('CompetitorsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors','CompetitorHelper', 'CompetitorMassCreateHelper','MassCompetitors'
-  ,function($scope, $stateParams, $location, Authentication, Competitors, CompHelper, CMassCreateHelper,MCompetitors) {
+angular.module('competitors').controller('CompetitorsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors','CompetitorHelper'
+  ,function($scope, $stateParams, $location, Authentication, Competitors, CompHelper) {
     $scope.authentication = Authentication;
 
     $scope.create = function() {
@@ -18,16 +18,6 @@ angular.module('competitors').controller('CompetitorsController', ['$scope', '$s
 	  this.description ='';
 	  this.imageLink = '';
     };
-
- //   $scope.createMassCompetitors = function(text) {
- //     var competitors = CMassCreateHelper.splitEmailList(text);
- //     var mCompetitors = new MCompetitors({competitors:competitors});
-  //    mCompetitors.$massCreate(function(response) {
-//	      $location.path('competitors');
-//	    }, function(errorResponse) {
-//	    $scope.error = errorResponse.data.message;
-//	  });
- //   };
 
     $scope.remove = function(competitor) {
       if (competitor) {

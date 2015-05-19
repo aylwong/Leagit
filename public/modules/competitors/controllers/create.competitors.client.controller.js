@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('competitors').controller('CompetitorCreateController', ['$scope', '$stateParams', '$location', 'Authentication', 'Competitors','CompetitorHelper',
-function($scope, $stateParams, $location, Authentication, Competitors,CompHelper) {
+angular.module('competitors').controller('CompetitorCreateController', ['$scope', 'Authentication','CompetitorHelper',
+function($scope, Authentication, CompHelper) {
 	$scope.authentication = Authentication;
 	var ctrl = this;
 	ctrl.competitor_selected_list = $scope.competitor_selected_list;
