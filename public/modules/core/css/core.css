@@ -33,3 +33,11 @@ max-width:3em;
 .largeText {
   font-size: 1.8rem;
 }
+
+.winButton {
+    background-color:#66CC66;
+}
+
+.lossButton {
+    background-color:#CC0033;
+}

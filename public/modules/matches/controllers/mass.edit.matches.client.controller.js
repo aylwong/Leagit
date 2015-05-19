@@ -11,6 +11,16 @@ angular.module('matches')
     return MRHelper.getCompetitorResultName(match, competitor);
   };
 
+  $scope.getCompetitorResultButtonColour = function(match, competitor) {
+    var resultKey = MRHelper.getCompetitorResult(match, competitor);
+    if(resultKey === TResults.key.win) {
+      return 'winButton';
+    } else if (resultKey === TResults.key.loss) {
+        return 'lossButton';
+    }  else {
+        return '';
+    }
+  };
   $scope.getMatchResultName = function(match) {
     return MRHelper.getMatchResultName(match);
   };

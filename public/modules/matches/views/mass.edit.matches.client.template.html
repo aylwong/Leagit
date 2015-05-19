@@ -8,6 +8,6 @@
     </div>
     <div class="large-3 columns left" data-ng-repeat="competitor in match.competitors_full">
       {{ competitor.name }} 
-      <a class="button round small right" data-ng-click="swapWinner(match,competitor)">{{ getCompetitorResultName(match, competitor) }}</a> 
+      <a class="button round small right {{getCompetitorResultButtonColour(match,competitor)}}" data-ng-click="swapWinner(match,competitor)">{{ getCompetitorResultName(match, competitor) }}</a> 
     </div>
   </div>

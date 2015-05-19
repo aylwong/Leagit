@@ -25,14 +25,27 @@ angular.module('matches').factory('MatchRoundsResultsHelper', ['$filter', 'CoreH
   };
 
   var getCompetitorResultName = function(match, competitor) {
-    var result = _s.find(match.results,function(result) {
+    return TResults.getName(getCompetitorResult(match,competitor));
+//    var result = _s.find(match.results,function(result) {
+//      var competitorId = CHelper.hasId(competitor) ? CHelper.getId(competitor) : competitor;
+//      return existsInList(result.competitors, competitorId);
+//    });
+//    if(!result) {
+//      return TResults.getName(TResults.key.tBD);
+//    } else {
+//      return result.name;
+//    }
+  };
+
+  var getCompetitorResult = function(match,competitor) {
+     var result = _s.find(match.results,function(result) {
       var competitorId = CHelper.hasId(competitor) ? CHelper.getId(competitor) : competitor;
       return existsInList(result.competitors, competitorId);
     });
     if(!result) {
-      return TResults.getName(TResults.key.tBD);
+      return TResults.key.tBD;
     } else {
-      return result.name;
+      return result.key;
     }
   };
 
@@ -226,6 +239,7 @@ angular.module('matches').factory('MatchRoundsResultsHelper', ['$filter', 'CoreH
   return {
     getStrengthOfScheduleWins: getStrengthOfScheduleWins
     ,getCompetitorWinsFromMatches: getCompetitorWinsFromMatches
+    ,getCompetitorResult: getCompetitorResult
     ,getCompetitorResultName: getCompetitorResultName
     ,getMatchResultName: getMatchResultName
     ,getCompetitorTiesFromMatches:getCompetitorTiesFromMatches
