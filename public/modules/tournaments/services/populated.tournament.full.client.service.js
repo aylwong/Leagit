@@ -7,14 +7,15 @@ angular.module('tournaments')
 // Todo: load into rounds as well?
 
   var loadPublicTournamentDetails = function(tournamentId) {
-    return loadTournamentDetails(tournamentId,PublicCompetitors);
+    return loadTournamentDetails(tournamentId,PublicCompetitors,Tournaments);
   };
 
-  var loadTournamentDetails = function(tournamentId,competitorService) {
+  var loadTournamentDetails = function(tournamentId,competitorService,tournamentService) {
   // Initialise a create Ad Hoc Tournament
     competitorService = competitorService? competitorService: Competitors;
+    tournamentService = tournamentService? tournamentService: Tournaments;
 
-    var tournamentPromise = findTournament(tournamentId,competitorService);
+    var tournamentPromise = findTournament(tournamentId,competitorService,tournamentService);
 
     return tournamentPromise.then(function(results) {
       var new_result = {};
@@ -36,9 +37,9 @@ angular.module('tournaments')
   };
 
   // Find Tournament.
-  var findTournament = function(tournamentId, competitorService) {
+  var findTournament = function(tournamentId, competitorService, tournamentService) {
     var tournamentResult;
-    var promise = Tournaments.get({ tournamentId: tournamentId}).$promise
+    var promise = tournamentService.get({ tournamentId: tournamentId}).$promise
       .then(function(tournament) {
         tournamentResult = tournament;
         var competitorList =tournament.competitors;

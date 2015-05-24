@@ -35,28 +35,6 @@ angular.module('tournaments')
   $scope.tournaments.selectable_competitors=[];
 
   // HANDLERS
-
-  // add match to the tournament
-  $scope.add_new_match = function(new_match) {
-    var match = THelper.createNewMatch(new_match,$scope.competitors.match_competitors);
-
-    $scope.tournaments.tournament.matches.push(match);
-  };
-
-  // remove match from tournament, based on index
-  $scope.remove_match = function (match) {
-    THelper.removeMatchFromTournament(match,$scope.tournaments.tournament);
-
-  };
-
-  // view state
-  // toggles for view (whether to show new match or not)
-  $scope.view_state.show_new_match = true;
-
-  $scope.toggle_new_match = function() {
-    $scope.view_state.show_new_match = $scope.view_state.show_new_match !== true;
-  };
-
   $scope.massCompetitorsAdded = function(allCompetitors,response) {
     CHelper.mergeArrays($scope.tournaments.selected_competitors, allCompetitors, CHelper.sameIdStrings);
     allCompetitors.forEach(function(sCompetitor) {
@@ -77,8 +55,7 @@ angular.module('tournaments')
 
   // INIT
   // This is competitor INIT stuff:
-  $scope.competitor_init = function(competitorIds) {
-    // getting available competitors (defered until loaded?)
+  var competitor_init = function(competitorIds) {
     var searchParameters = {};
 
     if(competitorIds) {
@@ -90,7 +67,7 @@ angular.module('tournaments')
 
     // function - load competitors after initialisation.
     return all_competitors.then( function(list) {
-      $scope.competitors.available_competitors = THelper.competitorsToSelectList(list);
+      $scope.competitors.available_competitors = list;
 
       // Competitor list
       return list;
@@ -105,7 +82,7 @@ angular.module('tournaments')
     // get tournaments
     $scope.tournaments.list = Tournaments.query();
 
-    var competitors_loaded = $scope.competitor_init(); 
+    var competitors_loaded = competitor_init(); 
     var tournaments_loaded = $scope.tournaments.list.$promise;
 
     // when both list and competitors loaded, then 
@@ -125,11 +102,11 @@ angular.module('tournaments')
     var tournament_competitors = CHelper.idsToList(tournament.competitors,competitors);
  
     // filter to select list
-    tournament.selected_competitors = THelper.competitorsToSelectList(tournament_competitors);
+    tournament.selected_competitors = tournament_competitors;
   
-    angular.forEach(tournament.matches, function(val, key)  {
       // populate limited info of competitors to Match
-      THelper.addCompetitorsToMatch(val,tournament.selected_competitors);
+    angular.forEach(tournament.matches, function(val, key)  {
+      val.currentCompetitors = CHelper.idsToList(val.competitors,tournament.selected_competitors);
     });
   };
 
@@ -229,7 +206,7 @@ angular.module('tournaments')
     // clean match competitors.
     angular.forEach($scope.tournaments.tournament.matches, function(value,key) {
       // turn selected competitors into list of ids
-      value.competitors = THelper.getSelectedCompetitorsAsIds(value.competitors_list);
+      value.competitors = CHelper.listToIds(value.currentCompetitors);
     });
 			
     tournament.$update(function() {
@@ -284,7 +261,7 @@ angular.module('tournaments')
   };
 
   $scope.initTournamentCreate = function() {
-    var competitorPromise = $scope.competitor_init();
+    var competitorPromise = competitor_init();
 
     competitorPromise.then(function(competitors) {
      // filter competitors for archiving.
@@ -298,7 +275,7 @@ angular.module('tournaments')
 
   $scope.findOne = function() {
     // load all competitors - as competitors grows, will probably have to load after initial load of tournaments, and filter for competitors only of the tournament
-    $scope.competitors.competitors_complete = $scope.competitor_init();
+    $scope.competitors.competitors_complete = competitor_init();
     $scope.tournaments.tournament = [];
     $scope.tournaments.tournament_complete = $scope.tournaments.init_tournament($scope.tournamentId,$scope.competitors.competitors_complete);
   };
