@@ -26,15 +26,6 @@ angular.module('matches').factory('MatchRoundsResultsHelper', ['$filter', 'CoreH
 
   var getCompetitorResultName = function(match, competitor) {
     return TResults.getName(getCompetitorResult(match,competitor));
-//    var result = _s.find(match.results,function(result) {
-//      var competitorId = CHelper.hasId(competitor) ? CHelper.getId(competitor) : competitor;
-//      return existsInList(result.competitors, competitorId);
-//    });
-//    if(!result) {
-//      return TResults.getName(TResults.key.tBD);
-//    } else {
-//      return result.name;
-//    }
   };
 
   var getCompetitorResult = function(match,competitor) {
@@ -62,7 +53,7 @@ angular.module('matches').factory('MatchRoundsResultsHelper', ['$filter', 'CoreH
 
    var getCompetitorPointsFromMatches = function(competitor,matches) {
      var compResults = getCompetitorResultsFromMatches(competitor, matches);
-     return compResults.reduce(resultPointsReduceFunction,0);
+     return compResults.reduce(resultPointsReduceFunction,[0]);
 
     };   
 
@@ -178,17 +169,19 @@ angular.module('matches').factory('MatchRoundsResultsHelper', ['$filter', 'CoreH
   };
 
   var resultGamesPlayedReduceFunction = function(previousValue, currentValue) {
-    return previousValue + 1;
+    if(currentValue.key === TResults.key.tBD) {
+      return previousValue;
+    } else {
+      return previousValue + 1;
+    }
   };
 
   var resultPointsReduceFunction = function(previousValue, currentValue) {
-    if (currentValue.points && Array.isArray(currentValue.points)) {
-      return addArrayEntries(previousValue,currentValue.points);     
-     } else if (!currentValue.points) {
-        return previousValue;
-     } else{
-        return previousValue + currentValue.points;
-     }
+    if(currentValue.points) {
+      return addArrayEntries(previousValue, currentValue.points);
+    } else {
+      return previousValue;
+    }
   };
 
   // Add The entries in two arrays into a new array that is the addition of both
@@ -204,7 +197,7 @@ angular.module('matches').factory('MatchRoundsResultsHelper', ['$filter', 'CoreH
     }
 
     longResult.forEach(function(currentValue,index,array) {
-      if(shortResult.length > index+1) {
+      if(shortResult.length > index) {
         finalResult[index] = longResult[index] + shortResult[index];
       } else {
 	finalResult[index] = longResult[index];
@@ -237,11 +230,11 @@ angular.module('matches').factory('MatchRoundsResultsHelper', ['$filter', 'CoreH
   };
 
   return {
-    getStrengthOfScheduleWins: getStrengthOfScheduleWins
-    ,getCompetitorWinsFromMatches: getCompetitorWinsFromMatches
-    ,getCompetitorResult: getCompetitorResult
+    getCompetitorResult: getCompetitorResult
     ,getCompetitorResultName: getCompetitorResultName
     ,getMatchResultName: getMatchResultName
+    ,getStrengthOfScheduleWins: getStrengthOfScheduleWins
+    ,getCompetitorWinsFromMatches: getCompetitorWinsFromMatches
     ,getCompetitorTiesFromMatches:getCompetitorTiesFromMatches
     ,getCompetitorLossesFromMatches:getCompetitorLossesFromMatches
     ,getCompetitorTBDFromMatches:getCompetitorTBDFromMatches

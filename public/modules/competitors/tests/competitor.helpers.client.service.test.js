@@ -16,11 +16,11 @@
 		it('should return a list Competitor Enumerations to use', function() {
             var list = CHService.getCompetitorArchiveEnumerations();
             var containsArchived = list.some(function(entry) {
-                return entry === 'Archived'
+                return entry === 'Archived';
             });
             expect(containsArchived).toBe(true);
             var containsCurrent = list.some(function(entry) {
-                return entry === 'Current'
+                return entry === 'Current';
             });
             expect(containsCurrent).toBe(true);
         });
@@ -43,15 +43,15 @@
            var competitors = [ comp1, comp2, comp3];
             var list = CHService.selectableCompetitors(competitors);
             var containsComp1 = list.some(function(entry) {
-                return entry === comp1
+                return entry === comp1;
             });
             expect(containsComp1).toBe(true);
             var containsComp2 = list.some(function(entry) {
-                return entry === comp2
+                return entry === comp2;
             });
             expect(containsComp2).toBe(true);
             var containsComp3 = list.some(function(entry) {
-                return entry === comp3
+                return entry === comp3;
             });
             expect(containsComp3).toBe(false);
         });
